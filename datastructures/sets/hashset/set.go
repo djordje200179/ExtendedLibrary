@@ -13,20 +13,20 @@ func New[T comparable]() Set[T] {
 	return Set[T]{hashmap.New[T, bool]()}
 }
 
-func (set *Set[T]) Add(value T) {
+func (set Set[T]) Add(value T) {
 	if !set.Contains(value) {
-		set.m[value] = true
+		set.m.Set(value, true)
 	}
 }
 
-func (set *Set[T]) Remove(value T) {
+func (set Set[T]) Remove(value T) {
 	delete(set.m, value)
 }
 
-func (set *Set[T]) Contains(value T) bool {
+func (set Set[T]) Contains(value T) bool {
 	return set.m.Contains(value)
 }
 
-func (set *Set[T]) Iterator() datastructures.Iterator[T] {
+func (set Set[T]) Iterator() datastructures.Iterator[T] {
 	return iterator[T]{set.m.Iterator()}
 }
