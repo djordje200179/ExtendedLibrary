@@ -100,3 +100,13 @@ func (stream Stream[T]) Min(less functions.Less[T]) optional.Optional[T] {
 
 	return optional.New(min, set)
 }
+
+func (stream Stream[T]) First() optional.Optional[T] {
+	data, ok := stream.getNext()
+	if !ok {
+		return optional.Empty[T]()
+	}
+
+	stream.signal <- end
+	return optional.FromValue(data)
+}
