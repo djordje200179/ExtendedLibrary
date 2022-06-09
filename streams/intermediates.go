@@ -1,10 +1,12 @@
 package streams
 
+import "github.com/djordje200179/GoExtendedLibrary/misc/functions"
+
 //func (stream Stream[T]) Map[P any](mapper func(curr T) P) Stream[P] {
 //
 //}
 
-func (stream Stream[T]) Filter(filter func(curr T) bool) Stream[T] {
+func (stream Stream[T]) Filter(predicate functions.Predicate[T]) Stream[T] {
 	ret := create[T]()
 
 	go func() {
@@ -15,7 +17,7 @@ func (stream Stream[T]) Filter(filter func(curr T) bool) Stream[T] {
 					goto end
 				}
 
-				if filter(data) {
+				if predicate(data) {
 					ret.data <- data
 					found = true
 				}

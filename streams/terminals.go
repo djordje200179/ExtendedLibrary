@@ -16,14 +16,14 @@ func (stream Stream[T]) ForEach(function func(curr T)) {
 	}
 }
 
-func (stream Stream[T]) Any(tester func(curr T) bool) bool {
+func (stream Stream[T]) Any(predicate functions.Predicate[T]) bool {
 	for {
 		data, ok := stream.getNext().Get()
 		if !ok {
 			break
 		}
 
-		if tester(data) {
+		if predicate(data) {
 			stream.stop()
 			return true
 		}
@@ -32,14 +32,14 @@ func (stream Stream[T]) Any(tester func(curr T) bool) bool {
 	return false
 }
 
-func (stream Stream[T]) All(tester func(curr T) bool) bool {
+func (stream Stream[T]) All(predicate functions.Predicate[T]) bool {
 	for {
 		data, ok := stream.getNext().Get()
 		if !ok {
 			break
 		}
 
-		if !tester(data) {
+		if !predicate(data) {
 			stream.stop()
 			return false
 		}
