@@ -26,6 +26,10 @@ func (o Optional[T]) IsPresent() bool {
 	return o.valid
 }
 
+func (o Optional[T]) Get() (T, bool) {
+	return o.value, o.valid
+}
+
 func (o Optional[T]) GetOrElse(other T) T {
 	if o.valid {
 		return o.value
@@ -39,5 +43,12 @@ func (o Optional[T]) GetOrPanic() T {
 		return o.value
 	} else {
 		panic("No value present")
+	}
+}
+func (o Optional[T]) Process(onValue func(value T), onEmpty func()) {
+	if o.valid {
+		onValue(o.value)
+	} else {
+		onEmpty()
 	}
 }
