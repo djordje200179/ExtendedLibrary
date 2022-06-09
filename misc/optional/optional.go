@@ -1,5 +1,7 @@
 package optional
 
+import "github.com/djordje200179/GoExtendedLibrary/misc/functions"
+
 type Optional[T any] struct {
 	value T
 	valid bool
@@ -45,7 +47,8 @@ func (o Optional[T]) GetOrPanic() T {
 		panic("No value present")
 	}
 }
-func (o Optional[T]) Process(onValue func(value T), onEmpty func()) {
+
+func (o Optional[T]) Process(onValue functions.ParamCallback[T], onEmpty functions.EmptyCallback) {
 	if o.valid {
 		onValue(o.value)
 	} else {
