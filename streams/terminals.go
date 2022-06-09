@@ -1,6 +1,9 @@
 package streams
 
-import "github.com/djordje200179/GoExtendedLibrary/misc/functions"
+import (
+	"github.com/djordje200179/GoExtendedLibrary/misc/functions"
+	"github.com/djordje200179/GoExtendedLibrary/misc/optional"
+)
 
 func (stream Stream[T]) ForEach(function func(curr T)) {
 	for {
@@ -60,7 +63,7 @@ func (stream Stream[T]) Count() int {
 	return count
 }
 
-func (stream Stream[T]) Max(less functions.Less[T]) T {
+func (stream Stream[T]) Max(less functions.Less[T]) optional.Optional[T] {
 	var max T
 	set := false
 
@@ -76,10 +79,10 @@ func (stream Stream[T]) Max(less functions.Less[T]) T {
 		}
 	}
 
-	return max
+	return optional.New(max, set)
 }
 
-func (stream Stream[T]) Min(less functions.Less[T]) T {
+func (stream Stream[T]) Min(less functions.Less[T]) optional.Optional[T] {
 	var min T
 	set := false
 
@@ -95,5 +98,5 @@ func (stream Stream[T]) Min(less functions.Less[T]) T {
 		}
 	}
 
-	return min
+	return optional.New(min, set)
 }
