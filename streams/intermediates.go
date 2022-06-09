@@ -10,7 +10,7 @@ func (stream Stream[T]) Filter(filter func(curr T) bool) Stream[T] {
 	go func() {
 		for <-ret.signal == next {
 			for found := false; !found; {
-				data, ok := stream.getNext()
+				data, ok := stream.getNext().Get()
 				if !ok {
 					goto end
 				}
@@ -43,7 +43,7 @@ func (stream Stream[T]) Limit(count int) Stream[T] {
 				break
 			}
 
-			data, ok := stream.getNext()
+			data, ok := stream.getNext().Get()
 			if !ok {
 				break
 			}

@@ -7,7 +7,7 @@ import (
 
 func (stream Stream[T]) ForEach(function func(curr T)) {
 	for {
-		data, ok := stream.getNext()
+		data, ok := stream.getNext().Get()
 		if !ok {
 			break
 		}
@@ -18,7 +18,7 @@ func (stream Stream[T]) ForEach(function func(curr T)) {
 
 func (stream Stream[T]) Any(tester func(curr T) bool) bool {
 	for {
-		data, ok := stream.getNext()
+		data, ok := stream.getNext().Get()
 		if !ok {
 			break
 		}
@@ -34,7 +34,7 @@ func (stream Stream[T]) Any(tester func(curr T) bool) bool {
 
 func (stream Stream[T]) All(tester func(curr T) bool) bool {
 	for {
-		data, ok := stream.getNext()
+		data, ok := stream.getNext().Get()
 		if !ok {
 			break
 		}
@@ -52,7 +52,7 @@ func (stream Stream[T]) Count() int {
 	count := 0
 
 	for {
-		_, ok := stream.getNext()
+		_, ok := stream.getNext().Get()
 		if !ok {
 			break
 		}
@@ -68,7 +68,7 @@ func (stream Stream[T]) Max(less functions.Less[T]) optional.Optional[T] {
 	set := false
 
 	for {
-		data, ok := stream.getNext()
+		data, ok := stream.getNext().Get()
 		if !ok {
 			break
 		}
@@ -87,7 +87,7 @@ func (stream Stream[T]) Min(less functions.Less[T]) optional.Optional[T] {
 	set := false
 
 	for {
-		data, ok := stream.getNext()
+		data, ok := stream.getNext().Get()
 		if !ok {
 			break
 		}
@@ -102,7 +102,7 @@ func (stream Stream[T]) Min(less functions.Less[T]) optional.Optional[T] {
 }
 
 func (stream Stream[T]) First() optional.Optional[T] {
-	data, ok := stream.getNext()
+	data, ok := stream.getNext().Get()
 	if !ok {
 		return optional.Empty[T]()
 	}

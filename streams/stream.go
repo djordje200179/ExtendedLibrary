@@ -1,5 +1,7 @@
 package streams
 
+import "github.com/djordje200179/GoExtendedLibrary/misc/optional"
+
 type signal bool
 
 const (
@@ -24,11 +26,11 @@ func (stream Stream[T]) close() {
 	close(stream.signal)
 }
 
-func (stream Stream[T]) getNext() (T, bool) {
+func (stream Stream[T]) getNext() optional.Optional[T] {
 	stream.signal <- next
 
 	data, ok := <-stream.data
-	return data, ok
+	return optional.New(data, ok)
 }
 
 func (stream Stream[T]) stop() {
