@@ -1,6 +1,7 @@
 package streams
 
 import (
+	"github.com/djordje200179/GoExtendedLibrary/misc/comparison"
 	"github.com/djordje200179/GoExtendedLibrary/misc/functions"
 	"github.com/djordje200179/GoExtendedLibrary/misc/optional"
 )
@@ -63,7 +64,7 @@ func (stream Stream[T]) Count() int {
 	return count
 }
 
-func (stream Stream[T]) Max(less functions.Less[T]) optional.Optional[T] {
+func (stream Stream[T]) Max(comparator comparison.Comparator[T]) optional.Optional[T] {
 	var max T
 	set := false
 
@@ -73,7 +74,7 @@ func (stream Stream[T]) Max(less functions.Less[T]) optional.Optional[T] {
 			break
 		}
 
-		if !set || less(max, data) {
+		if !set || comparator(data, max) == comparison.FirstBigger {
 			max = data
 			set = true
 		}
@@ -82,7 +83,7 @@ func (stream Stream[T]) Max(less functions.Less[T]) optional.Optional[T] {
 	return optional.New(max, set)
 }
 
-func (stream Stream[T]) Min(less functions.Less[T]) optional.Optional[T] {
+func (stream Stream[T]) Min(comparator comparison.Comparator[T]) optional.Optional[T] {
 	var min T
 	set := false
 
@@ -92,7 +93,7 @@ func (stream Stream[T]) Min(less functions.Less[T]) optional.Optional[T] {
 			break
 		}
 
-		if !set || less(data, min) {
+		if !set || comparator(data, min) == comparison.FirstSmaller {
 			min = data
 			set = true
 		}

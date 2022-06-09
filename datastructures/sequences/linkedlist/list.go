@@ -2,7 +2,7 @@ package linkedlist
 
 import (
 	"github.com/djordje200179/GoExtendedLibrary/datastructures/sequences"
-	"github.com/djordje200179/GoExtendedLibrary/misc/functions"
+	"github.com/djordje200179/GoExtendedLibrary/misc/comparison"
 	"github.com/djordje200179/GoExtendedLibrary/streams"
 )
 
@@ -127,7 +127,7 @@ func (list *LinkedList[T]) Remove(index int) T {
 	return node.value
 }
 
-func (list *LinkedList[T]) Sort(less functions.Less[T]) {
+func (list *LinkedList[T]) Sort(comparator comparison.Comparator[T]) {
 	// Implement
 }
 

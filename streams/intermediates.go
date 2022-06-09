@@ -1,6 +1,7 @@
 package streams
 
 import (
+	"github.com/djordje200179/GoExtendedLibrary/misc/comparison"
 	"github.com/djordje200179/GoExtendedLibrary/misc/functions"
 	"sort"
 )
@@ -66,7 +67,21 @@ func (stream Stream[T]) Limit(count int) Stream[T] {
 //
 //}
 
-func (stream Stream[T]) Sort(less functions.Less[T]) Stream[T] {
+func initArray[T any](arrPtr *[]T, stream Stream[T], comparator comparison.Comparator[T]) {
+	*arrPtr = make([]T, 0)
+
+	stream.ForEach(func(data T) {
+		*arrPtr = append(*arrPtr, data)
+	})
+
+	arr := *arrPtr
+
+	sort.Slice(*arrPtr, func(i, j int) bool {
+		return comparator(arr[i], arr[j]) == comparison.FirstSmaller
+	})
+}
+
+func (stream Stream[T]) Sort(comparator comparison.Comparator[T]) Stream[T] {
 	ret := create[T]()
 
 	go func() {
@@ -74,15 +89,7 @@ func (stream Stream[T]) Sort(less functions.Less[T]) Stream[T] {
 
 		for i := 0; ret.waitRequest(); i++ {
 			if arr == nil {
-				arr = make([]T, 0)
-
-				stream.ForEach(func(data T) {
-					arr = append(arr, data)
-				})
-
-				sort.Slice(arr, func(i, j int) bool {
-					return less(arr[i], arr[j])
-				})
+				initArray(&arr, stream, comparator)
 			}
 
 			if i >= len(arr) {

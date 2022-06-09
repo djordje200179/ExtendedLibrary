@@ -2,7 +2,7 @@ package array
 
 import (
 	"github.com/djordje200179/GoExtendedLibrary/datastructures/sequences"
-	"github.com/djordje200179/GoExtendedLibrary/misc/functions"
+	"github.com/djordje200179/GoExtendedLibrary/misc/comparison"
 	"github.com/djordje200179/GoExtendedLibrary/streams"
 )
 
@@ -51,7 +51,7 @@ func (array *Array[T]) Remove(index int) T {
 	return value
 }
 
-func (array *Array[T]) Sort(less functions.Less[T]) {
+func (array *Array[T]) Sort(comparator comparison.Comparator[T]) {
 	// Implement
 }
 

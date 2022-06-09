@@ -1,7 +1,7 @@
 package sequences
 
 import (
-	"github.com/djordje200179/GoExtendedLibrary/misc/functions"
+	"github.com/djordje200179/GoExtendedLibrary/misc/comparison"
 	"github.com/djordje200179/GoExtendedLibrary/streams"
 )
 
@@ -15,7 +15,7 @@ type Sequence[T any] interface {
 	Insert(index int, value T)
 	Remove(index int) T
 
-	Sort(less functions.Less[T])
+	Sort(comparator comparison.Comparator[T])
 	Join(other Sequence[T])
 
 	Iterator() Iterator[T]
