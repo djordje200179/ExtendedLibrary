@@ -1,6 +1,6 @@
 package hashmap
 
-import "github.com/djordje200179/GoExtendedLibrary/datastructures/maps"
+import "github.com/djordje200179/extendedlibrary/datastructures/maps"
 
 type iterator[K comparable, V any] struct {
 	m     Map[K, V]

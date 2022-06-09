@@ -1,7 +1,7 @@
 package hashset
 
 import (
-	"github.com/djordje200179/GoExtendedLibrary/datastructures/maps"
+	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 )
 
 type iterator[T comparable] struct {

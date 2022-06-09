@@ -1,9 +1,9 @@
 package linkedlistset
 
 import (
-	"github.com/djordje200179/GoExtendedLibrary/datastructures"
-	"github.com/djordje200179/GoExtendedLibrary/datastructures/sequences/linkedlist"
-	"github.com/djordje200179/GoExtendedLibrary/streams"
+	"github.com/djordje200179/extendedlibrary/datastructures"
+	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
+	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type Set[T comparable] struct {

@@ -1,8 +1,8 @@
 package streams
 
 import (
-	"github.com/djordje200179/GoExtendedLibrary/misc/comparison"
-	"github.com/djordje200179/GoExtendedLibrary/misc/functions"
+	"github.com/djordje200179/extendedlibrary/misc/comparison"
+	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"sort"
 )
 

@@ -1,8 +1,8 @@
 package sets
 
 import (
-	"github.com/djordje200179/GoExtendedLibrary/datastructures"
-	"github.com/djordje200179/GoExtendedLibrary/streams"
+	"github.com/djordje200179/extendedlibrary/datastructures"
+	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type Set[T comparable] interface {

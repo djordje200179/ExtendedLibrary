@@ -1,9 +1,9 @@
 package linkedlistmap
 
 import (
-	"github.com/djordje200179/GoExtendedLibrary/datastructures/maps"
-	"github.com/djordje200179/GoExtendedLibrary/datastructures/sequences"
-	"github.com/djordje200179/GoExtendedLibrary/misc"
+	"github.com/djordje200179/extendedlibrary/datastructures/maps"
+	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
+	"github.com/djordje200179/extendedlibrary/misc"
 )
 
 type iterator[K comparable, V any] struct {

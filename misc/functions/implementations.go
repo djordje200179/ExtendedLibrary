@@ -1,6 +1,6 @@
 package functions
 
-import "github.com/djordje200179/GoExtendedLibrary/misc/comparison"
+import "github.com/djordje200179/extendedlibrary/misc/comparison"
 
 func Increment(i int) int {
 	return i + 1

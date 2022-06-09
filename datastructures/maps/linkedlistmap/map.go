@@ -1,11 +1,11 @@
 package linkedlistmap
 
 import (
-	"github.com/djordje200179/GoExtendedLibrary/datastructures/maps"
-	"github.com/djordje200179/GoExtendedLibrary/datastructures/sequences"
-	"github.com/djordje200179/GoExtendedLibrary/datastructures/sequences/linkedlist"
-	"github.com/djordje200179/GoExtendedLibrary/misc"
-	"github.com/djordje200179/GoExtendedLibrary/streams"
+	"github.com/djordje200179/extendedlibrary/datastructures/maps"
+	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
+	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
+	"github.com/djordje200179/extendedlibrary/misc"
+	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type Map[K comparable, V any] struct {

@@ -1,9 +1,9 @@
 package streams
 
 import (
-	"github.com/djordje200179/GoExtendedLibrary/misc/comparison"
-	"github.com/djordje200179/GoExtendedLibrary/misc/functions"
-	"github.com/djordje200179/GoExtendedLibrary/misc/optional"
+	"github.com/djordje200179/extendedlibrary/misc/comparison"
+	"github.com/djordje200179/extendedlibrary/misc/functions"
+	"github.com/djordje200179/extendedlibrary/misc/optional"
 )
 
 func (stream Stream[T]) ForEach(function func(curr T)) {

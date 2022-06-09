@@ -1,6 +1,6 @@
 package streams
 
-import "github.com/djordje200179/GoExtendedLibrary/misc/optional"
+import "github.com/djordje200179/extendedlibrary/misc/optional"
 
 type signal bool
 

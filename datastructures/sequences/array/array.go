@@ -1,9 +1,9 @@
 package array
 
 import (
-	"github.com/djordje200179/GoExtendedLibrary/datastructures/sequences"
-	"github.com/djordje200179/GoExtendedLibrary/misc/comparison"
-	"github.com/djordje200179/GoExtendedLibrary/streams"
+	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
+	"github.com/djordje200179/extendedlibrary/misc/comparison"
+	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type Array[T any] []T

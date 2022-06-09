@@ -1,7 +1,7 @@
 package sequences
 
 import (
-	"github.com/djordje200179/GoExtendedLibrary/datastructures"
+	"github.com/djordje200179/extendedlibrary/datastructures"
 )
 
 type Iterator[T any] interface {

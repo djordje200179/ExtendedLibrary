@@ -1,8 +1,8 @@
 package hashset
 
 import (
-	"github.com/djordje200179/GoExtendedLibrary/datastructures"
-	"github.com/djordje200179/GoExtendedLibrary/datastructures/maps/hashmap"
+	"github.com/djordje200179/extendedlibrary/datastructures"
+	"github.com/djordje200179/extendedlibrary/datastructures/maps/hashmap"
 )
 
 type Set[T comparable] struct {

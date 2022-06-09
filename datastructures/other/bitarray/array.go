@@ -1,8 +1,8 @@
 package bitarray
 
 import (
-	"github.com/djordje200179/GoExtendedLibrary/datastructures/sequences/array"
-	"github.com/djordje200179/GoExtendedLibrary/streams"
+	"github.com/djordje200179/extendedlibrary/datastructures/sequences/array"
+	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type BitArray struct {

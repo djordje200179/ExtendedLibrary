@@ -1,7 +1,7 @@
 package priorityqueue
 
 import (
-	"github.com/djordje200179/GoExtendedLibrary/datastructures/sequences/linkedlist"
+	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
 )
 
 type Priority bool

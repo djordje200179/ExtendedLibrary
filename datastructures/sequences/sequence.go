@@ -1,8 +1,8 @@
 package sequences
 
 import (
-	"github.com/djordje200179/GoExtendedLibrary/misc/comparison"
-	"github.com/djordje200179/GoExtendedLibrary/streams"
+	"github.com/djordje200179/extendedlibrary/misc/comparison"
+	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type Sequence[T any] interface {

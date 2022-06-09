@@ -1,6 +1,6 @@
 package optional
 
-import "github.com/djordje200179/GoExtendedLibrary/misc/functions"
+import "github.com/djordje200179/extendedlibrary/misc/functions"
 
 type Optional[T any] struct {
 	value T

@@ -1,6 +1,6 @@
 package event
 
-import "github.com/djordje200179/GoExtendedLibrary/concurrency/semaphore"
+import "github.com/djordje200179/extendedlibrary/concurrency/semaphore"
 
 type Event struct {
 	sem semaphore.Semaphore
