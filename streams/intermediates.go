@@ -1,6 +1,9 @@
 package streams
 
-import "github.com/djordje200179/GoExtendedLibrary/misc/functions"
+import (
+	"github.com/djordje200179/GoExtendedLibrary/misc/functions"
+	"sort"
+)
 
 //func (stream Stream[T]) Map[P any](mapper func(curr T) P) Stream[P] {
 //
@@ -10,7 +13,7 @@ func (stream Stream[T]) Filter(predicate functions.Predicate[T]) Stream[T] {
 	ret := create[T]()
 
 	go func() {
-		for <-ret.signal == next {
+		for ret.waitRequest() {
 			for found := false; !found; {
 				data, ok := stream.getNext().Get()
 				if !ok {
@@ -39,7 +42,7 @@ func (stream Stream[T]) Limit(count int) Stream[T] {
 	ret := create[T]()
 
 	go func() {
-		for i := 0; <-ret.signal == next; i++ {
+		for i := 0; ret.waitRequest(); i++ {
 			if i >= count {
 				stream.stop()
 				break
@@ -63,6 +66,34 @@ func (stream Stream[T]) Limit(count int) Stream[T] {
 //
 //}
 
-//func (stream Stream[T]) Sort(less functions.Less[T]) Stream[T] {
-//
-//}
+func (stream Stream[T]) Sort(less functions.Less[T]) Stream[T] {
+	ret := create[T]()
+
+	go func() {
+		var arr []T
+
+		for i := 0; ret.waitRequest(); i++ {
+			if arr == nil {
+				arr = make([]T, 0)
+
+				stream.ForEach(func(data T) {
+					arr = append(arr, data)
+				})
+
+				sort.Slice(arr, func(i, j int) bool {
+					return less(arr[i], arr[j])
+				})
+			}
+
+			if i >= len(arr) {
+				break
+			}
+
+			ret.data <- arr[i]
+		}
+
+		ret.close()
+	}()
+
+	return ret
+}
