@@ -24,7 +24,7 @@ func (stream Stream[T]) Any(tester func(curr T) bool) bool {
 		}
 
 		if tester(data) {
-			stream.signal <- end
+			stream.stop()
 			return true
 		}
 	}
@@ -40,7 +40,7 @@ func (stream Stream[T]) All(tester func(curr T) bool) bool {
 		}
 
 		if !tester(data) {
-			stream.signal <- end
+			stream.stop()
 			return false
 		}
 	}
@@ -107,6 +107,6 @@ func (stream Stream[T]) First() optional.Optional[T] {
 		return optional.Empty[T]()
 	}
 
-	stream.signal <- end
+	stream.stop()
 	return optional.FromValue(data)
 }
