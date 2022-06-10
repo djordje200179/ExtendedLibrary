@@ -63,6 +63,38 @@ func (stream Stream[T]) Limit(count int) Stream[T] {
 	return ret
 }
 
+func (stream Stream[T]) Seek(count int) Stream[T] {
+	ret := create[T]()
+
+	go func() {
+		seeked := false
+		for ret.waitRequest() {
+			if !seeked {
+				for i := 0; i < count; i++ {
+					_, ok := stream.getNext().Get()
+					if !ok {
+						goto end
+					}
+				}
+
+				seeked = true
+			}
+
+			data, ok := stream.getNext().Get()
+			if !ok {
+				break
+			}
+
+			ret.data <- data
+		}
+
+	end:
+		ret.close()
+	}()
+
+	return ret
+}
+
 //func (stream Stream[T]) Group[P any](grouper func(curr T) P) Stream[misc.Pair[P, sequence.Sequence[T]] {
 //
 //}
