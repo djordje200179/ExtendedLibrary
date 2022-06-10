@@ -8,11 +8,12 @@ import (
 
 type Array[T any] []T
 
-func New[T any](capacity int) Array[T] {
-	return make([]T, 0, capacity)
+func New[T any](capacity int) *Array[T] {
+	arr := make([]T, 0, capacity)
+	return (*Array[T])(&arr)
 }
 
-func FromStream[T any](stream streams.Stream[T]) Array[T] {
+func FromStream[T any](stream streams.Stream[T]) *Array[T] {
 	array := New[T](0)
 
 	stream.ForEach(func(value T) {

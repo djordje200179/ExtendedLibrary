@@ -18,15 +18,15 @@ type LinkedList[T any] struct {
 	length int
 }
 
-func New[T any]() LinkedList[T] {
-	return LinkedList[T]{
+func New[T any]() *LinkedList[T] {
+	return &LinkedList[T]{
 		head:   nil,
 		tail:   nil,
 		length: 0,
 	}
 }
 
-func FromStream[T any](stream streams.Stream[T]) LinkedList[T] {
+func FromStream[T any](stream streams.Stream[T]) *LinkedList[T] {
 	list := New[T]()
 
 	stream.ForEach(func(value T) {

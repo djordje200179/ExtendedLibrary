@@ -10,9 +10,9 @@ type BitArray struct {
 	lastElemOff uint8
 }
 
-func New() BitArray {
-	return BitArray{
-		array:       array.New[uint8](),
+func New() *BitArray {
+	return &BitArray{
+		array:       *array.New[uint8](),
 		lastElemOff: 0,
 	}
 }

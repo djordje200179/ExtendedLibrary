@@ -18,8 +18,8 @@ type PeriodicTask struct {
 	stopped bool
 }
 
-func New(task func(), period time.Duration, async bool) PeriodicTask {
-	return PeriodicTask{
+func New(task func(), period time.Duration, async bool) *PeriodicTask {
+	return &PeriodicTask{
 		task:   task,
 		period: period,
 		async:  async,

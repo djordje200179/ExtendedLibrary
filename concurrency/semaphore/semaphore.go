@@ -3,8 +3,8 @@ package semaphore
 type Semaphore struct {
 }
 
-func New(val int) Semaphore {
-	return Semaphore{}
+func New(val int) *Semaphore {
+	return &Semaphore{}
 }
 
 func (s *Semaphore) Wait() {
