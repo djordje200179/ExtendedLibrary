@@ -15,7 +15,13 @@ func New[T comparable]() Set[T] {
 }
 
 func FromStream[T comparable](stream streams.Stream[T]) Set[T] {
-	return Set[T]{linkedlist.FromStream(stream)}
+	set := New[T]()
+
+	stream.ForEach(func(item T) {
+		set.Add(item)
+	})
+
+	return set
 }
 
 func (set Set[T]) Size() int {
