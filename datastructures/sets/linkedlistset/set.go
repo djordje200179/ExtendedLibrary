@@ -12,6 +12,10 @@ func New[T comparable]() Set[T] {
 	return linkedlist.New[T]()
 }
 
+func FromStream[T comparable](stream streams.Stream[T]) Set[T] {
+	return linkedlist.FromStream(stream)
+}
+
 func (set Set[T]) getList() *linkedlist.LinkedList[T] {
 	return set
 }

@@ -3,12 +3,23 @@ package hashset
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps/hashmap"
+	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type Set[T comparable] hashmap.Map[T, bool]
 
 func New[T comparable]() Set[T] {
 	return Set[T](hashmap.New[T, bool]())
+}
+
+func FromStream[T comparable](stream streams.Stream[T]) Set[T] {
+	set := New[T]()
+
+	stream.ForEach(func(item T) {
+		set.Add(item)
+	})
+
+	return set
 }
 
 func (set Set[T]) getMap() hashmap.Map[T, bool] {

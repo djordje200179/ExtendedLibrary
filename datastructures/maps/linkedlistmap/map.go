@@ -14,6 +14,10 @@ func New[K comparable, V any]() Map[K, V] {
 	return linkedlist.New[misc.Pair[K, V]]()
 }
 
+func FromStream[K comparable, V any](stream streams.Stream[misc.Pair[K, V]]) Map[K, V] {
+	return linkedlist.FromStream(stream)
+}
+
 func (m Map[K, V]) getList() *linkedlist.LinkedList[misc.Pair[K, V]] {
 	return m
 }
