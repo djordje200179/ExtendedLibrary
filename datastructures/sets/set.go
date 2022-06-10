@@ -6,6 +6,8 @@ import (
 )
 
 type Set[T comparable] interface {
+	Size() int
+
 	Add(value T)
 	Remove(value T)
 	Contains(value T)

@@ -22,6 +22,10 @@ func FromStream[K comparable, V any](stream streams.Stream[misc.Pair[K, V]]) Map
 	return m
 }
 
+func (m Map[K, V]) Size() int {
+	return len(m)
+}
+
 func (m Map[K, V]) Get(key K) V {
 	return m[key]
 }

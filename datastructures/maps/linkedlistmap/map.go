@@ -32,6 +32,10 @@ func (m Map[K, V]) find(key K) sequences.Iterator[misc.Pair[K, V]] {
 	return nil
 }
 
+func (m Map[K, V]) Size() int {
+	return m.getList().Size()
+}
+
 func (m Map[K, V]) Get(key K) V {
 	return m.find(key).Get().Second
 }

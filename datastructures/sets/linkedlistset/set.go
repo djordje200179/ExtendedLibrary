@@ -20,6 +20,10 @@ func (set Set[T]) getList() *linkedlist.LinkedList[T] {
 	return set
 }
 
+func (set Set[T]) Size() int {
+	return set.getList().Size()
+}
+
 func (set Set[T]) Add(value T) {
 	if !set.Contains(value) {
 		set.getList().Append(value)

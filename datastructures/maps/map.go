@@ -6,6 +6,8 @@ import (
 )
 
 type Map[K comparable, V any] interface {
+	Size() int
+
 	Get(key K) V
 	Set(key K, value V)
 

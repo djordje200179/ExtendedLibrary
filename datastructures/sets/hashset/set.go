@@ -26,6 +26,10 @@ func (set Set[T]) getMap() hashmap.Map[T, bool] {
 	return hashmap.Map[T, bool](set)
 }
 
+func (set Set[T]) Size() int {
+	return set.getMap().Size()
+}
+
 func (set Set[T]) Add(value T) {
 	if !set.Contains(value) {
 		set.getMap().Set(value, true)
