@@ -12,5 +12,5 @@ type Sizer interface {
 }
 
 type Indexer[K, V any] interface {
-	Get(index K) V
+	Get(K) V
 }
