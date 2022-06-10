@@ -6,7 +6,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/misc/optional"
 )
 
-func (stream Stream[T]) ForEach(function func(curr T)) {
+func (stream Stream[T]) ForEach(function functions.ParamCallback[T]) {
 	for {
 		data, ok := stream.getNext().Get()
 		if !ok {
