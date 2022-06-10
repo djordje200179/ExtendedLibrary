@@ -6,32 +6,30 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
-type Set[T comparable] *linkedlist.LinkedList[T]
+type Set[T comparable] struct {
+	list *linkedlist.LinkedList[T]
+}
 
 func New[T comparable]() Set[T] {
-	return linkedlist.New[T]()
+	return Set[T]{linkedlist.New[T]()}
 }
 
 func FromStream[T comparable](stream streams.Stream[T]) Set[T] {
-	return linkedlist.FromStream(stream)
-}
-
-func (set Set[T]) getList() *linkedlist.LinkedList[T] {
-	return set
+	return Set[T]{linkedlist.FromStream(stream)}
 }
 
 func (set Set[T]) Size() int {
-	return set.getList().Size()
+	return set.list.Size()
 }
 
 func (set Set[T]) Add(value T) {
 	if !set.Contains(value) {
-		set.getList().Append(value)
+		set.list.Append(value)
 	}
 }
 
 func (set Set[T]) Remove(value T) {
-	for it := set.getList().Iterator(); it.IsValid(); it.Move() {
+	for it := set.list.Iterator(); it.IsValid(); it.Move() {
 		if it.Get() == value {
 			it.Remove()
 			return
@@ -40,7 +38,7 @@ func (set Set[T]) Remove(value T) {
 }
 
 func (set Set[T]) Contains(value T) bool {
-	for it := set.getList().Iterator(); it.IsValid(); it.Move() {
+	for it := set.list.Iterator(); it.IsValid(); it.Move() {
 		if it.Get() == value {
 			return true
 		}
@@ -50,9 +48,9 @@ func (set Set[T]) Contains(value T) bool {
 }
 
 func (set Set[T]) Iterator() datastructures.Iterator[T] {
-	return set.getList().Iterator()
+	return set.list.Iterator()
 }
 
 func (set Set[T]) Stream() streams.Stream[T] {
-	return set.getList().Stream()
+	return set.list.Stream()
 }

@@ -4,28 +4,26 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
 )
 
-type Queue[T any] *linkedlist.LinkedList[T]
-
-func New[T any]() Queue[T] {
-	return linkedlist.New[T]()
+type Queue[T any] struct {
+	list *linkedlist.LinkedList[T]
 }
 
-func (queue Queue[T]) getList() *linkedlist.LinkedList[T] {
-	return queue
+func New[T any]() Queue[T] {
+	return Queue[T]{linkedlist.New[T]()}
 }
 
 func (queue Queue[T]) Push(value T) {
-	queue.getList().Append(value)
+	queue.list.Append(value)
 }
 
 func (queue Queue[T]) Pop() T {
-	return queue.getList().Remove(0)
+	return queue.list.Remove(0)
 }
 
 func (queue Queue[T]) Peek() T {
-	return queue.getList().Get(0)
+	return queue.list.Get(0)
 }
 
 func (queue Queue[T]) IsEmpty() bool {
-	return queue.getList().Size() == 0
+	return queue.list.Size() == 0
 }
