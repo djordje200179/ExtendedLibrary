@@ -1,6 +1,9 @@
 package streams
 
-import "github.com/djordje200179/extendedlibrary/misc/optional"
+import (
+	"github.com/djordje200179/extendedlibrary/datastructures"
+	"github.com/djordje200179/extendedlibrary/misc/optional"
+)
 
 type signal bool
 
@@ -39,6 +42,14 @@ func (stream Stream[T]) stop() {
 
 func (stream Stream[T]) waitRequest() bool {
 	return <-stream.signal == next
+}
+
+func (stream Stream[T]) Iterator() datastructures.Iterator[T] {
+	return &iterator[T]{
+		stream:  stream,
+		started: false,
+		ended:   false,
+	}
 }
 
 type Streamer[T any] interface {
