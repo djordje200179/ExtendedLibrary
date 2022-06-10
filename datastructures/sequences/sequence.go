@@ -1,14 +1,15 @@
 package sequences
 
 import (
+	"github.com/djordje200179/extendedlibrary/datastructures"
 	"github.com/djordje200179/extendedlibrary/misc/comparison"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type Sequence[T any] interface {
-	Size() int
+	datastructures.Sizer
 
-	Get(index int) T
+	datastructures.Indexer[int, T]
 	Set(index int, value T)
 
 	Append(values ...T)

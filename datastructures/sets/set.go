@@ -6,7 +6,7 @@ import (
 )
 
 type Set[T comparable] interface {
-	Size() int
+	datastructures.Sizer
 
 	Add(value T)
 	Remove(value T)
