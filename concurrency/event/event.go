@@ -1,25 +1,27 @@
 package event
 
-import "github.com/djordje200179/extendedlibrary/concurrency/semaphore"
+import (
+	"sync"
+)
 
 type Event struct {
-	sem semaphore.Semaphore
+	cond *sync.Cond
 }
 
-func New() *Event {
-	return &Event{*semaphore.New(0)}
+func New() Event {
+	return Event{sync.NewCond(&sync.Mutex{})}
 }
 
-func (event *Event) Wait() {
-	event.sem.Wait()
+func (event Event) Wait() {
+	event.cond.L.Lock()
+	event.cond.Wait()
+	event.cond.L.Unlock()
 }
 
 func (event *Event) Notify() {
-	event.sem.Signal()
+	event.cond.Signal()
 }
 
 func (event *Event) NotifyAll() {
-	for event.sem.Value() > 0 {
-		event.sem.Signal()
-	}
+	event.cond.Broadcast()
 }
