@@ -21,7 +21,7 @@ func (messenger *Messenger[T]) Send(signal T) {
 	messenger.ch <- signal
 }
 
-func (messenger *Messenger[T]) Read() optional.Optional[T] {
+func (messenger *Messenger[T]) ReadSync() optional.Optional[T] {
 	if messenger.closed {
 		return optional.Empty[T]()
 	} else {
@@ -40,7 +40,7 @@ func (messenger *Messenger[T]) ReadAsync(callback functions.ParamCallback[T]) {
 	}()
 }
 
-func (messenger *Messenger[T]) ReadIfReady() optional.Optional[T] {
+func (messenger *Messenger[T]) ReadIfHasData() optional.Optional[T] {
 	if messenger.closed {
 		return optional.Empty[T]()
 	}
@@ -53,7 +53,7 @@ func (messenger *Messenger[T]) ReadIfReady() optional.Optional[T] {
 	}
 }
 
-func (messenger *Messenger[T]) IsClosed() bool {
+func (messenger *Messenger[T]) Closed() bool {
 	return messenger.closed
 }
 
