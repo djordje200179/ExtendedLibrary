@@ -8,8 +8,8 @@ import (
 
 func (stream Stream[T]) ForEach(function functions.ParamCallback[T]) {
 	for {
-		data, ok := stream.getNext().Get()
-		if !ok {
+		data, valid := stream.getNext().Get()
+		if !valid {
 			break
 		}
 
@@ -19,8 +19,8 @@ func (stream Stream[T]) ForEach(function functions.ParamCallback[T]) {
 
 func (stream Stream[T]) Any(predicate functions.Predicate[T]) bool {
 	for {
-		data, ok := stream.getNext().Get()
-		if !ok {
+		data, valid := stream.getNext().Get()
+		if !valid {
 			break
 		}
 
@@ -35,8 +35,8 @@ func (stream Stream[T]) Any(predicate functions.Predicate[T]) bool {
 
 func (stream Stream[T]) All(predicate functions.Predicate[T]) bool {
 	for {
-		data, ok := stream.getNext().Get()
-		if !ok {
+		data, valid := stream.getNext().Get()
+		if !valid {
 			break
 		}
 
@@ -53,8 +53,8 @@ func (stream Stream[T]) Count() int {
 	count := 0
 
 	for {
-		_, ok := stream.getNext().Get()
-		if !ok {
+		_, valid := stream.getNext().Get()
+		if !valid {
 			break
 		}
 
@@ -69,8 +69,8 @@ func (stream Stream[T]) Max(comparator comparison.Comparator[T]) optional.Option
 	set := false
 
 	for {
-		data, ok := stream.getNext().Get()
-		if !ok {
+		data, valid := stream.getNext().Get()
+		if !valid {
 			break
 		}
 
@@ -88,8 +88,8 @@ func (stream Stream[T]) Min(comparator comparison.Comparator[T]) optional.Option
 	set := false
 
 	for {
-		data, ok := stream.getNext().Get()
-		if !ok {
+		data, valid := stream.getNext().Get()
+		if !valid {
 			break
 		}
 
@@ -103,8 +103,8 @@ func (stream Stream[T]) Min(comparator comparison.Comparator[T]) optional.Option
 }
 
 func (stream Stream[T]) First() optional.Optional[T] {
-	data, ok := stream.getNext().Get()
-	if !ok {
+	data, valid := stream.getNext().Get()
+	if !valid {
 		return optional.Empty[T]()
 	}
 

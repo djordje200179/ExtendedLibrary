@@ -42,6 +42,10 @@ func (set Set[T]) Contains(value T) bool {
 	return set.m.Contains(value)
 }
 
+func (set Set[T]) Empty() {
+	set.m.Empty()
+}
+
 func (set Set[T]) Iterator() datastructures.Iterator[T] {
 	return iterator[T]{set.m.Iterator()}
 }

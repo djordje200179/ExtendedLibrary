@@ -127,6 +127,12 @@ func (list *LinkedList[T]) Remove(index int) T {
 	return node.value
 }
 
+func (list *LinkedList[T]) Empty() {
+	list.head = nil
+	list.tail = nil
+	list.length = 0
+}
+
 func (list *LinkedList[T]) Sort(comparator comparison.Comparator[T]) {
 	// Implement
 }

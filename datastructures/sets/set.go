@@ -11,6 +11,8 @@ type Set[T comparable] interface {
 	Add(value T)
 	Remove(value T)
 	Contains(value T)
+	
+	Empty()
 
 	Iterator() datastructures.Iterator[T]
 	streams.Streamer[T]

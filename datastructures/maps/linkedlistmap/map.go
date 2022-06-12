@@ -64,6 +64,10 @@ func (m Map[K, V]) Contains(key K) bool {
 	return m.find(key) != nil
 }
 
+func (m Map[K, V]) Empty() {
+	m.list.Empty()
+}
+
 func (m Map[K, V]) Iterator() maps.Iterator[K, V] {
 	return iterator[K, V]{m.list.Iterator()}
 }

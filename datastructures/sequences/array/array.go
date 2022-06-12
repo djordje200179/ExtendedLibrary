@@ -52,6 +52,10 @@ func (array *Array[T]) Remove(index int) T {
 	return value
 }
 
+func (array *Array[T]) Empty() {
+	*array = nil
+}
+
 func (array *Array[T]) Sort(comparator comparison.Comparator[T]) {
 	// Implement
 }

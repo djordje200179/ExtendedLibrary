@@ -43,6 +43,12 @@ func (m Map[K, V]) Contains(key K) bool {
 	return ok
 }
 
+func (m Map[K, V]) Empty() {
+	for k := range m {
+		delete(m, k)
+	}
+}
+
 func (m Map[K, V]) Iterator() maps.Iterator[K, V] {
 	keys := make([]K, 0, len(m))
 
