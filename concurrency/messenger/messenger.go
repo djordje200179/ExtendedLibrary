@@ -1,6 +1,9 @@
 package messenger
 
-import "github.com/djordje200179/extendedlibrary/misc/optional"
+import (
+	"github.com/djordje200179/extendedlibrary/misc/functions"
+	"github.com/djordje200179/extendedlibrary/misc/optional"
+)
 
 type Messenger[T any] struct {
 	ch     chan T
@@ -23,6 +26,30 @@ func (messenger *Messenger[T]) Read() optional.Optional[T] {
 		return optional.Empty[T]()
 	} else {
 		return optional.FromValue(<-messenger.ch)
+	}
+}
+
+func (messenger *Messenger[T]) ReadAsync(callback functions.ParamCallback[T]) {
+	go func() {
+		if messenger.closed {
+			return
+		}
+
+		value := <-messenger.ch
+		callback(value)
+	}()
+}
+
+func (messenger *Messenger[T]) ReadIfReady() optional.Optional[T] {
+	if messenger.closed {
+		return optional.Empty[T]()
+	}
+
+	select {
+	case data := <-messenger.ch:
+		return optional.FromValue(data)
+	default:
+		return optional.Empty[T]()
 	}
 }
 
