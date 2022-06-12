@@ -69,7 +69,10 @@ func (m Map[K, V]) Empty() {
 }
 
 func (m Map[K, V]) Iterator() maps.Iterator[K, V] {
-	return iterator[K, V]{m.list.Iterator()}
+	return iterator[K, V]{
+		m:        m,
+		Iterator: m.list.Iterator(),
+	}
 }
 
 func (m Map[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
