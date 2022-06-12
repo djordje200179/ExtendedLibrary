@@ -13,16 +13,16 @@ type node[T any] struct {
 }
 
 type LinkedList[T any] struct {
-	head   *node[T]
-	tail   *node[T]
-	length int
+	head *node[T]
+	tail *node[T]
+	size int
 }
 
 func New[T any]() *LinkedList[T] {
 	return &LinkedList[T]{
-		head:   nil,
-		tail:   nil,
-		length: 0,
+		head: nil,
+		tail: nil,
+		size: 0,
 	}
 }
 
@@ -57,7 +57,7 @@ func (list *LinkedList[T]) getNode(index int) *node[T] {
 }
 
 func (list *LinkedList[T]) Size() int {
-	return list.length
+	return list.size
 }
 
 func (list *LinkedList[T]) Get(index int) T {
@@ -82,7 +82,7 @@ func (list *LinkedList[T]) Append(values ...T) {
 		list.tail = newNode
 	}
 
-	list.length += len(values)
+	list.size += len(values)
 }
 
 func (list *LinkedList[T]) Insert(index int, value T) {
@@ -122,7 +122,7 @@ func (list *LinkedList[T]) Remove(index int) T {
 		list.tail = prevNode
 	}
 
-	list.length--
+	list.size--
 
 	return node.value
 }
@@ -130,7 +130,7 @@ func (list *LinkedList[T]) Remove(index int) T {
 func (list *LinkedList[T]) Empty() {
 	list.head = nil
 	list.tail = nil
-	list.length = 0
+	list.size = 0
 }
 
 func (list *LinkedList[T]) Sort(comparator comparison.Comparator[T]) {
@@ -148,7 +148,7 @@ func (list *LinkedList[T]) Join(other sequences.Sequence[T]) {
 		second.head.prev = list.tail
 		list.tail = second.tail
 
-		list.length += second.length
+		list.size += second.size
 	default:
 		for it := other.Iterator(); it.IsValid(); it.Move() {
 			list.Append(it.Get())

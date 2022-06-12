@@ -49,5 +49,5 @@ func (it *Iterator[T]) Remove() {
 		it.list.head = next
 	}
 
-	it.list.length--
+	it.list.size--
 }
