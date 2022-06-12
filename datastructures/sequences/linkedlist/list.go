@@ -1,6 +1,7 @@
 package linkedlist
 
 import (
+	"fmt"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
 	"github.com/djordje200179/extendedlibrary/misc/comparison"
 	"github.com/djordje200179/extendedlibrary/streams"
@@ -37,6 +38,10 @@ func FromStream[T any](stream streams.Stream[T]) *LinkedList[T] {
 }
 
 func (list *LinkedList[T]) getNode(index int) *node[T] {
+	if index >= list.size || index < -list.size {
+		panic(fmt.Sprintf("runtime error: index out of range [%d] with length %d", index, list.size))
+	}
+	
 	if index >= 0 {
 		curr := list.head
 		for i := 0; i < index; i++ {
