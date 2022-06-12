@@ -41,24 +41,27 @@ func (list *LinkedList[T]) getNode(index int) *node[T] {
 	if index >= list.size || index < -list.size {
 		panic(fmt.Sprintf("runtime error: index out of range [%d] with length %d", index, list.size))
 	}
-	
-	if index >= 0 {
-		curr := list.head
-		for i := 0; i < index; i++ {
-			curr = curr.next
-		}
 
-		return curr
-	} else {
+	if index < 0 {
 		index = -index - 1
+	}
 
-		curr := list.tail
-		for i := 0; i < index; i++ {
+	var curr *node[T]
+	if index >= 0 {
+		curr = list.head
+	} else {
+		curr = list.tail
+	}
+
+	for i := 0; i < index; i++ {
+		if index >= 0 {
+			curr = curr.next
+		} else {
 			curr = curr.prev
 		}
-
-		return curr
 	}
+
+	return curr
 }
 
 func (list *LinkedList[T]) Size() int {
