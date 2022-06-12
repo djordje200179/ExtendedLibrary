@@ -1,6 +1,7 @@
 package streams
 
 import (
+	"github.com/djordje200179/extendedlibrary/concurrency/messenger"
 	"github.com/djordje200179/extendedlibrary/datastructures"
 	"github.com/djordje200179/extendedlibrary/misc/optional"
 )
@@ -13,35 +14,35 @@ const (
 )
 
 type Stream[T any] struct {
-	data   chan T
-	signal chan signal
+	data     chan T
+	signaler *messenger.Messenger[signal]
 }
 
 func create[T any]() Stream[T] {
 	return Stream[T]{
-		data:   make(chan T),
-		signal: make(chan signal),
+		data:     make(chan T),
+		signaler: messenger.New[signal](),
 	}
 }
 
 func (stream Stream[T]) close() {
 	close(stream.data)
-	close(stream.signal)
+	stream.signaler.Close()
 }
 
 func (stream Stream[T]) getNext() optional.Optional[T] {
-	stream.signal <- next
+	stream.signaler.Send(next)
 
 	data, ok := <-stream.data
 	return optional.New(data, ok)
 }
 
 func (stream Stream[T]) stop() {
-	stream.signal <- end
+	stream.signaler.Send(end)
 }
 
-func (stream Stream[T]) waitRequest() bool {
-	return <-stream.signal == next
+func (stream Stream[T]) waitRequest() signal {
+	return stream.signaler.ReadSync().GetOrPanic()
 }
 
 func (stream Stream[T]) Iterator() datastructures.Iterator[T] {
