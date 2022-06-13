@@ -8,8 +8,8 @@ import (
 
 type Array[T any] []T
 
-func New[T any](capacity int) *Array[T] {
-	arr := make([]T, 0, capacity)
+func New[T any](initialCapacity int) *Array[T] {
+	arr := make([]T, 0, initialCapacity)
 	return (*Array[T])(&arr)
 }
 
