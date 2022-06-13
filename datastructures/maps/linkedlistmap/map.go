@@ -57,7 +57,10 @@ func (m Map[K, V]) Set(key K, value V) {
 }
 
 func (m Map[K, V]) Remove(key K) {
-	m.find(key).Remove()
+	it := m.find(key)
+	if it != nil {
+		it.Remove()
+	}
 }
 
 func (m Map[K, V]) Contains(key K) bool {
