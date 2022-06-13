@@ -4,7 +4,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 )
 
-func Supply[T any](supplier func() T) Stream[T] {
+func Supply[T any](supplier functions.Generator[T]) Stream[T] {
 	stream := create[T]()
 
 	go func() {
