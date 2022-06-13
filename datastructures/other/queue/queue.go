@@ -17,7 +17,8 @@ func (queue Queue[T]) Push(value T) {
 }
 
 func (queue Queue[T]) Pop() T {
-	return queue.list.Remove(0)
+	defer queue.list.Remove(0)
+	return queue.Peek()
 }
 
 func (queue Queue[T]) Peek() T {

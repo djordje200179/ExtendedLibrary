@@ -21,11 +21,13 @@ func (deque Deque[T]) PushBack(value T) {
 }
 
 func (deque Deque[T]) PopFront() T {
-	return deque.list.Remove(0)
+	defer deque.list.Remove(0)
+	return deque.PeekFront()
 }
 
 func (deque Deque[T]) PopBack() T {
-	return deque.list.Remove(-1)
+	defer deque.list.Remove(-1)
+	return deque.PeekBack()
 }
 
 func (deque Deque[T]) PeekFront() T {

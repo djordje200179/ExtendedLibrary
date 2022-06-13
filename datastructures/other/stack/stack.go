@@ -17,7 +17,8 @@ func (stack Stack[T]) Push(value T) {
 }
 
 func (stack Stack[T]) Pop() T {
-	return stack.list.Remove(-1)
+	defer stack.list.Remove(-1)
+	return stack.Peek()
 }
 
 func (stack Stack[T]) Peek() T {

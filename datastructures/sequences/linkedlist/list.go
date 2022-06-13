@@ -112,7 +112,7 @@ func (list *LinkedList[T]) Insert(index int, value T) {
 	}
 }
 
-func (list *LinkedList[T]) Remove(index int) T {
+func (list *LinkedList[T]) Remove(index int) {
 	node := list.getNode(index)
 
 	nextNode := node.next
@@ -131,8 +131,6 @@ func (list *LinkedList[T]) Remove(index int) T {
 	}
 
 	list.size--
-
-	return node.value
 }
 
 func (list *LinkedList[T]) Empty() {

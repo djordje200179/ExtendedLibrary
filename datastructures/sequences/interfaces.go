@@ -22,7 +22,7 @@ type Sequence[T any] interface {
 
 	Append(values ...T)
 	Insert(index int, value T)
-	Remove(index int) T
+	Remove(index int)
 
 	Empty()
 

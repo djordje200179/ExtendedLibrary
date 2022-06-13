@@ -44,12 +44,8 @@ func (array *Array[T]) Insert(index int, value T) {
 	(*array)[index] = value
 }
 
-func (array *Array[T]) Remove(index int) T {
-	value := (*array)[index]
-
+func (array *Array[T]) Remove(index int) {
 	*array = append((*array)[:index], (*array)[index+1:]...)
-
-	return value
 }
 
 func (array *Array[T]) Empty() {
