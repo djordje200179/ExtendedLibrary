@@ -1,11 +1,12 @@
 package deque
 
 import (
+	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
 )
 
 type Deque[T any] struct {
-	list *linkedlist.LinkedList[T]
+	seq sequences.Sequence[T]
 }
 
 func New[T any]() Deque[T] {
@@ -13,31 +14,31 @@ func New[T any]() Deque[T] {
 }
 
 func (deque Deque[T]) PushFront(value T) {
-	deque.list.Insert(0, value)
+	deque.seq.Insert(0, value)
 }
 
 func (deque Deque[T]) PushBack(value T) {
-	deque.list.Append(value)
+	deque.seq.Append(value)
 }
 
 func (deque Deque[T]) PopFront() T {
-	defer deque.list.Remove(0)
+	defer deque.seq.Remove(0)
 	return deque.PeekFront()
 }
 
 func (deque Deque[T]) PopBack() T {
-	defer deque.list.Remove(-1)
+	defer deque.seq.Remove(-1)
 	return deque.PeekBack()
 }
 
 func (deque Deque[T]) PeekFront() T {
-	return deque.list.Get(0)
+	return deque.seq.Get(0)
 }
 
 func (deque Deque[T]) PeekBack() T {
-	return deque.list.Get(-1)
+	return deque.seq.Get(-1)
 }
 
 func (deque Deque[T]) IsEmpty() bool {
-	return deque.list.Size() == 0
+	return deque.seq.Size() == 0
 }

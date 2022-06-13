@@ -1,11 +1,12 @@
 package queue
 
 import (
+	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
 )
 
 type Queue[T any] struct {
-	list *linkedlist.LinkedList[T]
+	seq sequences.Sequence[T]
 }
 
 func New[T any]() Queue[T] {
@@ -13,18 +14,18 @@ func New[T any]() Queue[T] {
 }
 
 func (queue Queue[T]) Push(value T) {
-	queue.list.Append(value)
+	queue.seq.Append(value)
 }
 
 func (queue Queue[T]) Pop() T {
-	defer queue.list.Remove(0)
+	defer queue.seq.Remove(0)
 	return queue.Peek()
 }
 
 func (queue Queue[T]) Peek() T {
-	return queue.list.Get(0)
+	return queue.seq.Get(0)
 }
 
 func (queue Queue[T]) IsEmpty() bool {
-	return queue.list.Size() == 0
+	return queue.seq.Size() == 0
 }
