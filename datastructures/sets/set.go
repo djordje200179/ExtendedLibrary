@@ -6,12 +6,12 @@ import (
 )
 
 type Set[T comparable] interface {
-	datastructures.Sizer
+	Size() int
 
 	Add(value T)
 	Remove(value T)
 	Contains(value T)
-	
+
 	Empty()
 
 	Iterator() datastructures.Iterator[T]

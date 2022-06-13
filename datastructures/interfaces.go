@@ -7,10 +7,9 @@ type Iterator[T any] interface {
 	Get() T
 }
 
-type Sizer interface {
+type Collection[K comparable, V any] interface {
 	Size() int
-}
 
-type Indexer[K, V any] interface {
 	Get(K) V
+	Set(K, V)
 }

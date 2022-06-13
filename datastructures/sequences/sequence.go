@@ -7,10 +7,7 @@ import (
 )
 
 type Sequence[T any] interface {
-	datastructures.Sizer
-
-	datastructures.Indexer[int, T]
-	Set(index int, value T)
+	datastructures.Collection[int, T]
 
 	Append(values ...T)
 	Insert(index int, value T)

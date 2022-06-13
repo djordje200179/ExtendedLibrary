@@ -7,15 +7,13 @@ import (
 )
 
 type Map[K comparable, V any] interface {
-	datastructures.Sizer
+	datastructures.Collection[K, V]
 
-	datastructures.Indexer[K, V]
-	Set(key K, value V)
 	Remove(key K)
 	Contains(key K) bool
 
 	Empty()
-	
+
 	Iterator() Iterator[K, V]
 	streams.Streamer[misc.Pair[K, V]]
 }
