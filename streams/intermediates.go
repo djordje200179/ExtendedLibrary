@@ -6,8 +6,8 @@ import (
 	"sort"
 )
 
-func (stream Stream[T]) Map(mapper func(curr T) any) Stream[any] {
-	ret := create[any]()
+func Map[T, P any](stream Stream[T], mapper func(curr T) P) Stream[P] {
+	ret := create[P]()
 
 	go func() {
 		for ret.waitRequest() {
@@ -23,6 +23,10 @@ func (stream Stream[T]) Map(mapper func(curr T) any) Stream[any] {
 	}()
 
 	return ret
+}
+
+func (stream Stream[T]) MapWithAny(mapper func(curr T) any) Stream[any] {
+	return Map[T, any](stream, mapper)
 }
 
 func (stream Stream[T]) Filter(predictor functions.Predictor[T]) Stream[T] {

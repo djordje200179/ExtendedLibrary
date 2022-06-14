@@ -17,7 +17,7 @@ func (stream Stream[T]) ForEach(function functions.ParamCallback[T]) {
 	}
 }
 
-func (stream Stream[T]) Reduce(accumulator any, reducer functions.Reducer[T, any]) any {
+func Reduce[T, P any](stream Stream[T], accumulator P, reducer functions.Reducer[T, P]) P {
 	acc := accumulator
 
 	for {
@@ -30,6 +30,10 @@ func (stream Stream[T]) Reduce(accumulator any, reducer functions.Reducer[T, any
 	}
 
 	return acc
+}
+
+func (stream Stream[T]) ReduceWithAny(accumulator any, reducer functions.Reducer[T, any]) any {
+	return Reduce[T, any](stream, accumulator, reducer)
 }
 
 func (stream Stream[T]) Any(predictor functions.Predictor[T]) bool {
