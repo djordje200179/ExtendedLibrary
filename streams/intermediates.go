@@ -36,7 +36,7 @@ func (stream Stream[T]) Filter(predicate functions.Predicate[T]) Stream[T] {
 
 	go func() {
 		for ret.waitRequest() {
-			for found := false; !found; {
+			for {
 				elem := stream.getNext()
 				if !elem.HasValue() {
 					goto end
@@ -45,7 +45,7 @@ func (stream Stream[T]) Filter(predicate functions.Predicate[T]) Stream[T] {
 				data := elem.Get()
 				if predicate(data) {
 					ret.data <- data
-					found = true
+					break
 				}
 			}
 		}
