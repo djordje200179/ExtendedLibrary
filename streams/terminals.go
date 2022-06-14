@@ -8,23 +8,23 @@ import (
 
 func (stream Stream[T]) ForEach(function functions.ParamCallback[T]) {
 	for {
-		data, valid := stream.getNext().Get()
-		if !valid {
+		elem := stream.getNext()
+		if !elem.IsPresent() {
 			break
 		}
 
-		function(data)
+		function(elem.GetOrPanic())
 	}
 }
 
 func (stream Stream[T]) Any(predicate functions.Predicate[T]) bool {
 	for {
-		data, valid := stream.getNext().Get()
-		if !valid {
+		elem := stream.getNext()
+		if !elem.IsPresent() {
 			break
 		}
 
-		if predicate(data) {
+		if predicate(elem.GetOrPanic()) {
 			stream.stop()
 			return true
 		}
@@ -35,12 +35,12 @@ func (stream Stream[T]) Any(predicate functions.Predicate[T]) bool {
 
 func (stream Stream[T]) All(predicate functions.Predicate[T]) bool {
 	for {
-		data, valid := stream.getNext().Get()
-		if !valid {
+		elem := stream.getNext()
+		if !elem.IsPresent() {
 			break
 		}
 
-		if !predicate(data) {
+		if !predicate(elem.GetOrPanic()) {
 			stream.stop()
 			return false
 		}
@@ -53,8 +53,8 @@ func (stream Stream[T]) Count() int {
 	count := 0
 
 	for {
-		_, valid := stream.getNext().Get()
-		if !valid {
+		elem := stream.getNext()
+		if !elem.IsPresent() {
 			break
 		}
 
@@ -69,11 +69,12 @@ func (stream Stream[T]) Max(comparator comparison.Comparator[T]) optional.Option
 	set := false
 
 	for {
-		data, valid := stream.getNext().Get()
-		if !valid {
+		elem := stream.getNext()
+		if !elem.IsPresent() {
 			break
 		}
 
+		data := elem.GetOrPanic()
 		if !set || comparator(data, max) == comparison.FirstBigger {
 			max = data
 			set = true
@@ -88,11 +89,12 @@ func (stream Stream[T]) Min(comparator comparison.Comparator[T]) optional.Option
 	set := false
 
 	for {
-		data, valid := stream.getNext().Get()
-		if !valid {
+		elem := stream.getNext()
+		if !elem.IsPresent() {
 			break
 		}
 
+		data := elem.GetOrPanic()
 		if !set || comparator(data, min) == comparison.FirstSmaller {
 			min = data
 			set = true
@@ -103,11 +105,10 @@ func (stream Stream[T]) Min(comparator comparison.Comparator[T]) optional.Option
 }
 
 func (stream Stream[T]) First() optional.Optional[T] {
-	data, valid := stream.getNext().Get()
-	if !valid {
-		return optional.Empty[T]()
+	elem := stream.getNext()
+	if elem.IsPresent() {
+		stream.stop()
 	}
 
-	stream.stop()
-	return optional.FromValue(data)
+	return elem
 }

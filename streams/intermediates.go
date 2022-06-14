@@ -16,11 +16,12 @@ func (stream Stream[T]) Filter(predicate functions.Predicate[T]) Stream[T] {
 	go func() {
 		for ret.waitRequest() {
 			for found := false; !found; {
-				data, ok := stream.getNext().Get()
-				if !ok {
+				elem := stream.getNext()
+				if !elem.IsPresent() {
 					goto end
 				}
 
+				data := elem.GetOrPanic()
 				if predicate(data) {
 					ret.data <- data
 					found = true
@@ -49,12 +50,12 @@ func (stream Stream[T]) Limit(count int) Stream[T] {
 				break
 			}
 
-			data, ok := stream.getNext().Get()
-			if !ok {
+			elem := stream.getNext()
+			if !elem.IsPresent() {
 				break
 			}
 
-			ret.data <- data
+			ret.data <- elem.GetOrPanic()
 		}
 
 		ret.close()
@@ -71,8 +72,8 @@ func (stream Stream[T]) Seek(count int) Stream[T] {
 		for ret.waitRequest() {
 			if !seeked {
 				for i := 0; i < count; i++ {
-					_, ok := stream.getNext().Get()
-					if !ok {
+					elem := stream.getNext()
+					if !elem.IsPresent() {
 						goto end
 					}
 				}
@@ -80,12 +81,12 @@ func (stream Stream[T]) Seek(count int) Stream[T] {
 				seeked = true
 			}
 
-			data, ok := stream.getNext().Get()
-			if !ok {
+			elem := stream.getNext()
+			if !elem.IsPresent() {
 				break
 			}
 
-			ret.data <- data
+			ret.data <- elem.GetOrPanic()
 		}
 
 	end:
