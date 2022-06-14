@@ -41,8 +41,8 @@ func (stream Stream[T]) stop() {
 	stream.signaler.Send(end)
 }
 
-func (stream Stream[T]) waitRequest() signal {
-	return stream.signaler.ReadSync().Get()
+func (stream Stream[T]) waitRequest() bool {
+	return stream.signaler.ReadSync().Get() == next
 }
 
 func (stream Stream[T]) Iterator() datastructures.Iterator[T] {
