@@ -31,6 +31,10 @@ func (stream Stream[T]) close() {
 }
 
 func (stream Stream[T]) getNext() optional.Optional[T] {
+	if stream.signaler.Closed() {
+		return optional.Empty[T]()
+	}
+
 	stream.signaler.Send(next)
 
 	data, ok := <-stream.data
