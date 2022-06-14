@@ -1,7 +1,6 @@
 package streams
 
 import (
-	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/misc/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"sort"
@@ -108,7 +107,7 @@ func (stream Stream[T]) Seek(count int) Stream[T] {
 	return ret
 }
 
-func (stream Stream[T]) Group(mapper functions.Mapper[T, any]) Stream[misc.Pair[any, []T]] {
+/*func (stream Stream[T]) Group(mapper functions.Mapper[T, any]) Stream[misc.Pair[any, []T]] {
 	ret := create[misc.Pair[any, []T]]()
 
 	go func() {
@@ -143,7 +142,7 @@ func (stream Stream[T]) Group(mapper functions.Mapper[T, any]) Stream[misc.Pair[
 	}()
 
 	return ret
-}
+}*/
 
 func (stream Stream[T]) Sort(comparator functions.Comparator[T]) Stream[T] {
 	ret := create[T]()
