@@ -68,5 +68,5 @@ func (array *Array[T]) Iterator() sequences.Iterator[T] {
 }
 
 func (array *Array[T]) Stream() streams.Stream[T] {
-	return streams.FromValues(([]T)(*array)...)
+	return streams.FromSlice(*array)
 }

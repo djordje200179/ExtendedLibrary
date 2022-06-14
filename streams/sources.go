@@ -32,7 +32,7 @@ func Generate[T any](seed T, generator func(curr T) T) Stream[T] {
 	return stream
 }
 
-func FromValues[T any](values ...T) Stream[T] {
+func FromSlice[T any](values []T) Stream[T] {
 	stream := create[T]()
 
 	go func() {
