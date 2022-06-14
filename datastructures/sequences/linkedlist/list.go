@@ -3,7 +3,7 @@ package linkedlist
 import (
 	"fmt"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
-	"github.com/djordje200179/extendedlibrary/misc/comparison"
+	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
@@ -139,7 +139,7 @@ func (list *LinkedList[T]) Empty() {
 	list.size = 0
 }
 
-func (list *LinkedList[T]) Sort(comparator comparison.Comparator[T]) {
+func (list *LinkedList[T]) Sort(comparator functions.Comparator[T]) {
 	// Implement
 }
 

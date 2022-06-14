@@ -7,8 +7,6 @@ import (
 	"sort"
 )
 
-type Mapper[T, P any] func(value T) P
-
 func (stream Stream[T]) Map(mapper func(curr T) any) Stream[any] {
 	ret := create[any]()
 
@@ -28,7 +26,7 @@ func (stream Stream[T]) Map(mapper func(curr T) any) Stream[any] {
 	return ret
 }
 
-func (stream Stream[T]) Filter(predicate functions.Predicate[T]) Stream[T] {
+func (stream Stream[T]) Filter(predictor functions.Predictor[T]) Stream[T] {
 	ret := create[T]()
 
 	go func() {
@@ -40,7 +38,7 @@ func (stream Stream[T]) Filter(predicate functions.Predicate[T]) Stream[T] {
 				}
 
 				data := elem.Get()
-				if predicate(data) {
+				if predictor(data) {
 					ret.data <- data
 					break
 				}
@@ -110,7 +108,7 @@ func (stream Stream[T]) Seek(count int) Stream[T] {
 	return ret
 }
 
-func (stream Stream[T]) Group(mapper Mapper[T, any]) Stream[misc.Pair[any, []T]] {
+func (stream Stream[T]) Group(mapper functions.Mapper[T, any]) Stream[misc.Pair[any, []T]] {
 	ret := create[misc.Pair[any, []T]]()
 
 	go func() {
@@ -147,7 +145,7 @@ func (stream Stream[T]) Group(mapper Mapper[T, any]) Stream[misc.Pair[any, []T]]
 	return ret
 }
 
-func (stream Stream[T]) Sort(comparator comparison.Comparator[T]) Stream[T] {
+func (stream Stream[T]) Sort(comparator functions.Comparator[T]) Stream[T] {
 	ret := create[T]()
 
 	go func() {

@@ -17,11 +17,9 @@ func (stream Stream[T]) ForEach(function functions.ParamCallback[T]) {
 	}
 }
 
-type Reducer[T, P any] func(acc P, value T) P
-
-func (stream Stream[T]) Reduce(accumulator any, reducer Reducer[T, any]) any {
+func (stream Stream[T]) Reduce(accumulator any, reducer functions.Reducer[T, any]) any {
 	acc := accumulator
-	
+
 	for {
 		elem := stream.getNext()
 		if !elem.HasValue() {
@@ -34,14 +32,14 @@ func (stream Stream[T]) Reduce(accumulator any, reducer Reducer[T, any]) any {
 	return acc
 }
 
-func (stream Stream[T]) Any(predicate functions.Predicate[T]) bool {
+func (stream Stream[T]) Any(predictor functions.Predictor[T]) bool {
 	for {
 		elem := stream.getNext()
 		if !elem.HasValue() {
 			break
 		}
 
-		if predicate(elem.Get()) {
+		if predictor(elem.Get()) {
 			stream.stop()
 			return true
 		}
@@ -50,14 +48,14 @@ func (stream Stream[T]) Any(predicate functions.Predicate[T]) bool {
 	return false
 }
 
-func (stream Stream[T]) All(predicate functions.Predicate[T]) bool {
+func (stream Stream[T]) All(predictor functions.Predictor[T]) bool {
 	for {
 		elem := stream.getNext()
 		if !elem.HasValue() {
 			break
 		}
 
-		if !predicate(elem.Get()) {
+		if !predictor(elem.Get()) {
 			stream.stop()
 			return false
 		}
@@ -81,7 +79,7 @@ func (stream Stream[T]) Count() int {
 	return count
 }
 
-func (stream Stream[T]) Max(comparator comparison.Comparator[T]) optional.Optional[T] {
+func (stream Stream[T]) Max(comparator functions.Comparator[T]) optional.Optional[T] {
 	var max T
 	set := false
 
@@ -101,7 +99,7 @@ func (stream Stream[T]) Max(comparator comparison.Comparator[T]) optional.Option
 	return optional.New(max, set)
 }
 
-func (stream Stream[T]) Min(comparator comparison.Comparator[T]) optional.Optional[T] {
+func (stream Stream[T]) Min(comparator functions.Comparator[T]) optional.Optional[T] {
 	var min T
 	set := false
 

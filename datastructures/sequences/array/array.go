@@ -2,7 +2,7 @@ package array
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
-	"github.com/djordje200179/extendedlibrary/misc/comparison"
+	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
@@ -52,7 +52,7 @@ func (array *Array[T]) Empty() {
 	*array = nil
 }
 
-func (array *Array[T]) Sort(comparator comparison.Comparator[T]) {
+func (array *Array[T]) Sort(comparator functions.Comparator[T]) {
 	// Implement
 }
 

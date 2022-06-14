@@ -5,7 +5,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 )
 
-func Supply[T any](supplier functions.Generator[T]) Stream[T] {
+func Supply[T any](supplier functions.EmptyGenerator[T]) Stream[T] {
 	stream := create[T]()
 
 	go func() {
@@ -19,7 +19,7 @@ func Supply[T any](supplier functions.Generator[T]) Stream[T] {
 	return stream
 }
 
-func Generate[T any](seed T, generator func(curr T) T) Stream[T] {
+func Generate[T any](seed T, generator functions.ParamGenerator[T, T]) Stream[T] {
 	stream := create[T]()
 
 	go func() {
