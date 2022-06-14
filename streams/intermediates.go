@@ -1,9 +1,6 @@
 package streams
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/maps/hashmap"
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences/array"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/misc/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
@@ -113,8 +110,8 @@ func (stream Stream[T]) Seek(count int) Stream[T] {
 	return ret
 }
 
-func (stream Stream[T]) Group(mapper Mapper[T, any]) Stream[misc.Pair[any, sequences.Sequence[T]]] {
-	ret := create[misc.Pair[any, sequences.Sequence[T]]]()
+func (stream Stream[T]) Group(mapper Mapper[T, any]) Stream[misc.Pair[any, []T]] {
+	ret := create[misc.Pair[any, []T]]()
 
 	go func() {
 		if !ret.waitRequest() {
@@ -122,23 +119,26 @@ func (stream Stream[T]) Group(mapper Mapper[T, any]) Stream[misc.Pair[any, seque
 			return
 		}
 
-		m := hashmap.New[any, sequences.Sequence[T]]()
+		m := make(map[any][]T)
 		stream.ForEach(func(data T) {
 			key := mapper(data)
 
-			if !m.Contains(key) {
-				m.Set(key, array.New[T](0))
+			_, ok := m[key]
+			if !ok {
+				m[key] = []T{}
 			}
 
-			m.Get(key).Append(data)
+			m[key] = append(m[key], data)
 		})
 
-		it := m.Iterator()
-		ret.data <- it.Get().Get()
-		it.Move()
+		entries := make([]misc.Pair[any, []T], 0, len(m))
+		for key, value := range m {
+			entries = append(entries, misc.Pair[any, []T]{key, value})
+		}
 
-		for ; it.IsValid() && ret.waitRequest(); it.Move() {
-			ret.data <- it.Get().Get()
+		ret.data <- entries[0]
+		for i := 1; i < len(entries) && ret.waitRequest(); i++ {
+			ret.data <- entries[i]
 		}
 
 		ret.close()
@@ -151,25 +151,22 @@ func (stream Stream[T]) Sort(comparator comparison.Comparator[T]) Stream[T] {
 	ret := create[T]()
 
 	go func() {
-		var arr []T
+		if !ret.waitRequest() {
+			ret.close()
+			return
+		}
 
-		for i := 0; (arr == nil || i < len(arr)) && ret.waitRequest(); i++ {
-			if arr == nil {
-				arr = make([]T, 0)
+		arr := make([]T, 0)
+		stream.ForEach(func(data T) {
+			arr = append(arr, data)
+		})
 
-				stream.ForEach(func(data T) {
-					arr = append(arr, data)
-				})
+		sort.Slice(arr, func(i, j int) bool {
+			return comparator(arr[i], arr[j]) == comparison.FirstSmaller
+		})
 
-				sort.Slice(arr, func(i, j int) bool {
-					return comparator(arr[i], arr[j]) == comparison.FirstSmaller
-				})
-			}
-
-			if i >= len(arr) {
-				break
-			}
-
+		ret.data <- arr[0]
+		for i := 1; i < len(arr) && ret.waitRequest(); i++ {
 			ret.data <- arr[i]
 		}
 
