@@ -170,5 +170,5 @@ func (list *LinkedList[T]) Iterator() sequences.Iterator[T] {
 }
 
 func (list *LinkedList[T]) Stream() streams.Stream[T] {
-	return sequences.CreateStream[T](list)
+	return streams.FromIterator[T](list.Iterator())
 }

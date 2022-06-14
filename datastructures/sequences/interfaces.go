@@ -32,12 +32,3 @@ type Sequence[T any] interface {
 	Iterator() Iterator[T]
 	streams.Streamer[T]
 }
-
-func CreateStream[T any](sequence Sequence[T]) streams.Stream[T] {
-	it := sequence.Iterator()
-
-	return streams.Supply(func() T {
-		defer it.Move()
-		return it.Get()
-	})
-}

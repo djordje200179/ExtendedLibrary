@@ -1,6 +1,7 @@
 package streams
 
 import (
+	"github.com/djordje200179/extendedlibrary/datastructures"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 )
 
@@ -58,6 +59,20 @@ func FromChannel[T any](ch <-chan T) Stream[T] {
 			}
 
 			stream.data <- data
+		}
+
+		stream.close()
+	}()
+
+	return stream
+}
+
+func FromIterator[T any](iterator datastructures.Iterator[T]) Stream[T] {
+	stream := create[T]()
+
+	go func() {
+		for it := iterator; it.IsValid() && stream.waitRequest(); it.Move() {
+			stream.data <- iterator.Get()
 		}
 
 		stream.close()
