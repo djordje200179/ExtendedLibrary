@@ -83,19 +83,23 @@ func (stream Stream[T]) Seek(count int) Stream[T] {
 	ret := create[T]()
 
 	go func() {
-		seeked := false
-		for ret.waitRequest() {
-			if !seeked {
-				for i := 0; i < count; i++ {
-					elem := stream.getNext()
-					if !elem.HasValue() {
-						goto end
-					}
-				}
+		if !ret.waitRequest() {
+			stream.stop()
+			return
+		}
 
-				seeked = true
+		for i := 0; i <= count; i++ {
+			elem := stream.getNext()
+			if !elem.HasValue() {
+				goto end
 			}
 
+			if i == count {
+				ret.data <- elem.Get()
+			}
+		}
+
+		for ret.waitRequest() {
 			elem := stream.getNext()
 			if !elem.HasValue() {
 				break
