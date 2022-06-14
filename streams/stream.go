@@ -42,7 +42,7 @@ func (stream Stream[T]) stop() {
 }
 
 func (stream Stream[T]) waitRequest() signal {
-	return stream.signaler.ReadSync().GetOrPanic()
+	return stream.signaler.ReadSync().Get()
 }
 
 func (stream Stream[T]) Iterator() datastructures.Iterator[T] {

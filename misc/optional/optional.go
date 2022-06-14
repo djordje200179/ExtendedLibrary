@@ -24,12 +24,20 @@ func New[T any](value T, valid bool) Optional[T] {
 	}
 }
 
-func (o Optional[T]) IsPresent() bool {
+func (o Optional[T]) HasValue() bool {
 	return o.valid
 }
 
-func (o Optional[T]) Get() (T, bool) {
+func (o Optional[T]) GetPair() (T, bool) {
 	return o.value, o.valid
+}
+
+func (o Optional[T]) Get() T {
+	if o.valid {
+		return o.value
+	} else {
+		panic("No value present")
+	}
 }
 
 func (o Optional[T]) GetOrElse(other T) T {
@@ -40,12 +48,9 @@ func (o Optional[T]) GetOrElse(other T) T {
 	}
 }
 
-func (o Optional[T]) GetOrPanic() T {
-	if o.valid {
-		return o.value
-	} else {
-		panic("No value present")
-	}
+func (o Optional[T]) GetOrDefault() T {
+	var def T
+	return o.GetOrElse(def)
 }
 
 func (o Optional[T]) Process(onValue functions.ParamCallback[T], onEmpty functions.EmptyCallback) {

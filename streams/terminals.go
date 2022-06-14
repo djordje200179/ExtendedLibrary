@@ -9,22 +9,22 @@ import (
 func (stream Stream[T]) ForEach(function functions.ParamCallback[T]) {
 	for {
 		elem := stream.getNext()
-		if !elem.IsPresent() {
+		if !elem.HasValue() {
 			break
 		}
 
-		function(elem.GetOrPanic())
+		function(elem.Get())
 	}
 }
 
 func (stream Stream[T]) Any(predicate functions.Predicate[T]) bool {
 	for {
 		elem := stream.getNext()
-		if !elem.IsPresent() {
+		if !elem.HasValue() {
 			break
 		}
 
-		if predicate(elem.GetOrPanic()) {
+		if predicate(elem.Get()) {
 			stream.stop()
 			return true
 		}
@@ -36,11 +36,11 @@ func (stream Stream[T]) Any(predicate functions.Predicate[T]) bool {
 func (stream Stream[T]) All(predicate functions.Predicate[T]) bool {
 	for {
 		elem := stream.getNext()
-		if !elem.IsPresent() {
+		if !elem.HasValue() {
 			break
 		}
 
-		if !predicate(elem.GetOrPanic()) {
+		if !predicate(elem.Get()) {
 			stream.stop()
 			return false
 		}
@@ -54,7 +54,7 @@ func (stream Stream[T]) Count() int {
 
 	for {
 		elem := stream.getNext()
-		if !elem.IsPresent() {
+		if !elem.HasValue() {
 			break
 		}
 
@@ -70,11 +70,11 @@ func (stream Stream[T]) Max(comparator comparison.Comparator[T]) optional.Option
 
 	for {
 		elem := stream.getNext()
-		if !elem.IsPresent() {
+		if !elem.HasValue() {
 			break
 		}
 
-		data := elem.GetOrPanic()
+		data := elem.Get()
 		if !set || comparator(data, max) == comparison.FirstBigger {
 			max = data
 			set = true
@@ -90,11 +90,11 @@ func (stream Stream[T]) Min(comparator comparison.Comparator[T]) optional.Option
 
 	for {
 		elem := stream.getNext()
-		if !elem.IsPresent() {
+		if !elem.HasValue() {
 			break
 		}
 
-		data := elem.GetOrPanic()
+		data := elem.Get()
 		if !set || comparator(data, min) == comparison.FirstSmaller {
 			min = data
 			set = true
@@ -106,7 +106,7 @@ func (stream Stream[T]) Min(comparator comparison.Comparator[T]) optional.Option
 
 func (stream Stream[T]) First() optional.Optional[T] {
 	elem := stream.getNext()
-	if elem.IsPresent() {
+	if elem.HasValue() {
 		stream.stop()
 	}
 

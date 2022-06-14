@@ -12,7 +12,7 @@ func (it *iterator[T]) IsValid() bool {
 }
 
 func (it *iterator[T]) Move() {
-	data, ok := it.stream.getNext().Get()
+	data, ok := it.stream.getNext().GetPair()
 	if ok {
 		it.current = data
 	} else {
