@@ -17,6 +17,23 @@ func (stream Stream[T]) ForEach(function functions.ParamCallback[T]) {
 	}
 }
 
+type Reducer[T, P any] func(acc P, value T) P
+
+func (stream Stream[T]) Reduce(accumulator any, reducer Reducer[T, any]) any {
+	acc := accumulator
+	
+	for {
+		elem := stream.getNext()
+		if !elem.HasValue() {
+			break
+		}
+
+		acc = reducer(acc, elem.Get())
+	}
+
+	return acc
+}
+
 func (stream Stream[T]) Any(predicate functions.Predicate[T]) bool {
 	for {
 		elem := stream.getNext()
