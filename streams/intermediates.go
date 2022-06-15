@@ -115,43 +115,6 @@ func (stream Stream[T]) Seek(count int) Stream[T] {
 	return ret
 }
 
-/*func (stream Stream[T]) Group(mapper functions.Mapper[T, any]) Stream[misc.Pair[any, []T]] {
-	ret := create[misc.Pair[any, []T]]()
-
-	go func() {
-		if !ret.waitRequest() {
-			ret.close()
-			return
-		}
-
-		m := make(map[any][]T)
-		stream.ForEach(func(data T) {
-			key := mapper(data)
-
-			_, ok := m[key]
-			if !ok {
-				m[key] = []T{}
-			}
-
-			m[key] = append(m[key], data)
-		})
-
-		entries := make([]misc.Pair[any, []T], 0, len(m))
-		for key, value := range m {
-			entries = append(entries, misc.Pair[any, []T]{key, value})
-		}
-
-		ret.data <- entries[0]
-		for i := 1; i < len(entries) && ret.waitRequest(); i++ {
-			ret.data <- entries[i]
-		}
-
-		ret.close()
-	}()
-
-	return ret
-}*/
-
 func (stream Stream[T]) Sort(comparator functions.Comparator[T]) Stream[T] {
 	ret := create[T]()
 

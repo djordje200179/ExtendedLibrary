@@ -4,6 +4,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/misc/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/misc/optional"
+	"github.com/djordje200179/extendedlibrary/streams/collector"
 )
 
 func (stream Stream[T]) ForEach(function functions.ParamCallback[T]) {
@@ -50,6 +51,18 @@ func (stream Stream[T]) Any(predictor functions.Predictor[T]) bool {
 	}
 
 	return false
+}
+
+func Collect[T, R any](stream Stream[T], collector collector.Collector[T, R]) R {
+	stream.ForEach(func(elem T) {
+		collector.Supply(elem)
+	})
+
+	return collector.Finish()
+}
+
+func (stream Stream[T]) CollectWithAny(collector collector.Collector[T, any]) any {
+	return Collect[T, any](stream, collector)
 }
 
 func (stream Stream[T]) All(predictor functions.Predictor[T]) bool {
