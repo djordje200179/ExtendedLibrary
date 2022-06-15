@@ -24,3 +24,7 @@ func (group group[T, K]) Supply(value T) {
 func (group group[T, K]) Finish() map[K][]T {
 	return group.m
 }
+
+func Partition[T any](predictor functions.Predictor[T]) Collector[T, map[bool][]T] {
+	return Group[T](functions.Mapper[T, bool](predictor))
+}
