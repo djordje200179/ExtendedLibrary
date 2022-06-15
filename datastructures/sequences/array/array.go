@@ -13,16 +13,6 @@ func New[T any](initialCapacity int) *Array[T] {
 	return (*Array[T])(&arr)
 }
 
-func FromStream[T any](stream streams.Stream[T]) *Array[T] {
-	array := New[T](0)
-
-	stream.ForEach(func(value T) {
-		array.Append(value)
-	})
-
-	return array
-}
-
 func (array *Array[T]) Size() int {
 	return len(*array)
 }

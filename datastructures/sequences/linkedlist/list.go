@@ -27,16 +27,6 @@ func New[T any]() *LinkedList[T] {
 	}
 }
 
-func FromStream[T any](stream streams.Stream[T]) *LinkedList[T] {
-	list := New[T]()
-
-	stream.ForEach(func(value T) {
-		list.Append(value)
-	})
-
-	return list
-}
-
 func (list *LinkedList[T]) getNode(index int) *node[T] {
 	if index >= list.size || index < -list.size {
 		panic(fmt.Sprintf("runtime error: index out of range [%d] with length %d", index, list.size))
