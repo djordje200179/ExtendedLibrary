@@ -10,6 +10,6 @@ type EmptyGenerator[T any] func() T
 
 type Reducer[T, P any] func(acc P, value T) P
 type Mapper[T, P any] func(value T) P
-type Predictor[T any] func(value T) bool
+type Predictor[T any] Mapper[T, bool]
 
 type Comparator[T any] func(first, second T) comparison.Result
