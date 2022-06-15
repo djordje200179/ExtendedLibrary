@@ -2,7 +2,7 @@ package sequences
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures"
-	"github.com/djordje200179/extendedlibrary/misc/comparison"
+	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
@@ -26,7 +26,7 @@ type Sequence[T any] interface {
 
 	Empty()
 
-	Sort(comparator comparison.Comparator[T])
+	Sort(comparator functions.Comparator[T])
 	Join(other Sequence[T])
 
 	Iterator() Iterator[T]
