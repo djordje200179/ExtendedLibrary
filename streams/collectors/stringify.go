@@ -1,7 +1,8 @@
-package collector
+package collectors
 
 import (
 	"fmt"
+	"github.com/djordje200179/extendedlibrary/streams"
 	"strings"
 )
 
@@ -10,7 +11,7 @@ type stringify[T any] struct {
 	delimiter string
 }
 
-func Stringify[T any](delimiter string) Collector[T, string] {
+func Stringify[T any](delimiter string) streams.Collector[T, string] {
 	return stringify[T]{
 		builder:   new(strings.Builder),
 		delimiter: delimiter,

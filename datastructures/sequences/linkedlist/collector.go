@@ -1,12 +1,14 @@
 package linkedlist
 
-import stream "github.com/djordje200179/extendedlibrary/streams/collector"
+import (
+	"github.com/djordje200179/extendedlibrary/streams"
+)
 
 type collector[T any] struct {
 	list *LinkedList[T]
 }
 
-func Collector[T any]() stream.Collector[T, *LinkedList[T]] {
+func Collector[T any]() streams.Collector[T, *LinkedList[T]] {
 	return collector[T]{
 		list: New[T](),
 	}

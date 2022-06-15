@@ -1,12 +1,14 @@
 package array
 
-import stream "github.com/djordje200179/extendedlibrary/streams/collector"
+import (
+	"github.com/djordje200179/extendedlibrary/streams"
+)
 
 type collector[T any] struct {
 	array *Array[T]
 }
 
-func Collector[T any]() stream.Collector[T, *Array[T]] {
+func Collector[T any]() streams.Collector[T, *Array[T]] {
 	return collector[T]{
 		array: New[T](0),
 	}
