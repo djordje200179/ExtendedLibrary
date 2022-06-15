@@ -14,16 +14,6 @@ func New[T comparable]() Set[T] {
 	return Set[T]{hashmap.New[T, bool]()}
 }
 
-func FromStream[T comparable](stream streams.Stream[T]) Set[T] {
-	set := New[T]()
-
-	stream.ForEach(func(item T) {
-		set.Add(item)
-	})
-
-	return set
-}
-
 func (set Set[T]) Size() int {
 	return set.m.Size()
 }
