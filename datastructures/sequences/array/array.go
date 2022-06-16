@@ -2,8 +2,10 @@ package array
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
+	"github.com/djordje200179/extendedlibrary/misc/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/streams"
+	"sort"
 )
 
 type Array[T any] struct {
@@ -46,7 +48,9 @@ func (array *Array[T]) Empty() {
 }
 
 func (array *Array[T]) Sort(comparator functions.Comparator[T]) {
-	// Implement
+	sort.Slice(array.slice, func(i, j int) bool {
+		return comparator(array.slice[i], array.slice[j]) == comparison.FirstSmaller
+	})
 }
 
 func (array *Array[T]) Join(other sequences.Sequence[T]) {
