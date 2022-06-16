@@ -1,4 +1,4 @@
-package linkedlistmap
+package maps
 
 import (
 	"github.com/djordje200179/extendedlibrary/misc"
@@ -9,9 +9,9 @@ type collector[K comparable, V any] struct {
 	m Map[K, V]
 }
 
-func Collector[K comparable, V any]() streams.Collector[misc.Pair[K, V], Map[K, V]] {
+func Collector[K comparable, V any](empty Map[K, V]) streams.Collector[misc.Pair[K, V], Map[K, V]] {
 	return collector[K, V]{
-		m: New[K, V](),
+		m: empty,
 	}
 }
 
