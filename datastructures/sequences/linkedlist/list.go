@@ -140,10 +140,6 @@ func (list *LinkedList[T]) Sort(comparator functions.Comparator[T]) {
 	}
 }
 
-func (list *LinkedList[T]) Reverse() {
-	// Implement
-}
-
 func (list *LinkedList[T]) Join(other sequences.Sequence[T]) {
 	switch second := other.(type) {
 	case *LinkedList[T]:
