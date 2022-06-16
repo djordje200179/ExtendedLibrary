@@ -6,43 +6,45 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
-type Map[K comparable, V any] map[K]V
+type Map[K comparable, V any] struct {
+	m map[K]V
+}
 
 func New[K comparable, V any]() Map[K, V] {
-	return make(map[K]V)
+	return Map[K, V]{make(map[K]V)}
 }
 
 func (m Map[K, V]) Size() int {
-	return len(m)
+	return len(m.m)
 }
 
 func (m Map[K, V]) Get(key K) V {
-	return m[key]
+	return m.m[key]
 }
 
 func (m Map[K, V]) Set(key K, value V) {
-	m[key] = value
+	m.m[key] = value
 }
 
 func (m Map[K, V]) Remove(key K) {
-	delete(m, key)
+	delete(m.m, key)
 }
 
 func (m Map[K, V]) Contains(key K) bool {
-	_, ok := m[key]
+	_, ok := m.m[key]
 	return ok
 }
 
 func (m Map[K, V]) Empty() {
-	for k := range m {
-		delete(m, k)
+	for k := range m.m {
+		delete(m.m, k)
 	}
 }
 
 func (m Map[K, V]) Iterator() maps.Iterator[K, V] {
-	keys := make([]K, 0, len(m))
+	keys := make([]K, 0, len(m.m))
 
-	for k := range m {
+	for k := range m.m {
 		keys = append(keys, k)
 	}
 
