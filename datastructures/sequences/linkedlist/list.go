@@ -3,6 +3,7 @@ package linkedlist
 import (
 	"fmt"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
+	"github.com/djordje200179/extendedlibrary/misc/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
@@ -130,7 +131,13 @@ func (list *LinkedList[T]) Empty() {
 }
 
 func (list *LinkedList[T]) Sort(comparator functions.Comparator[T]) {
-	// Implement
+	for front := list.head; front.next != nil; front = front.next {
+		for back := front.next; back != nil; back = back.next {
+			if comparator(front.value, back.value) != comparison.FirstSmaller {
+				front.value, back.value = back.value, front.value
+			}
+		}
+	}
 }
 
 func (list *LinkedList[T]) Reverse() {
