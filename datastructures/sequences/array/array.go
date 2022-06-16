@@ -54,7 +54,14 @@ func (array *Array[T]) Sort(comparator functions.Comparator[T]) {
 }
 
 func (array *Array[T]) Join(other sequences.Sequence[T]) {
-	// Implement
+	switch second := other.(type) {
+	case *Array[T]:
+		array.Append(second.slice...)
+	default:
+		for it := other.Iterator(); it.IsValid(); it.Move() {
+			array.Append(it.Get())
+		}
+	}
 }
 
 func (array *Array[T]) Iterator() sequences.Iterator[T] {
