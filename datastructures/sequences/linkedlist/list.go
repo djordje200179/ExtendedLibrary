@@ -72,21 +72,24 @@ func (list *LinkedList[T]) Set(index int, value T) {
 	list.getNode(index).value = value
 }
 
-func (list *LinkedList[T]) Append(values ...T) {
-	for _, value := range values {
-		newNode := &node[T]{value, list.tail, nil}
+func (list *LinkedList[T]) Append(value T) {
+	newNode := &node[T]{value, list.tail, nil}
 
-		if list.tail != nil {
-			list.tail.next = newNode
-			newNode.prev = list.tail
-		} else {
-			list.head = newNode
-		}
-
-		list.tail = newNode
+	if list.tail != nil {
+		list.tail.next = newNode
+		newNode.prev = list.tail
+	} else {
+		list.head = newNode
 	}
+	list.tail = newNode
 
-	list.size += len(values)
+	list.size++
+}
+
+func (list *LinkedList[T]) AppendMany(values ...T) {
+	for _, value := range values {
+		list.Append(value)
+	}
 }
 
 func (list *LinkedList[T]) Insert(index int, value T) {

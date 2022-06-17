@@ -35,8 +35,12 @@ func (array *Array[T]) Set(i int, value T) {
 	array.slice[i] = value
 }
 
-func (array *Array[T]) Append(values ...T) {
-	array.slice = append(array.slice, values...)
+func (array *Array[T]) Append(value T) {
+	array.slice = append(array.slice, value)
+}
+
+func (array *Array[T]) AppendMany(values ...T) {
+	array.slice = append(array.slice, values)
 }
 
 func (array *Array[T]) Insert(index int, value T) {
@@ -61,7 +65,7 @@ func (array *Array[T]) Sort(comparator functions.Comparator[T]) {
 func (array *Array[T]) Join(other sequences.Sequence[T]) {
 	switch second := other.(type) {
 	case *Array[T]:
-		array.Append(second.slice...)
+		array.AppendMany(second.slice...)
 	default:
 		for it := other.Iterator(); it.IsValid(); it.Move() {
 			array.Append(it.Get())
@@ -71,7 +75,7 @@ func (array *Array[T]) Join(other sequences.Sequence[T]) {
 
 func (array *Array[T]) Clone() sequences.Sequence[T] {
 	cloned := New[T](array.Size())
-	cloned.Append(array.slice...)
+	cloned.AppendMany(array.slice...)
 
 	return cloned
 }

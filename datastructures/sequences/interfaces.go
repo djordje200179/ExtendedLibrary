@@ -20,7 +20,8 @@ type Iterator[T any] interface {
 
 type Sequence[T any] interface {
 	datastructures.Collection[int, T]
-	Append(values ...T)
+	Append(value T)
+	AppendMany(values ...T)
 	Insert(index int, value T)
 	Remove(index int)
 
