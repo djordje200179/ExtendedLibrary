@@ -28,6 +28,10 @@ func New[T any]() *LinkedList[T] {
 	}
 }
 
+func Collector[T any]() streams.Collector[T, sequences.Sequence[T]] {
+	return sequences.Collector[T](New[T]())
+}
+
 func (list *LinkedList[T]) getNode(index int) *node[T] {
 	if index >= list.size || index < -list.size {
 		panic(fmt.Sprintf("runtime error: index out of range [%d] with length %d", index, list.size))

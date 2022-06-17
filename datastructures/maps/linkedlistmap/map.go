@@ -16,6 +16,10 @@ func New[K comparable, V any]() Map[K, V] {
 	return Map[K, V]{linkedlist.New[misc.Pair[K, V]]()}
 }
 
+func Collector[K comparable, V any]() streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
+	return maps.Collector[K, V](New[K, V]())
+}
+
 func (m Map[K, V]) find(key K) sequences.Iterator[misc.Pair[K, V]] {
 	for it := m.list.Iterator(); it.IsValid(); it.Move() {
 		if it.Get().First == key {

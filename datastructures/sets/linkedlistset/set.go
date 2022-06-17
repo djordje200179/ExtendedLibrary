@@ -15,6 +15,10 @@ func New[T comparable]() Set[T] {
 	return Set[T]{linkedlist.New[T]()}
 }
 
+func Collector[T comparable]() streams.Collector[T, sets.Set[T]] {
+	return sets.Collector[T](New[T]())
+}
+
 func (set Set[T]) Size() int {
 	return set.list.Size()
 }

@@ -14,6 +14,10 @@ func New[K comparable, V any]() Map[K, V] {
 	return Map[K, V]{make(map[K]V)}
 }
 
+func Collector[K comparable, V any]() streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
+	return maps.Collector[K, V](New[K, V]())
+}
+
 func (m Map[K, V]) Size() int {
 	return len(m.m)
 }

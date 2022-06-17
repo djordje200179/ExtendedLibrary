@@ -18,6 +18,10 @@ func New[T any](initialCapacity int) *Array[T] {
 	}
 }
 
+func Collector[T any]() streams.Collector[T, sequences.Sequence[T]] {
+	return sequences.Collector[T](New[T](0))
+}
+
 func (array *Array[T]) Size() int {
 	return len(array.slice)
 }
