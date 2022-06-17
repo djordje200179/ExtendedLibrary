@@ -22,15 +22,39 @@ func (it *Iterator[T]) Set(value T) {
 }
 
 func (it *Iterator[T]) InsertBefore(value T) {
-	//node := &node[T]{value, nil, nil}
+	node := &node[T]{value, nil, nil}
 
-	// implement
+	prev := it.current.prev
+	next := it.current
+
+	if prev == nil {
+		it.list.head = node
+	} else {
+		prev.next = node
+		node.prev = prev
+	}
+
+	next.prev = node
+
+	it.list.size++
 }
 
 func (it *Iterator[T]) InsertAfter(value T) {
-	//node := &node[T]{value, nil, nil}
+	node := &node[T]{value, nil, nil}
 
-	// implement
+	prev := it.current
+	next := it.current.next
+
+	if next == nil {
+		it.list.tail = node
+	} else {
+		next.prev = node
+		node.next = next
+	}
+
+	prev.next = node
+
+	it.list.size++
 }
 
 func (it *Iterator[T]) Remove() {
