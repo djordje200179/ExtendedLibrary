@@ -1,6 +1,7 @@
 package linkedlistmap
 
 import (
+	"github.com/djordje200179/extendedlibrary/datastructures"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
@@ -21,7 +22,7 @@ func Collector[K comparable, V any]() streams.Collector[misc.Pair[K, V], maps.Ma
 }
 
 func (m Map[K, V]) find(key K) sequences.Iterator[misc.Pair[K, V]] {
-	for it := m.list.Iterator(); it.IsValid(); it.Move() {
+	for it := m.list.ModifyingIterator(); it.IsValid(); it.Move() {
 		if it.Get().First == key {
 			return it
 		}
@@ -69,10 +70,14 @@ func (m Map[K, V]) Clone() maps.Map[K, V] {
 	return Map[K, V]{m.list.Clone().(*linkedlist.LinkedList[misc.Pair[K, V]])}
 }
 
-func (m Map[K, V]) Iterator() maps.Iterator[K, V] {
+func (m Map[K, V]) Iterator() datastructures.Iterator[maps.Entry[K, V]] {
+	return m.ModifyingIterator()
+}
+
+func (m Map[K, V]) ModifyingIterator() maps.Iterator[K, V] {
 	return iterator[K, V]{
 		m:        m,
-		Iterator: m.list.Iterator(),
+		Iterator: m.list.ModifyingIterator(),
 	}
 }
 

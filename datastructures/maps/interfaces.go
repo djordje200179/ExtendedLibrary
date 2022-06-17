@@ -20,6 +20,7 @@ type Map[K comparable, V any] interface {
 	Clear()
 	misc.Cloner[Map[K, V]]
 
-	Iterator() Iterator[K, V]
+	datastructures.Iterable[Entry[K, V]]
+	ModifyingIterator() Iterator[K, V]
 	streams.Streamer[misc.Pair[K, V]]
 }
