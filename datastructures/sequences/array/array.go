@@ -64,6 +64,13 @@ func (array *Array[T]) Join(other sequences.Sequence[T]) {
 	}
 }
 
+func (array *Array[T]) Clone() sequences.Sequence[T] {
+	cloned := New[T](array.Size())
+	cloned.Append(array.slice...)
+
+	return cloned
+}
+
 func (array *Array[T]) Iterator() sequences.Iterator[T] {
 	return &iterator[T]{
 		array: array,

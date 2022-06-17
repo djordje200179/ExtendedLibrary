@@ -41,6 +41,10 @@ func (m Map[K, V]) Empty() {
 	}
 }
 
+func (m Map[K, V]) Clone() Map[K, V] {
+
+}
+
 func (m Map[K, V]) Iterator() maps.Iterator[K, V] {
 	keys := make([]K, 0, len(m.m))
 

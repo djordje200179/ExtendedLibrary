@@ -3,6 +3,7 @@ package linkedlistset
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
+	"github.com/djordje200179/extendedlibrary/datastructures/sets"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
@@ -45,6 +46,10 @@ func (set Set[T]) Contains(value T) bool {
 
 func (set Set[T]) Empty() {
 	set.list.Empty()
+}
+
+func (set Set[T]) Clone() sets.Set[T] {
+	return Set[T]{set.list.Clone().(*linkedlist.LinkedList[T])}
 }
 
 func (set Set[T]) Iterator() datastructures.Iterator[T] {

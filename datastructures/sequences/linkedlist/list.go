@@ -155,6 +155,15 @@ func (list *LinkedList[T]) Join(other sequences.Sequence[T]) {
 	}
 }
 
+func (list *LinkedList[T]) Clone() sequences.Sequence[T] {
+	cloned := New[T]()
+	for it := list.Iterator(); it.IsValid(); it.Move() {
+		cloned.Append(it.Get())
+	}
+
+	return cloned
+}
+
 func (list *LinkedList[T]) Iterator() sequences.Iterator[T] {
 	return &Iterator[T]{
 		list:    list,

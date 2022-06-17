@@ -61,6 +61,10 @@ func (m Map[K, V]) Empty() {
 	m.list.Empty()
 }
 
+func (m Map[K, V]) Clone() Map[K, V] {
+
+}
+
 func (m Map[K, V]) Iterator() maps.Iterator[K, V] {
 	return iterator[K, V]{
 		m:        m,
