@@ -1,6 +1,7 @@
 package array
 
 import (
+	"github.com/djordje200179/extendedlibrary/datastructures"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
 	"github.com/djordje200179/extendedlibrary/misc/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
@@ -75,7 +76,11 @@ func (array *Array[T]) Clone() sequences.Sequence[T] {
 	return cloned
 }
 
-func (array *Array[T]) Iterator() sequences.Iterator[T] {
+func (array *Array[T]) Iterator() datastructures.Iterator[T] {
+	return array.ModifyingIterator()
+}
+
+func (array *Array[T]) ModifyingIterator() sequences.Iterator[T] {
 	return &iterator[T]{
 		array: array,
 		index: 0,

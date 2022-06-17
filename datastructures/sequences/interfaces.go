@@ -29,6 +29,7 @@ type Sequence[T any] interface {
 	Join(other Sequence[T])
 	misc.Cloner[Sequence[T]]
 
-	Iterator() Iterator[T]
+	datastructures.Iterable[T]
+	ModifyingIterator() Iterator[T]
 	streams.Streamer[T]
 }

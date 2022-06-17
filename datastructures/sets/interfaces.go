@@ -16,6 +16,6 @@ type Set[T comparable] interface {
 	Clear()
 	misc.Cloner[Set[T]]
 
-	Iterator() datastructures.Iterator[T]
+	datastructures.Iterable[T]
 	streams.Streamer[T]
 }

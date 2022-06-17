@@ -7,6 +7,10 @@ type Iterator[T any] interface {
 	Get() T
 }
 
+type Iterable[T any] interface {
+	Iterator() Iterator[T]
+}
+
 type Collection[K comparable, V any] interface {
 	Size() int
 

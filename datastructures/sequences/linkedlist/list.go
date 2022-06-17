@@ -2,6 +2,7 @@ package linkedlist
 
 import (
 	"fmt"
+	"github.com/djordje200179/extendedlibrary/datastructures"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
 	"github.com/djordje200179/extendedlibrary/misc/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
@@ -168,7 +169,11 @@ func (list *LinkedList[T]) Clone() sequences.Sequence[T] {
 	return cloned
 }
 
-func (list *LinkedList[T]) Iterator() sequences.Iterator[T] {
+func (list *LinkedList[T]) Iterator() datastructures.Iterator[T] {
+	return list.ModifyingIterator()
+}
+
+func (list *LinkedList[T]) ModifyingIterator() datastructures.Iterator[T] {
 	return &Iterator[T]{
 		list:    list,
 		current: list.head,
