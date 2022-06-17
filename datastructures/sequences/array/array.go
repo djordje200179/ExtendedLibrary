@@ -74,10 +74,12 @@ func (array *Array[T]) Join(other sequences.Sequence[T]) {
 }
 
 func (array *Array[T]) Clone() sequences.Sequence[T] {
-	cloned := New[T](array.Size())
-	cloned.AppendMany(array.slice...)
+	cloned := Array[T]{
+		slice: make([]T, len(array.slice)),
+	}
+	copy(cloned.slice, array.slice)
 
-	return cloned
+	return &cloned
 }
 
 func (array *Array[T]) Iterator() datastructures.Iterator[T] {
