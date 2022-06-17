@@ -30,7 +30,7 @@ func (set Set[T]) Add(value T) {
 }
 
 func (set Set[T]) Remove(value T) {
-	for it := set.list.ModifyingIterator(); it.IsValid(); it.Move() {
+	for it := set.list.ModifyingIterator(); it.Valid(); it.Move() {
 		if it.Get() == value {
 			it.Remove()
 			return
@@ -39,7 +39,7 @@ func (set Set[T]) Remove(value T) {
 }
 
 func (set Set[T]) Contains(value T) bool {
-	for it := set.list.Iterator(); it.IsValid(); it.Move() {
+	for it := set.list.Iterator(); it.Valid(); it.Move() {
 		if it.Get() == value {
 			return true
 		}

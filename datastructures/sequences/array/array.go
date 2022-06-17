@@ -67,7 +67,7 @@ func (array *Array[T]) Join(other sequences.Sequence[T]) {
 	case *Array[T]:
 		array.AppendMany(second.slice...)
 	default:
-		for it := other.Iterator(); it.IsValid(); it.Move() {
+		for it := other.Iterator(); it.Valid(); it.Move() {
 			array.Append(it.Get())
 		}
 	}

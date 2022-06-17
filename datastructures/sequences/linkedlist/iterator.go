@@ -5,7 +5,7 @@ type Iterator[T any] struct {
 	current *node[T]
 }
 
-func (it *Iterator[T]) IsValid() bool {
+func (it *Iterator[T]) Valid() bool {
 	return it.current != nil
 }
 

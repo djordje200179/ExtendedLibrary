@@ -1,7 +1,7 @@
 package datastructures
 
 type Iterator[T any] interface {
-	IsValid() bool
+	Valid() bool
 	Move()
 
 	Get() T

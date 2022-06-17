@@ -7,7 +7,7 @@ type iterator[T any] struct {
 	ended   bool
 }
 
-func (it *iterator[T]) IsValid() bool {
+func (it *iterator[T]) Valid() bool {
 	return !it.ended
 }
 

@@ -22,7 +22,7 @@ func Collector[K comparable, V any]() streams.Collector[misc.Pair[K, V], maps.Ma
 }
 
 func (m Map[K, V]) find(key K) sequences.Iterator[misc.Pair[K, V]] {
-	for it := m.list.ModifyingIterator(); it.IsValid(); it.Move() {
+	for it := m.list.ModifyingIterator(); it.Valid(); it.Move() {
 		if it.Get().First == key {
 			return it
 		}

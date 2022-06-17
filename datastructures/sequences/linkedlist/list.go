@@ -157,7 +157,7 @@ func (list *LinkedList[T]) Join(other sequences.Sequence[T]) {
 
 		list.size += second.size
 	default:
-		for it := other.Iterator(); it.IsValid(); it.Move() {
+		for it := other.Iterator(); it.Valid(); it.Move() {
 			list.Append(it.Get())
 		}
 	}
@@ -165,7 +165,7 @@ func (list *LinkedList[T]) Join(other sequences.Sequence[T]) {
 
 func (list *LinkedList[T]) Clone() sequences.Sequence[T] {
 	cloned := New[T]()
-	for it := list.Iterator(); it.IsValid(); it.Move() {
+	for it := list.Iterator(); it.Valid(); it.Move() {
 		cloned.Append(it.Get())
 	}
 

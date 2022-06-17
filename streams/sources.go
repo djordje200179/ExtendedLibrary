@@ -71,7 +71,7 @@ func FromIterable[T any](iterable datastructures.Iterable[T]) Stream[T] {
 	stream := create[T]()
 
 	go func() {
-		for it := iterable.Iterator(); it.IsValid() && stream.waitRequest(); it.Move() {
+		for it := iterable.Iterator(); it.Valid() && stream.waitRequest(); it.Move() {
 			stream.data <- it.Get()
 		}
 

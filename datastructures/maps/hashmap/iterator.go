@@ -8,7 +8,7 @@ type iterator[K comparable, V any] struct {
 	index int
 }
 
-func (it *iterator[K, V]) IsValid() bool {
+func (it *iterator[K, V]) Valid() bool {
 	return it.index < len(it.keys)
 }
 

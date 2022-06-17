@@ -5,7 +5,7 @@ type iterator[T any] struct {
 	index int
 }
 
-func (it *iterator[T]) IsValid() bool {
+func (it *iterator[T]) Valid() bool {
 	return it.index < it.array.Size()
 }
 
