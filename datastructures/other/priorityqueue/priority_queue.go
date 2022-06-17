@@ -1,8 +1,6 @@
 package priorityqueue
 
-import (
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
-)
+import "container/heap"
 
 type Priority bool
 
@@ -11,37 +9,35 @@ const (
 	BiggerFirst  Priority = true
 )
 
-type nodeData[T any] struct {
-	value    T
-	priority int
-}
-
 type PriorityQueue[T any] struct {
-	list     linkedlist.LinkedList[nodeData[T]]
-	priority Priority
+	heapSlice[T]
 }
 
-func New[T any](priority Priority) PriorityQueue[T] {
-	return PriorityQueue[T]{
-		list:     linkedlist.New[nodeData[T]](),
+func New[T any](priority Priority) *PriorityQueue[T] {
+	return &PriorityQueue[T]{heapSlice[T]{
+		slice:    nil,
+		priority: priority,
+	}}
+}
+
+func (queue *PriorityQueue[T]) Push(value T, priority int) {
+	item := item[T]{
+		value:    value,
 		priority: priority,
 	}
-}
 
-func (queue *PriorityQueue[T]) Push(value T) {
-	for it := queue.list.Iterator(); it.IsValid(); it.Move() {
-		// implement
-	}
+	heap.Push(&queue.heapSlice, item)
 }
 
 func (queue *PriorityQueue[T]) Pop() T {
-	return queue.list.Remove(0).value
+	item := heap.Pop(&queue.heapSlice).(item[T])
+	return item.value
 }
 
 func (queue *PriorityQueue[T]) Peek() T {
-	return queue.list.Get(0).value
+	return queue.heapSlice.slice[0].value
 }
 
 func (queue *PriorityQueue[T]) IsEmpty() bool {
-	return queue.list.Size() == 0
+	return queue.heapSlice.Len() == 0
 }
