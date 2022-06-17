@@ -39,6 +39,6 @@ func (deque Deque[T]) PeekBack() T {
 	return deque.seq.Get(-1)
 }
 
-func (deque Deque[T]) IsEmpty() bool {
+func (deque Deque[T]) Empty() bool {
 	return deque.seq.Size() == 0
 }

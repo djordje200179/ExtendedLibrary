@@ -26,6 +26,6 @@ func (queue Queue[T]) Peek() T {
 	return queue.seq.Get(0)
 }
 
-func (queue Queue[T]) IsEmpty() bool {
+func (queue Queue[T]) Empty() bool {
 	return queue.seq.Size() == 0
 }

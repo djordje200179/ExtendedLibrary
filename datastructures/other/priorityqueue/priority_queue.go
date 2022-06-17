@@ -38,6 +38,6 @@ func (queue *PriorityQueue[T]) Peek() T {
 	return queue.heapSlice.slice[0].value
 }
 
-func (queue *PriorityQueue[T]) IsEmpty() bool {
+func (queue *PriorityQueue[T]) Empty() bool {
 	return queue.heapSlice.Len() == 0
 }

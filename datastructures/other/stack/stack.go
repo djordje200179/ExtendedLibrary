@@ -26,6 +26,6 @@ func (stack Stack[T]) Peek() T {
 	return stack.seq.Get(-1)
 }
 
-func (stack Stack[T]) IsEmpty() bool {
+func (stack Stack[T]) Empty() bool {
 	return stack.seq.Size() == 0
 }
