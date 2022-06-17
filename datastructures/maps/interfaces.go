@@ -17,7 +17,7 @@ type Map[K comparable, V any] interface {
 	Remove(key K)
 	Contains(key K) bool
 
-	Empty()
+	Clear()
 	misc.Cloner[Map[K, V]]
 
 	Iterator() Iterator[K, V]

@@ -37,7 +37,7 @@ func (m Map[K, V]) Contains(key K) bool {
 	return ok
 }
 
-func (m Map[K, V]) Empty() {
+func (m Map[K, V]) Clear() {
 	for k := range m {
 		delete(m, k)
 	}

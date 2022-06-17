@@ -47,7 +47,7 @@ func (array *Array[T]) Remove(index int) {
 	array.slice = append(array.slice[:index], array.slice[index+1:]...)
 }
 
-func (array *Array[T]) Empty() {
+func (array *Array[T]) Clear() {
 	array.slice = nil
 }
 

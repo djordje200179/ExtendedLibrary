@@ -128,7 +128,7 @@ func (list *LinkedList[T]) Remove(index int) {
 	list.size--
 }
 
-func (list *LinkedList[T]) Empty() {
+func (list *LinkedList[T]) Clear() {
 	list.head = nil
 	list.tail = nil
 	list.size = 0

@@ -13,7 +13,7 @@ type Set[T comparable] interface {
 	Remove(value T)
 	Contains(value T) bool
 
-	Empty()
+	Clear()
 	misc.Cloner[Set[T]]
 
 	Iterator() datastructures.Iterator[T]

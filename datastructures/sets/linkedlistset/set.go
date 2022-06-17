@@ -48,8 +48,8 @@ func (set Set[T]) Contains(value T) bool {
 	return false
 }
 
-func (set Set[T]) Empty() {
-	set.list.Empty()
+func (set Set[T]) Clear() {
+	set.list.Clear()
 }
 
 func (set Set[T]) Clone() sets.Set[T] {
