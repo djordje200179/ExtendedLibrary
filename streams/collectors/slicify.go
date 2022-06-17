@@ -5,19 +5,19 @@ import (
 )
 
 type slicify[T any] struct {
-	slice *[]T
+	slice []T
 }
 
 func Slicify[T any]() streams.Collector[T, []T] {
-	return slicify[T]{
-		slice: new([]T),
+	return &slicify[T]{
+		slice: nil,
 	}
 }
 
-func (slicify slicify[T]) Supply(value T) {
-	*slicify.slice = append(*slicify.slice, value)
+func (slicify *slicify[T]) Supply(value T) {
+	slicify.slice = append(slicify.slice, value)
 }
 
-func (slicify slicify[T]) Finish() []T {
-	return *slicify.slice
+func (slicify *slicify[T]) Finish() []T {
+	return slicify.slice
 }

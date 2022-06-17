@@ -7,18 +7,18 @@ import (
 )
 
 type stringify[T any] struct {
-	builder   *strings.Builder
+	builder   strings.Builder
 	delimiter string
 }
 
 func Stringify[T any](delimiter string) streams.Collector[T, string] {
-	return stringify[T]{
-		builder:   new(strings.Builder),
+	return &stringify[T]{
+		builder:   strings.Builder{},
 		delimiter: delimiter,
 	}
 }
 
-func (stringify stringify[T]) Supply(value T) {
+func (stringify *stringify[T]) Supply(value T) {
 	if stringify.builder.Len() > 0 {
 		stringify.builder.WriteString(stringify.delimiter)
 	}
@@ -27,6 +27,6 @@ func (stringify stringify[T]) Supply(value T) {
 	stringify.builder.WriteString(str)
 }
 
-func (stringify stringify[T]) Finish() string {
+func (stringify *stringify[T]) Finish() string {
 	return stringify.builder.String()
 }
