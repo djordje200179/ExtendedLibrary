@@ -42,7 +42,7 @@ func (set Set[T]) Clear() {
 }
 
 func (set Set[T]) Clone() sets.Set[T] {
-	return Set[T]{set.m.Clone()}
+	return Set[T]{set.m.Clone().(hashmap.Map[T, bool])}
 }
 
 func (set Set[T]) Iterator() datastructures.Iterator[T] {
