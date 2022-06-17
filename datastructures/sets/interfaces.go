@@ -11,7 +11,7 @@ type Set[T comparable] interface {
 
 	Add(value T)
 	Remove(value T)
-	Contains(value T)
+	Contains(value T) bool
 
 	Empty()
 	misc.Cloner[Set[T]]
