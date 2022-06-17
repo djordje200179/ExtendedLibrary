@@ -6,12 +6,10 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
-type Map[K comparable, V any] struct {
-	m map[K]V
-}
+type Map[K comparable, V any] map[K]V
 
 func New[K comparable, V any]() Map[K, V] {
-	return Map[K, V]{make(map[K]V)}
+	return make(map[K]V)
 }
 
 func Collector[K comparable, V any]() streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
@@ -19,45 +17,45 @@ func Collector[K comparable, V any]() streams.Collector[misc.Pair[K, V], maps.Ma
 }
 
 func (m Map[K, V]) Size() int {
-	return len(m.m)
+	return len(m)
 }
 
 func (m Map[K, V]) Get(key K) V {
-	return m.m[key]
+	return m[key]
 }
 
 func (m Map[K, V]) Set(key K, value V) {
-	m.m[key] = value
+	m[key] = value
 }
 
 func (m Map[K, V]) Remove(key K) {
-	delete(m.m, key)
+	delete(m, key)
 }
 
 func (m Map[K, V]) Contains(key K) bool {
-	_, ok := m.m[key]
+	_, ok := m[key]
 	return ok
 }
 
 func (m Map[K, V]) Empty() {
-	for k := range m.m {
-		delete(m.m, k)
+	for k := range m {
+		delete(m, k)
 	}
 }
 
 func (m Map[K, V]) Clone() maps.Map[K, V] {
 	cloned := New[K, V]()
-	for k, v := range m.m {
-		cloned.m[k] = v
+	for k, v := range m {
+		cloned[k] = v
 	}
 
 	return cloned
 }
 
 func (m Map[K, V]) Iterator() maps.Iterator[K, V] {
-	keys := make([]K, 0, len(m.m))
+	keys := make([]K, 0, len(m))
 
-	for k := range m.m {
+	for k := range m {
 		keys = append(keys, k)
 	}
 
