@@ -67,12 +67,12 @@ func FromChannel[T any](ch <-chan T) Stream[T] {
 	return stream
 }
 
-func FromIterator[T any](iterator datastructures.Iterator[T]) Stream[T] {
+func FromIterable[T any](iterable datastructures.Iterable[T]) Stream[T] {
 	stream := create[T]()
 
 	go func() {
-		for it := iterator; it.IsValid() && stream.waitRequest(); it.Move() {
-			stream.data <- iterator.Get()
+		for it := iterable.Iterator(); it.IsValid() && stream.waitRequest(); it.Move() {
+			stream.data <- it.Get()
 		}
 
 		stream.close()

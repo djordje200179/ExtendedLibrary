@@ -173,7 +173,7 @@ func (list *LinkedList[T]) Iterator() datastructures.Iterator[T] {
 	return list.ModifyingIterator()
 }
 
-func (list *LinkedList[T]) ModifyingIterator() datastructures.Iterator[T] {
+func (list *LinkedList[T]) ModifyingIterator() sequences.Iterator[T] {
 	return &Iterator[T]{
 		list:    list,
 		current: list.head,
@@ -181,5 +181,5 @@ func (list *LinkedList[T]) ModifyingIterator() datastructures.Iterator[T] {
 }
 
 func (list *LinkedList[T]) Stream() streams.Stream[T] {
-	return streams.FromIterator[T](list.Iterator())
+	return streams.FromIterable[T](list)
 }
