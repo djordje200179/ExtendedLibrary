@@ -1,11 +1,12 @@
 package hashset
 
 import (
+	"github.com/djordje200179/extendedlibrary/datastructures"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 )
 
 type iterator[T comparable] struct {
-	maps.Iterator[T, bool]
+	datastructures.Iterator[maps.Entry[T, bool]]
 }
 
 func (it iterator[T]) Get() T {
