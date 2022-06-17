@@ -65,8 +65,8 @@ func (m Map[K, V]) Empty() {
 	m.list.Empty()
 }
 
-func (m Map[K, V]) Clone() Map[K, V] {
-
+func (m Map[K, V]) Clone() maps.Map[K, V] {
+	return Map[K, V]{m.list.Clone().(*linkedlist.LinkedList[misc.Pair[K, V]])}
 }
 
 func (m Map[K, V]) Iterator() maps.Iterator[K, V] {

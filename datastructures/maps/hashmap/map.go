@@ -45,8 +45,13 @@ func (m Map[K, V]) Empty() {
 	}
 }
 
-func (m Map[K, V]) Clone() Map[K, V] {
+func (m Map[K, V]) Clone() maps.Map[K, V] {
+	cloned := New[K, V]()
+	for k, v := range m.m {
+		cloned.m[k] = v
+	}
 
+	return cloned
 }
 
 func (m Map[K, V]) Iterator() maps.Iterator[K, V] {
