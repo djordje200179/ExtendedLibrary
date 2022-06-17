@@ -3,6 +3,7 @@ package queue
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
+	"github.com/djordje200179/extendedlibrary/misc/functions"
 )
 
 type Queue[T any] struct {
@@ -28,4 +29,10 @@ func (queue Queue[T]) Peek() T {
 
 func (queue Queue[T]) Empty() bool {
 	return queue.seq.Size() == 0
+}
+
+func (queue Queue[T]) ForEach(callback functions.ParamCallback[T]) {
+	for !queue.Empty() {
+		callback(queue.Pop())
+	}
 }

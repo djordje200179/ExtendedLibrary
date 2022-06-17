@@ -3,6 +3,7 @@ package stack
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
+	"github.com/djordje200179/extendedlibrary/misc/functions"
 )
 
 type Stack[T any] struct {
@@ -28,4 +29,10 @@ func (stack Stack[T]) Peek() T {
 
 func (stack Stack[T]) Empty() bool {
 	return stack.seq.Size() == 0
+}
+
+func (stack Stack[T]) ForEach(callback functions.ParamCallback[T]) {
+	for !stack.Empty() {
+		callback(stack.Pop())
+	}
 }

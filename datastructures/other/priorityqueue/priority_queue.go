@@ -1,6 +1,9 @@
 package priorityqueue
 
-import "container/heap"
+import (
+	"container/heap"
+	"github.com/djordje200179/extendedlibrary/misc/functions"
+)
 
 type Priority bool
 
@@ -40,4 +43,10 @@ func (queue *PriorityQueue[T]) Peek() T {
 
 func (queue *PriorityQueue[T]) Empty() bool {
 	return queue.heapSlice.Len() == 0
+}
+
+func (queue *PriorityQueue[T]) ForEach(callback functions.ParamCallback[T]) {
+	for !queue.Empty() {
+		callback(queue.Pop())
+	}
 }
