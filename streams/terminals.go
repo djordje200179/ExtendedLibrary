@@ -135,11 +135,19 @@ func (stream Stream[T]) Min(comparator functions.Comparator[T]) optional.Optiona
 	return optional.New(min, set)
 }
 
-func (stream Stream[T]) First() optional.Optional[T] {
-	elem := stream.getNext()
-	if elem.HasValue() {
-		stream.stop()
+func (stream Stream[T]) First(predictor functions.Predictor[T]) optional.Optional[T] {
+	for {
+		elem := stream.getNext()
+		if !elem.HasValue() {
+			break
+		}
+
+		value := elem.Get()
+		if predictor(value) {
+			stream.stop()
+			return optional.FromValue(value)
+		}
 	}
 
-	return elem
+	return optional.Empty[T]()
 }
