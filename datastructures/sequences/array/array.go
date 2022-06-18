@@ -40,7 +40,7 @@ func (array *Array[T]) Append(value T) {
 }
 
 func (array *Array[T]) AppendMany(values ...T) {
-	array.slice = append(array.slice, values)
+	array.slice = append(array.slice, values...)
 }
 
 func (array *Array[T]) Insert(index int, value T) {
