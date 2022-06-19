@@ -49,7 +49,7 @@ func (set Set[T]) Iterator() datastructures.Iterator[T] {
 	return iterator[T]{set.m.Iterator()}
 }
 
-func (set Set[T]) Stream() streams.Stream[T] {
+func (set Set[T]) Stream() *streams.Stream[T] {
 	it := set.m.Iterator()
 
 	return streams.Supply(func() T {

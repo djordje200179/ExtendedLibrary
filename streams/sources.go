@@ -5,7 +5,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 )
 
-func Supply[T any](supplier functions.EmptyGenerator[T]) Stream[T] {
+func Supply[T any](supplier functions.EmptyGenerator[T]) *Stream[T] {
 	stream := create[T]()
 
 	go func() {
@@ -19,7 +19,7 @@ func Supply[T any](supplier functions.EmptyGenerator[T]) Stream[T] {
 	return stream
 }
 
-func Generate[T any](seed T, generator functions.ParamGenerator[T, T]) Stream[T] {
+func Generate[T any](seed T, generator functions.ParamGenerator[T, T]) *Stream[T] {
 	stream := create[T]()
 
 	go func() {
@@ -33,7 +33,7 @@ func Generate[T any](seed T, generator functions.ParamGenerator[T, T]) Stream[T]
 	return stream
 }
 
-func FromSlice[T any](values []T) Stream[T] {
+func FromSlice[T any](values []T) *Stream[T] {
 	stream := create[T]()
 
 	go func() {
@@ -47,7 +47,7 @@ func FromSlice[T any](values []T) Stream[T] {
 	return stream
 }
 
-func FromChannel[T any](ch <-chan T) Stream[T] {
+func FromChannel[T any](ch <-chan T) *Stream[T] {
 	stream := create[T]()
 
 	go func() {
@@ -67,7 +67,7 @@ func FromChannel[T any](ch <-chan T) Stream[T] {
 	return stream
 }
 
-func FromIterable[T any](iterable datastructures.Iterable[T]) Stream[T] {
+func FromIterable[T any](iterable datastructures.Iterable[T]) *Stream[T] {
 	stream := create[T]()
 
 	go func() {
@@ -81,6 +81,6 @@ func FromIterable[T any](iterable datastructures.Iterable[T]) Stream[T] {
 	return stream
 }
 
-func Range(lower, upper int) Stream[int] {
+func Range(lower, upper int) *Stream[int] {
 	return Generate(lower, functions.Increment).Limit(upper - lower)
 }

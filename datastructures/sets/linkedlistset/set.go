@@ -60,6 +60,6 @@ func (set Set[T]) Iterator() datastructures.Iterator[T] {
 	return set.list.Iterator()
 }
 
-func (set Set[T]) Stream() streams.Stream[T] {
+func (set Set[T]) Stream() *streams.Stream[T] {
 	return set.list.Stream()
 }

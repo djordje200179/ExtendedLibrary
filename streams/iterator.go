@@ -1,7 +1,7 @@
 package streams
 
 type iterator[T any] struct {
-	stream  Stream[T]
+	stream  *Stream[T]
 	current T
 	started bool
 	ended   bool

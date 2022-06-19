@@ -183,6 +183,6 @@ func (list *LinkedList[T]) ModifyingIterator() sequences.Iterator[T] {
 	}
 }
 
-func (list *LinkedList[T]) Stream() streams.Stream[T] {
+func (list *LinkedList[T]) Stream() *streams.Stream[T] {
 	return streams.FromIterable[T](list)
 }

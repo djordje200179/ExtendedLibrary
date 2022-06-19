@@ -93,6 +93,6 @@ func (array *Array[T]) ModifyingIterator() sequences.Iterator[T] {
 	}
 }
 
-func (array *Array[T]) Stream() streams.Stream[T] {
+func (array *Array[T]) Stream() *streams.Stream[T] {
 	return streams.FromSlice(array.slice)
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/misc/optional"
 )
 
-func (stream Stream[T]) ForEach(function functions.ParamCallback[T]) {
+func (stream *Stream[T]) ForEach(function functions.ParamCallback[T]) {
 	for {
 		elem := stream.getNext()
 		if !elem.HasValue() {
@@ -17,7 +17,7 @@ func (stream Stream[T]) ForEach(function functions.ParamCallback[T]) {
 	}
 }
 
-func Reduce[T, P any](stream Stream[T], accumulator P, reducer functions.Reducer[T, P]) P {
+func Reduce[T, P any](stream *Stream[T], accumulator P, reducer functions.Reducer[T, P]) P {
 	acc := accumulator
 
 	for {
@@ -32,11 +32,11 @@ func Reduce[T, P any](stream Stream[T], accumulator P, reducer functions.Reducer
 	return acc
 }
 
-func (stream Stream[T]) ReduceWithAny(accumulator any, reducer functions.Reducer[T, any]) any {
+func (stream *Stream[T]) ReduceWithAny(accumulator any, reducer functions.Reducer[T, any]) any {
 	return Reduce[T, any](stream, accumulator, reducer)
 }
 
-func (stream Stream[T]) Any(predictor functions.Predictor[T]) bool {
+func (stream *Stream[T]) Any(predictor functions.Predictor[T]) bool {
 	for {
 		elem := stream.getNext()
 		if !elem.HasValue() {
@@ -52,7 +52,7 @@ func (stream Stream[T]) Any(predictor functions.Predictor[T]) bool {
 	return false
 }
 
-func Collect[T, R any](stream Stream[T], collector Collector[T, R]) R {
+func Collect[T, R any](stream *Stream[T], collector Collector[T, R]) R {
 	stream.ForEach(func(elem T) {
 		collector.Supply(elem)
 	})
@@ -60,11 +60,11 @@ func Collect[T, R any](stream Stream[T], collector Collector[T, R]) R {
 	return collector.Finish()
 }
 
-func (stream Stream[T]) CollectWithAny(collector Collector[T, any]) any {
+func (stream *Stream[T]) CollectWithAny(collector Collector[T, any]) any {
 	return Collect[T, any](stream, collector)
 }
 
-func (stream Stream[T]) All(predictor functions.Predictor[T]) bool {
+func (stream *Stream[T]) All(predictor functions.Predictor[T]) bool {
 	for {
 		elem := stream.getNext()
 		if !elem.HasValue() {
@@ -80,7 +80,7 @@ func (stream Stream[T]) All(predictor functions.Predictor[T]) bool {
 	return true
 }
 
-func (stream Stream[T]) Count() int {
+func (stream *Stream[T]) Count() int {
 	count := 0
 
 	for {
@@ -95,7 +95,7 @@ func (stream Stream[T]) Count() int {
 	return count
 }
 
-func (stream Stream[T]) Max(comparator functions.Comparator[T]) optional.Optional[T] {
+func (stream *Stream[T]) Max(comparator functions.Comparator[T]) optional.Optional[T] {
 	var max T
 	set := false
 
@@ -115,7 +115,7 @@ func (stream Stream[T]) Max(comparator functions.Comparator[T]) optional.Optiona
 	return optional.New(max, set)
 }
 
-func (stream Stream[T]) Min(comparator functions.Comparator[T]) optional.Optional[T] {
+func (stream *Stream[T]) Min(comparator functions.Comparator[T]) optional.Optional[T] {
 	var min T
 	set := false
 
@@ -135,7 +135,7 @@ func (stream Stream[T]) Min(comparator functions.Comparator[T]) optional.Optiona
 	return optional.New(min, set)
 }
 
-func (stream Stream[T]) First(predictor functions.Predictor[T]) optional.Optional[T] {
+func (stream *Stream[T]) First(predictor functions.Predictor[T]) optional.Optional[T] {
 	for {
 		elem := stream.getNext()
 		if !elem.HasValue() {

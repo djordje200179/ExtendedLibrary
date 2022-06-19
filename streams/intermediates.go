@@ -6,7 +6,7 @@ import (
 	"sort"
 )
 
-func Map[T, P any](stream Stream[T], mapper func(curr T) P) Stream[P] {
+func Map[T, P any](stream *Stream[T], mapper func(curr T) P) *Stream[P] {
 	ret := create[P]()
 
 	go func() {
@@ -25,11 +25,11 @@ func Map[T, P any](stream Stream[T], mapper func(curr T) P) Stream[P] {
 	return ret
 }
 
-func (stream Stream[T]) MapWithAny(mapper func(curr T) any) Stream[any] {
+func (stream *Stream[T]) MapWithAny(mapper func(curr T) any) *Stream[any] {
 	return Map[T, any](stream, mapper)
 }
 
-func (stream Stream[T]) Filter(predictor functions.Predictor[T]) Stream[T] {
+func (stream *Stream[T]) Filter(predictor functions.Predictor[T]) *Stream[T] {
 	ret := create[T]()
 
 	go func() {
@@ -55,7 +55,7 @@ func (stream Stream[T]) Filter(predictor functions.Predictor[T]) Stream[T] {
 	return ret
 }
 
-func (stream Stream[T]) Limit(count int) Stream[T] {
+func (stream *Stream[T]) Limit(count int) *Stream[T] {
 	ret := create[T]()
 
 	go func() {
@@ -79,7 +79,7 @@ func (stream Stream[T]) Limit(count int) Stream[T] {
 	return ret
 }
 
-func (stream Stream[T]) Seek(count int) Stream[T] {
+func (stream *Stream[T]) Seek(count int) *Stream[T] {
 	ret := create[T]()
 
 	go func() {
@@ -115,7 +115,7 @@ func (stream Stream[T]) Seek(count int) Stream[T] {
 	return ret
 }
 
-func (stream Stream[T]) Sort(comparator functions.Comparator[T]) Stream[T] {
+func (stream *Stream[T]) Sort(comparator functions.Comparator[T]) *Stream[T] {
 	ret := create[T]()
 
 	go func() {
