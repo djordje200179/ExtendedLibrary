@@ -15,13 +15,13 @@ const (
 
 type Stream[T any] struct {
 	data     chan T
-	signaler *messenger.Messenger[signal]
+	signaler messenger.Messenger[signal]
 }
 
 func create[T any]() *Stream[T] {
 	return &Stream[T]{
 		data:     make(chan T),
-		signaler: messenger.New[signal](),
+		signaler: *messenger.New[signal](),
 	}
 }
 
