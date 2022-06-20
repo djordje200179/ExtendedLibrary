@@ -54,7 +54,7 @@ func (syncSeq *Sequence[T]) AppendMany(values ...T) {
 	syncSeq.mutex.Lock()
 	defer syncSeq.mutex.Unlock()
 
-	syncSeq.sequence.AppendMany(values)
+	syncSeq.sequence.AppendMany(values...)
 }
 
 func (syncSeq *Sequence[T]) Insert(index int, value T) {
