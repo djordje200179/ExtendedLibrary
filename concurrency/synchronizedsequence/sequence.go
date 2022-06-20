@@ -1,4 +1,4 @@
-package sequence
+package synchronizedsequence
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures"
@@ -8,13 +8,13 @@ import (
 	"sync"
 )
 
-type Sequence[T any] struct {
+type SynchronizedSequence[T any] struct {
 	sequence sequences.Sequence[T]
 	mutex    sync.Mutex
 }
 
-func New[T any](sequence sequences.Sequence[T]) *Sequence[T] {
-	syncSeq := new(Sequence[T])
+func New[T any](sequence sequences.Sequence[T]) *SynchronizedSequence[T] {
+	syncSeq := new(SynchronizedSequence[T])
 
 	syncSeq.sequence = sequence
 	syncSeq.mutex = sync.Mutex{}
@@ -22,88 +22,91 @@ func New[T any](sequence sequences.Sequence[T]) *Sequence[T] {
 	return syncSeq
 }
 
-func (syncSeq *Sequence[T]) Size() int {
+func (syncSeq *SynchronizedSequence[T]) Size() int {
 	syncSeq.mutex.Lock()
 	defer syncSeq.mutex.Unlock()
 
 	return syncSeq.sequence.Size()
 }
 
-func (syncSeq *Sequence[T]) Get(index int) T {
+func (syncSeq *SynchronizedSequence[T]) Get(index int) T {
 	syncSeq.mutex.Lock()
 	defer syncSeq.mutex.Unlock()
 
 	return syncSeq.sequence.Get(index)
 }
 
-func (syncSeq *Sequence[T]) Set(index int, value T) {
+func (syncSeq *SynchronizedSequence[T]) Set(index int, value T) {
 	syncSeq.mutex.Lock()
 	defer syncSeq.mutex.Unlock()
 
 	syncSeq.sequence.Set(index, value)
 }
 
-func (syncSeq *Sequence[T]) Append(value T) {
+func (syncSeq *SynchronizedSequence[T]) Append(value T) {
 	syncSeq.mutex.Lock()
 	defer syncSeq.mutex.Unlock()
 
 	syncSeq.sequence.Append(value)
 }
 
-func (syncSeq *Sequence[T]) AppendMany(values ...T) {
+func (syncSeq *SynchronizedSequence[T]) AppendMany(values ...T) {
 	syncSeq.mutex.Lock()
 	defer syncSeq.mutex.Unlock()
 
 	syncSeq.sequence.AppendMany(values...)
 }
 
-func (syncSeq *Sequence[T]) Insert(index int, value T) {
+func (syncSeq *SynchronizedSequence[T]) Insert(index int, value T) {
 	syncSeq.mutex.Lock()
 	defer syncSeq.mutex.Unlock()
 
 	syncSeq.sequence.Insert(index, value)
 }
 
-func (syncSeq *Sequence[T]) Remove(index int) {
+func (syncSeq *SynchronizedSequence[T]) Remove(index int) {
 	syncSeq.mutex.Lock()
 	defer syncSeq.mutex.Unlock()
 
 	syncSeq.sequence.Remove(index)
 }
 
-func (syncSeq *Sequence[T]) Clear() {
+func (syncSeq *SynchronizedSequence[T]) Clear() {
 	syncSeq.mutex.Lock()
 	defer syncSeq.mutex.Unlock()
 
 	syncSeq.sequence.Clear()
 }
 
-func (syncSeq *Sequence[T]) Sort(comparator functions.Comparator[T]) {
+func (syncSeq *SynchronizedSequence[T]) Sort(comparator functions.Comparator[T]) {
 	syncSeq.mutex.Lock()
 	defer syncSeq.mutex.Unlock()
 
 	syncSeq.sequence.Sort(comparator)
 }
 
-func (syncSeq *Sequence[T]) Join(other sequences.Sequence[T]) {
+func (syncSeq *SynchronizedSequence[T]) Join(other sequences.Sequence[T]) {
 	syncSeq.mutex.Lock()
 	defer syncSeq.mutex.Unlock()
 
 	syncSeq.sequence.Join(other)
 }
 
-func (syncSeq *Sequence[T]) Clone() *Sequence[T] {
+func (syncSeq *SynchronizedSequence[T]) Clone() *SynchronizedSequence[T] {
 	return New[T](syncSeq.sequence.Clone())
 }
 
-func (syncSeq *Sequence[T]) Iterator() datastructures.Iterator[T] {
-	return syncSeq.sequence.Iterator()
+func (syncSeq *SynchronizedSequence[T]) Iterator() datastructures.Iterator[T] {
+	return syncSeq.ModifyingIterator()
 }
 
-func (syncSeq *Sequence[T]) ModifyingIterator() sequences.Iterator[T] {
-	return syncSeq.sequence.ModifyingIterator()
+func (syncSeq *SynchronizedSequence[T]) ModifyingIterator() sequences.Iterator[T] {
+	return iterator[T]{
+		Iterator: syncSeq.sequence.ModifyingIterator(),
+		seq:      syncSeq,
+	}
 }
 
-func (syncSeq *Sequence[T]) Stream() *streams.Stream[T] {
+func (syncSeq *SynchronizedSequence[T]) Stream() *streams.Stream[T] {
 	return syncSeq.sequence.Stream()
 }
