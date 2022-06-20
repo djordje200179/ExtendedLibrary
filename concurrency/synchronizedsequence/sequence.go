@@ -92,7 +92,7 @@ func (syncSeq *SynchronizedSequence[T]) Join(other sequences.Sequence[T]) {
 	syncSeq.sequence.Join(other)
 }
 
-func (syncSeq *SynchronizedSequence[T]) Clone() *SynchronizedSequence[T] {
+func (syncSeq *SynchronizedSequence[T]) Clone() sequences.Sequence[T] {
 	return New[T](syncSeq.sequence.Clone())
 }
 
