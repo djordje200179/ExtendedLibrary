@@ -36,13 +36,17 @@ func Generate[T any](seed T, generator functions.ParamGenerator[T, T]) *Stream[T
 func FromSlice[T any](values []T) *Stream[T] {
 	stream := create[T]()
 
-	go func() {
-		for i := 0; i < len(values) && stream.waitRequest(); i++ {
-			stream.data <- values[i]
-		}
-
+	if len(values) == 0 {
 		stream.close()
-	}()
+	} else {
+		go func() {
+			for i := 0; i < len(values) && stream.waitRequest(); i++ {
+				stream.data <- values[i]
+			}
+
+			stream.close()
+		}()
+	}
 
 	return stream
 }
@@ -70,13 +74,17 @@ func FromChannel[T any](ch <-chan T) *Stream[T] {
 func FromIterable[T any](iterable datastructures.Iterable[T]) *Stream[T] {
 	stream := create[T]()
 
-	go func() {
-		for it := iterable.Iterator(); it.Valid() && stream.waitRequest(); it.Move() {
-			stream.data <- it.Get()
-		}
-
+	if !iterable.Iterator().Valid() {
 		stream.close()
-	}()
+	} else {
+		go func() {
+			for it := iterable.Iterator(); it.Valid() && stream.waitRequest(); it.Move() {
+				stream.data <- it.Get()
+			}
+
+			stream.close()
+		}()
+	}
 
 	return stream
 }

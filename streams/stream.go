@@ -4,6 +4,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/concurrency/messenger"
 	"github.com/djordje200179/extendedlibrary/datastructures"
 	"github.com/djordje200179/extendedlibrary/misc/optional"
+	"sync"
 )
 
 type signal bool
@@ -16,21 +17,31 @@ const (
 type Stream[T any] struct {
 	data     chan T
 	signaler messenger.Messenger[signal]
+	mutex    sync.Mutex
 }
 
 func create[T any]() *Stream[T] {
-	return &Stream[T]{
-		data:     make(chan T),
-		signaler: *messenger.New[signal](),
-	}
+	stream := new(Stream[T])
+
+	stream.data = make(chan T)
+	stream.signaler = messenger.New[signal](0)
+	stream.mutex = sync.Mutex{}
+
+	return stream
 }
 
 func (stream *Stream[T]) close() {
+	stream.mutex.Lock()
+	defer stream.mutex.Unlock()
+
 	close(stream.data)
 	stream.signaler.Close()
 }
 
 func (stream *Stream[T]) getNext() optional.Optional[T] {
+	stream.mutex.Lock()
+	defer stream.mutex.Unlock()
+
 	if stream.signaler.Closed() {
 		return optional.Empty[T]()
 	}
