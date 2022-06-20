@@ -1,8 +1,6 @@
 package main
 
-import (
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
-)
+import "github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
 
 func main() {
 	list := linkedlist.New[int]()
