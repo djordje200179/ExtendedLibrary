@@ -1,4 +1,4 @@
-package synchronizedsequence
+package sequence
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures"
