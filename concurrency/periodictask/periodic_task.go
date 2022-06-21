@@ -19,12 +19,14 @@ type PeriodicTask struct {
 }
 
 func New(task func(), period time.Duration, async bool) *PeriodicTask {
-	return &PeriodicTask{
-		task:   task,
-		period: period,
-		async:  async,
-		signal: make(chan signal),
-	}
+	pTask := new(PeriodicTask)
+
+	pTask.task = task
+	pTask.period = period
+	pTask.async = async
+	pTask.signal = make(chan signal, 1)
+
+	return pTask
 }
 
 func (task *PeriodicTask) wrapper() {
