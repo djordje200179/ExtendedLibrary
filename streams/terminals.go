@@ -48,6 +48,11 @@ func (stream *Stream[T]) All(predictor functions.Predictor[T]) bool {
 	return true
 }
 
+type Collector[T, R any] interface {
+	Supply(value T)
+	Finish() R
+}
+
 func Collect[T, R any](stream *Stream[T], collector Collector[T, R]) R {
 	stream.ForEach(func(elem T) {
 		collector.Supply(elem)
