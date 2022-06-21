@@ -10,15 +10,13 @@ import (
 )
 
 type node[T any] struct {
-	value T
-	prev  *node[T]
-	next  *node[T]
+	value      T
+	prev, next *node[T]
 }
 
 type LinkedList[T any] struct {
-	head *node[T]
-	tail *node[T]
-	size int
+	head, tail *node[T]
+	size       int
 }
 
 func New[T any]() *LinkedList[T] {
@@ -38,15 +36,15 @@ func (list *LinkedList[T]) getNode(index int) *node[T] {
 		panic(fmt.Sprintf("runtime error: index out of range [%d] with length %d", index, list.size))
 	}
 
-	if index < 0 {
-		index = -index - 1
-	}
-
 	var curr *node[T]
 	if index >= 0 {
 		curr = list.head
 	} else {
 		curr = list.tail
+	}
+
+	if index < 0 {
+		index = -index - 1
 	}
 
 	for i := 0; i < index; i++ {
