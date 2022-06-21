@@ -10,12 +10,7 @@ func Map[T, P any](stream *Stream[T], mapper func(curr T) P) *Stream[P] {
 	ret := create[P]()
 
 	go func() {
-		for ret.waitRequest() {
-			elem := stream.getNext()
-			if !elem.HasValue() {
-				break
-			}
-
+		for elem := stream.getNext(); elem.HasValue() && ret.waitRequest(); elem = stream.getNext() {
 			ret.data <- mapper(elem.Get())
 		}
 
@@ -34,8 +29,7 @@ func (stream *Stream[T]) Filter(predictor functions.Predictor[T]) *Stream[T] {
 
 	go func() {
 		for ret.waitRequest() {
-			for {
-				elem := stream.getNext()
+			for elem := stream.getNext(); ; elem = stream.getNext() {
 				if !elem.HasValue() {
 					goto end
 				}
@@ -59,18 +53,13 @@ func (stream *Stream[T]) Limit(count int) *Stream[T] {
 	ret := create[T]()
 
 	go func() {
-		for i := 0; ret.waitRequest(); i++ {
-			if i >= count {
-				stream.stop()
-				break
-			}
-
-			elem := stream.getNext()
-			if !elem.HasValue() {
-				break
-			}
-
+		i := 0
+		for elem := stream.getNext(); i < count && elem.HasValue() && ret.waitRequest(); i, elem = i+1, stream.getNext() {
 			ret.data <- elem.Get()
+		}
+
+		if i == count {
+			stream.stop()
 		}
 
 		ret.close()
