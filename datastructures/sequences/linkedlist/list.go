@@ -146,6 +146,14 @@ func (list *LinkedList[T]) Sort(comparator functions.Comparator[T]) {
 	}
 }
 
+func (list *LinkedList[T]) Reverse() {
+	for curr := list.head; curr != nil; curr = curr.prev {
+		curr.prev, curr.next = curr.next, curr.prev
+	}
+
+	list.head, list.tail = list.tail, list.head
+}
+
 func (list *LinkedList[T]) Join(other sequences.Sequence[T]) {
 	switch second := other.(type) {
 	case *LinkedList[T]:
