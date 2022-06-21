@@ -12,9 +12,9 @@ func (it *iterator[T]) Valid() bool {
 }
 
 func (it *iterator[T]) Move() {
-	data, ok := it.stream.getNext().GetPair()
-	if ok {
-		it.current = data
+	elem := it.stream.getNext()
+	if elem.HasValue() {
+		it.current = elem.Get()
 	} else {
 		it.ended = true
 	}
