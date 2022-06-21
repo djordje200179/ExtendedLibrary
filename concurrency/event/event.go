@@ -18,10 +18,10 @@ func (event Event) Wait() {
 	event.cond.L.Unlock()
 }
 
-func (event *Event) Notify() {
+func (event Event) Notify() {
 	event.cond.Signal()
 }
 
-func (event *Event) NotifyAll() {
+func (event Event) NotifyAll() {
 	event.cond.Broadcast()
 }
