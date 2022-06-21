@@ -78,6 +78,13 @@ func (syncSeq *SynchronizedSequence[T]) Clear() {
 	syncSeq.sequence.Clear()
 }
 
+func (syncSeq *SynchronizedSequence[T]) Reverse() {
+	syncSeq.mutex.Lock()
+	defer syncSeq.mutex.Unlock()
+
+	syncSeq.sequence.Reverse()
+}
+
 func (syncSeq *SynchronizedSequence[T]) Sort(comparator functions.Comparator[T]) {
 	syncSeq.mutex.Lock()
 	defer syncSeq.mutex.Unlock()

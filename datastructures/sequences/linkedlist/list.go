@@ -136,6 +136,14 @@ func (list *LinkedList[T]) Clear() {
 	list.size = 0
 }
 
+func (list *LinkedList[T]) Reverse() {
+	for curr := list.head; curr != nil; curr = curr.prev {
+		curr.prev, curr.next = curr.next, curr.prev
+	}
+
+	list.head, list.tail = list.tail, list.head
+}
+
 func (list *LinkedList[T]) Sort(comparator functions.Comparator[T]) {
 	for front := list.head; front.next != nil; front = front.next {
 		for back := front.next; back != nil; back = back.next {
@@ -144,14 +152,6 @@ func (list *LinkedList[T]) Sort(comparator functions.Comparator[T]) {
 			}
 		}
 	}
-}
-
-func (list *LinkedList[T]) Reverse() {
-	for curr := list.head; curr != nil; curr = curr.prev {
-		curr.prev, curr.next = curr.next, curr.prev
-	}
-
-	list.head, list.tail = list.tail, list.head
 }
 
 func (list *LinkedList[T]) Join(other sequences.Sequence[T]) {

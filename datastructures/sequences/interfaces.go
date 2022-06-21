@@ -26,6 +26,7 @@ type Sequence[T any] interface {
 	Remove(index int)
 
 	Clear()
+	Reverse()
 	Sort(comparator functions.Comparator[T])
 	Join(other Sequence[T])
 	misc.Cloner[Sequence[T]]

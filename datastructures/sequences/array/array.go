@@ -56,6 +56,13 @@ func (array *Array[T]) Clear() {
 	array.slice = nil
 }
 
+func (array *Array[T]) Reverse() {
+	n := len(array.slice)
+	for i := 0; i < n/2; i++ {
+		array.slice[i], array.slice[n-1-i] = array.slice[n-1-i], array.slice[i]
+	}
+}
+
 func (array *Array[T]) Sort(comparator functions.Comparator[T]) {
 	sort.Slice(array.slice, func(i, j int) bool {
 		return comparator(array.slice[i], array.slice[j]) == comparison.FirstSmaller
