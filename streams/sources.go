@@ -33,6 +33,10 @@ func Generate[T any](seed T, generator functions.ParamGenerator[T, T]) *Stream[T
 	return stream
 }
 
+func FromValues[T any](values ...T) *Stream[T] {
+	return FromSlice[T](values)
+}
+
 func FromSlice[T any](values []T) *Stream[T] {
 	stream := create[T]()
 
