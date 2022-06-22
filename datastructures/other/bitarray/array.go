@@ -12,7 +12,7 @@ type BitArray struct {
 
 func New() *BitArray {
 	return &BitArray{
-		array:       *array.New[uint8](0),
+		array:       *array.New[uint8](),
 		lastElemOff: 0,
 	}
 }

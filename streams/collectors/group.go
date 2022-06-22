@@ -23,7 +23,7 @@ func (collector groupCollector[T, K]) Supply(value T) {
 	key := collector.mapper(value)
 
 	if !collector.m.Contains(key) {
-		collector.m.Set(key, array.New[T](0))
+		collector.m.Set(key, array.New[T]())
 	}
 
 	arr := collector.m.Get(key)

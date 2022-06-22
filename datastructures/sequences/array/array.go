@@ -11,13 +11,22 @@ import (
 
 type Array[T any] []T
 
-func New[T any](initialCapacity int) *Array[T] {
+func New[T any]() *Array[T] {
+	return NewWithCapacity[T](0)
+}
+
+func NewWithSize[T any](initialSize int) *Array[T] {
+	slice := make([]T, initialSize)
+	return (*Array[T])(&slice)
+}
+
+func NewWithCapacity[T any](initialCapacity int) *Array[T] {
 	slice := make([]T, 0, initialCapacity)
 	return (*Array[T])(&slice)
 }
 
 func Collector[T any]() streams.Collector[T, sequences.Sequence[T]] {
-	return sequences.Collector[T](New[T](0))
+	return sequences.Collector[T](New[T]())
 }
 
 func (array *Array[T]) Size() int {
@@ -80,10 +89,10 @@ func (array *Array[T]) Join(other sequences.Sequence[T]) {
 }
 
 func (array *Array[T]) Clone() sequences.Sequence[T] {
-	clonedSlice := make([]T, len(array.Slice()))
-	copy(clonedSlice, array.Slice())
+	cloned := NewWithSize[T](array.Size())
+	copy(cloned.Slice(), array.Slice())
 
-	return (*Array[T])(&clonedSlice)
+	return cloned
 }
 
 func (array *Array[T]) Iterator() datastructures.Iterator[T] {
