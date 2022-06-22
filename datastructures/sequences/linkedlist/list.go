@@ -46,6 +46,7 @@ func Collector[T any]() streams.Collector[T, sequences.Sequence[T]] {
 
 func (list *LinkedList[T]) getNode(index int) *node[T] {
 	if index >= list.size || index < -list.size {
+		//TODO: Improve panic type
 		panic(fmt.Sprintf("runtime error: index out of range [%d] with length %d", index, list.size))
 	}
 
