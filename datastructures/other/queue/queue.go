@@ -1,41 +1,39 @@
 package queue
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 )
 
 type Queue[T any] struct {
-	seq sequences.Sequence[T]
+	slice []T
 }
 
-func New[T any]() Queue[T] {
-	return NewFrom[T](linkedlist.New[T]())
+func New[T any]() *Queue[T] {
+	queue := new(Queue[T])
+	queue.slice = make([]T, 0)
+
+	return queue
 }
 
-func NewFrom[T any](sequence sequences.Sequence[T]) Queue[T] {
-	return Queue[T]{sequence}
+func (queue *Queue[T]) Push(value T) {
+	queue.slice = append(queue.slice, value)
 }
 
-func (queue Queue[T]) Push(value T) {
-	queue.seq.Append(value)
+func (queue *Queue[T]) Pop() T {
+	value := queue.Peek()
+	queue.slice = queue.slice[1:]
+	return value
 }
 
-func (queue Queue[T]) Pop() T {
-	defer queue.seq.Remove(0)
-	return queue.Peek()
+func (queue *Queue[T]) Peek() T {
+	return queue.slice[0]
 }
 
-func (queue Queue[T]) Peek() T {
-	return queue.seq.Get(0)
+func (queue *Queue[T]) Empty() bool {
+	return len(queue.slice) == 0
 }
 
-func (queue Queue[T]) Empty() bool {
-	return queue.seq.Size() == 0
-}
-
-func (queue Queue[T]) ForEach(callback functions.ParamCallback[T]) {
+func (queue *Queue[T]) ForEach(callback functions.ParamCallback[T]) {
 	for !queue.Empty() {
 		callback(queue.Pop())
 	}

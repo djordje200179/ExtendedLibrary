@@ -1,41 +1,39 @@
 package stack
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 )
 
 type Stack[T any] struct {
-	seq sequences.Sequence[T]
+	slice []T
 }
 
-func New[T any]() Stack[T] {
-	return NewFrom[T](linkedlist.New[T]())
+func New[T any]() *Stack[T] {
+	stack := new(Stack[T])
+	stack.slice = make([]T, 0)
+
+	return stack
 }
 
-func NewFrom[T any](sequence sequences.Sequence[T]) Stack[T] {
-	return Stack[T]{sequence}
+func (stack *Stack[T]) Push(value T) {
+	stack.slice = append(stack.slice, value)
 }
 
-func (stack Stack[T]) Push(value T) {
-	stack.seq.Append(value)
+func (stack *Stack[T]) Pop() T {
+	value := stack.Peek()
+	stack.slice = stack.slice[:len(stack.slice)-1]
+	return value
 }
 
-func (stack Stack[T]) Pop() T {
-	defer stack.seq.Remove(-1)
-	return stack.Peek()
+func (stack *Stack[T]) Peek() T {
+	return stack.slice[len(stack.slice)-1]
 }
 
-func (stack Stack[T]) Peek() T {
-	return stack.seq.Get(-1)
+func (stack *Stack[T]) Empty() bool {
+	return len(stack.slice) == 0
 }
 
-func (stack Stack[T]) Empty() bool {
-	return stack.seq.Size() == 0
-}
-
-func (stack Stack[T]) ForEach(callback functions.ParamCallback[T]) {
+func (stack *Stack[T]) ForEach(callback functions.ParamCallback[T]) {
 	for !stack.Empty() {
 		callback(stack.Pop())
 	}

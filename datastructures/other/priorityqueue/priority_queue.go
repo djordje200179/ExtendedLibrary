@@ -13,40 +13,42 @@ const (
 )
 
 type PriorityQueue[T any] struct {
-	hs *heapSlice[T]
+	hs heapSlice[T]
 }
 
-func New[T any](priority Priority) PriorityQueue[T] {
-	return PriorityQueue[T]{&heapSlice[T]{
-		slice:    nil,
-		priority: priority,
-	}}
+func New[T any](priority Priority) *PriorityQueue[T] {
+	pq := new(PriorityQueue[T])
+
+	pq.hs.slice = nil
+	pq.hs.priority = priority
+
+	return pq
 }
 
-func (queue PriorityQueue[T]) Push(value T, priority int) {
+func (pq *PriorityQueue[T]) Push(value T, priority int) {
 	item := item[T]{
 		value:    value,
 		priority: priority,
 	}
 
-	heap.Push(queue.hs, item)
+	heap.Push(&pq.hs, item)
 }
 
-func (queue PriorityQueue[T]) Pop() T {
-	item := heap.Pop(queue.hs).(item[T])
+func (pq *PriorityQueue[T]) Pop() T {
+	item := heap.Pop(&pq.hs).(item[T])
 	return item.value
 }
 
-func (queue PriorityQueue[T]) Peek() T {
-	return queue.hs.slice[0].value
+func (pq *PriorityQueue[T]) Peek() T {
+	return pq.hs.slice[0].value
 }
 
-func (queue PriorityQueue[T]) Empty() bool {
-	return queue.hs.Len() == 0
+func (pq *PriorityQueue[T]) Empty() bool {
+	return pq.hs.Len() == 0
 }
 
-func (queue PriorityQueue[T]) ForEach(callback functions.ParamCallback[T]) {
-	for !queue.Empty() {
-		callback(queue.Pop())
+func (pq *PriorityQueue[T]) ForEach(callback functions.ParamCallback[T]) {
+	for !pq.Empty() {
+		callback(pq.Pop())
 	}
 }

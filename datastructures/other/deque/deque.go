@@ -1,48 +1,48 @@
 package deque
 
-import (
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
-)
-
 type Deque[T any] struct {
-	seq sequences.Sequence[T]
+	slice []T
 }
 
-func New[T any]() Deque[T] {
-	return NewFrom[T](linkedlist.New[T]())
+func New[T any]() *Deque[T] {
+	deque := new(Deque[T])
+	deque.slice = make([]T, 0)
+
+	return deque
 }
 
-func NewFrom[T any](sequence sequences.Sequence[T]) Deque[T] {
-	return Deque[T]{sequence}
+func (deque *Deque[T]) PushFront(value T) {
+	newSlice := make([]T, len(deque.slice)+1)
+	newSlice[0] = value
+	copy(newSlice[1:], deque.slice)
+
+	deque.slice = newSlice
 }
 
-func (deque Deque[T]) PushFront(value T) {
-	deque.seq.Insert(0, value)
+func (deque *Deque[T]) PushBack(value T) {
+	deque.slice = append(deque.slice, value)
 }
 
-func (deque Deque[T]) PushBack(value T) {
-	deque.seq.Append(value)
+func (deque *Deque[T]) PopFront() T {
+	value := deque.PeekFront()
+	deque.slice = deque.slice[1:]
+	return value
 }
 
-func (deque Deque[T]) PopFront() T {
-	defer deque.seq.Remove(0)
-	return deque.PeekFront()
+func (deque *Deque[T]) PopBack() T {
+	value := deque.PeekBack()
+	deque.slice = deque.slice[:len(deque.slice)-1]
+	return value
 }
 
-func (deque Deque[T]) PopBack() T {
-	defer deque.seq.Remove(-1)
-	return deque.PeekBack()
+func (deque *Deque[T]) PeekFront() T {
+	return deque.slice[0]
 }
 
-func (deque Deque[T]) PeekFront() T {
-	return deque.seq.Get(0)
+func (deque *Deque[T]) PeekBack() T {
+	return deque.slice[len(deque.slice)-1]
 }
 
-func (deque Deque[T]) PeekBack() T {
-	return deque.seq.Get(-1)
-}
-
-func (deque Deque[T]) Empty() bool {
-	return deque.seq.Size() == 0
+func (deque *Deque[T]) Empty() bool {
+	return len(deque.slice) == 0
 }
