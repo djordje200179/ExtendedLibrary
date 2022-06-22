@@ -20,11 +20,24 @@ type LinkedList[T any] struct {
 }
 
 func New[T any]() *LinkedList[T] {
-	return &LinkedList[T]{
-		head: nil,
-		tail: nil,
-		size: 0,
+	list := new(LinkedList[T])
+
+	list.head = nil
+	list.tail = nil
+	list.size = 0
+
+	return list
+}
+
+func NewWithSize[T any](initialSize int) *LinkedList[T] {
+	list := New[T]()
+
+	for i := 0; i < initialSize; i++ {
+		var zeroValue T
+		list.Append(zeroValue)
 	}
+
+	return list
 }
 
 func Collector[T any]() streams.Collector[T, sequences.Sequence[T]] {
