@@ -25,6 +25,13 @@ func NewWithCapacity[T any](initialCapacity int) *Array[T] {
 	return (*Array[T])(&slice)
 }
 
+func NewFromSlice[T any](slice []T) *Array[T] {
+	array := NewWithSize[T](len(slice))
+	copy(array.Slice(), slice)
+
+	return array
+}
+
 func Collector[T any]() streams.Collector[T, sequences.Sequence[T]] {
 	return sequences.Collector[T](New[T]())
 }
@@ -89,10 +96,7 @@ func (array *Array[T]) Join(other sequences.Sequence[T]) {
 }
 
 func (array *Array[T]) Clone() sequences.Sequence[T] {
-	cloned := NewWithSize[T](array.Size())
-	copy(cloned.Slice(), array.Slice())
-
-	return cloned
+	return NewFromSlice[T](array.Slice())
 }
 
 func (array *Array[T]) Iterator() datastructures.Iterator[T] {
