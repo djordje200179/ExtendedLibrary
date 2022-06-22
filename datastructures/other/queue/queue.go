@@ -11,7 +11,11 @@ type Queue[T any] struct {
 }
 
 func New[T any]() Queue[T] {
-	return Queue[T]{linkedlist.New[T]()}
+	return NewFrom[T](linkedlist.New[T]())
+}
+
+func NewFrom[T any](sequence sequences.Sequence[T]) Queue[T] {
+	return Queue[T]{sequence}
 }
 
 func (queue Queue[T]) Push(value T) {

@@ -10,7 +10,11 @@ type Deque[T any] struct {
 }
 
 func New[T any]() Deque[T] {
-	return Deque[T]{linkedlist.New[T]()}
+	return NewFrom[T](linkedlist.New[T]())
+}
+
+func NewFrom[T any](sequence sequences.Sequence[T]) Deque[T] {
+	return Deque[T]{sequence}
 }
 
 func (deque Deque[T]) PushFront(value T) {

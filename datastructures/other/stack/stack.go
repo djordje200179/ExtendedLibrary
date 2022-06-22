@@ -11,7 +11,11 @@ type Stack[T any] struct {
 }
 
 func New[T any]() Stack[T] {
-	return Stack[T]{linkedlist.New[T]()}
+	return NewFrom[T](linkedlist.New[T]())
+}
+
+func NewFrom[T any](sequence sequences.Sequence[T]) Stack[T] {
+	return Stack[T]{sequence}
 }
 
 func (stack Stack[T]) Push(value T) {
