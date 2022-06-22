@@ -1,7 +1,6 @@
 package linkedlist
 
 import (
-	"fmt"
 	"github.com/djordje200179/extendedlibrary/datastructures"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
 	"github.com/djordje200179/extendedlibrary/misc/comparison"
@@ -9,13 +8,8 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
-type node[T any] struct {
-	value      T
-	prev, next *node[T]
-}
-
 type LinkedList[T any] struct {
-	head, tail *node[T]
+	head, tail *Node[T]
 	size       int
 }
 
@@ -44,58 +38,20 @@ func Collector[T any]() streams.Collector[T, sequences.Sequence[T]] {
 	return sequences.Collector[T](New[T]())
 }
 
-func (list *LinkedList[T]) getNode(index int) *node[T] {
-	if index >= list.size || index < -list.size {
-		//TODO: Improve panic type
-		panic(fmt.Sprintf("runtime error: index out of range [%d] with length %d", index, list.size))
-	}
-
-	var curr *node[T]
-	if index >= 0 {
-		curr = list.head
-	} else {
-		curr = list.tail
-	}
-
-	if index < 0 {
-		index = -index - 1
-	}
-
-	for i := 0; i < index; i++ {
-		if index >= 0 {
-			curr = curr.next
-		} else {
-			curr = curr.prev
-		}
-	}
-
-	return curr
-}
-
 func (list *LinkedList[T]) Size() int {
 	return list.size
 }
 
 func (list *LinkedList[T]) Get(index int) T {
-	return list.getNode(index).value
+	return list.GetNode(index).Value
 }
 
 func (list *LinkedList[T]) Set(index int, value T) {
-	list.getNode(index).value = value
+	list.GetNode(index).Value = value
 }
 
 func (list *LinkedList[T]) Append(value T) {
-	newNode := &node[T]{value, list.tail, nil}
-
-	if list.tail != nil {
-		list.tail.next = newNode
-		newNode.prev = list.tail
-	} else {
-		list.head = newNode
-	}
-	list.tail = newNode
-
-	list.size++
+	list.insertAfterNode(list.tail, value)
 }
 
 func (list *LinkedList[T]) AppendMany(values ...T) {
@@ -105,43 +61,11 @@ func (list *LinkedList[T]) AppendMany(values ...T) {
 }
 
 func (list *LinkedList[T]) Insert(index int, value T) {
-	newNode := &node[T]{value, list.tail, nil}
-
-	nextNode := list.getNode(index)
-	prevNode := nextNode.prev
-
-	if prevNode != nil {
-		prevNode.next = newNode
-	} else {
-		list.head = newNode
-	}
-
-	if nextNode != nil {
-		nextNode.prev = newNode
-	} else {
-		list.tail = newNode
-	}
+	list.insertBeforeNode(list.GetNode(index), value)
 }
 
 func (list *LinkedList[T]) Remove(index int) {
-	node := list.getNode(index)
-
-	nextNode := node.next
-	prevNode := node.prev
-
-	if prevNode != nil {
-		prevNode.next = nextNode
-	} else {
-		list.head = nextNode
-	}
-
-	if nextNode != nil {
-		nextNode.prev = prevNode
-	} else {
-		list.tail = prevNode
-	}
-
-	list.size--
+	list.removeNode(list.GetNode(index))
 }
 
 func (list *LinkedList[T]) Clear() {
@@ -161,8 +85,8 @@ func (list *LinkedList[T]) Reverse() {
 func (list *LinkedList[T]) Sort(comparator functions.Comparator[T]) {
 	for front := list.head; front.next != nil; front = front.next {
 		for back := front.next; back != nil; back = back.next {
-			if comparator(front.value, back.value) != comparison.FirstSmaller {
-				front.value, back.value = back.value, front.value
+			if comparator(front.Value, back.Value) != comparison.FirstSmaller {
+				front.Value, back.Value = back.Value, front.Value
 			}
 		}
 	}
