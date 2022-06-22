@@ -51,7 +51,14 @@ func (list *LinkedList[T]) Set(index int, value T) {
 }
 
 func (list *LinkedList[T]) Append(value T) {
-	list.insertAfterNode(list.tail, value)
+	if list.size == 0 {
+		node := &Node[T]{value, nil, nil}
+		list.head = node
+		list.tail = node
+		list.size++
+	} else {
+		list.insertAfterNode(list.tail, value)
+	}
 }
 
 func (list *LinkedList[T]) AppendMany(values ...T) {
