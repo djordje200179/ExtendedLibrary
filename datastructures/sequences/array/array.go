@@ -1,6 +1,7 @@
 package array
 
 import (
+	"fmt"
 	"github.com/djordje200179/extendedlibrary/datastructures"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
 	"github.com/djordje200179/extendedlibrary/misc/comparison"
@@ -40,12 +41,29 @@ func (array *Array[T]) Size() int {
 	return len(array.Slice())
 }
 
-func (array *Array[T]) Get(i int) T {
-	return array.Slice()[i]
+func (array *Array[T]) getRealIndex(index int) int {
+	if index >= array.Size() || index < -array.Size() {
+		//TODO: Improve panic type
+		panic(fmt.Sprintf("runtime error: index out of range [%d] with length %d", index, array.Size()))
+	}
+
+	if index < 0 {
+		index += array.Size()
+	}
+
+	return index
 }
 
-func (array *Array[T]) Set(i int, value T) {
-	array.Slice()[i] = value
+func (array *Array[T]) Get(index int) T {
+	index = array.getRealIndex(index)
+
+	return array.Slice()[index]
+}
+
+func (array *Array[T]) Set(index int, value T) {
+	index = array.getRealIndex(index)
+
+	array.Slice()[index] = value
 }
 
 func (array *Array[T]) Append(value T) {
@@ -57,12 +75,16 @@ func (array *Array[T]) AppendMany(values ...T) {
 }
 
 func (array *Array[T]) Insert(index int, value T) {
+	index = array.getRealIndex(index)
+
 	oldSlice := array.Slice()
 	*array = append(oldSlice[:index+1], oldSlice[index:]...)
 	array.Slice()[index] = value
 }
 
 func (array *Array[T]) Remove(index int) {
+	index = array.getRealIndex(index)
+
 	oldSlice := array.Slice()
 	*array = append(oldSlice[:index], oldSlice[index+1:]...)
 }
