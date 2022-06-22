@@ -109,8 +109,8 @@ func (list *LinkedList[T]) Join(other sequences.Sequence[T]) {
 
 func (list *LinkedList[T]) Clone() sequences.Sequence[T] {
 	cloned := New[T]()
-	for it := list.Iterator(); it.Valid(); it.Move() {
-		cloned.Append(it.Get())
+	for curr := list.head; curr != nil; curr = curr.next {
+		cloned.Append(curr.Value)
 	}
 
 	return cloned
