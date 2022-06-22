@@ -9,8 +9,12 @@ type Stack[T any] struct {
 }
 
 func New[T any]() *Stack[T] {
+	return NewWithCapacity[T](0)
+}
+
+func NewWithCapacity[T any](initialCapacity int) *Stack[T] {
 	stack := new(Stack[T])
-	stack.slice = make([]T, 0)
+	stack.slice = make([]T, 0, initialCapacity)
 
 	return stack
 }

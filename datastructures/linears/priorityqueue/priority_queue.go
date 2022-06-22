@@ -17,9 +17,13 @@ type PriorityQueue[T any] struct {
 }
 
 func New[T any](priority Priority) *PriorityQueue[T] {
+	return NewWithCapacity[T](priority, 0)
+}
+
+func NewWithCapacity[T any](priority Priority, initialCapacity int) *PriorityQueue[T] {
 	pq := new(PriorityQueue[T])
 
-	pq.hs.slice = nil
+	pq.hs.slice = make([]item[T], 0, initialCapacity)
 	pq.hs.priority = priority
 
 	return pq

@@ -9,8 +9,12 @@ type Queue[T any] struct {
 }
 
 func New[T any]() *Queue[T] {
+	return NewWithCapacity[T](0)
+}
+
+func NewWithCapacity[T any](initialCapacity int) *Queue[T] {
 	queue := new(Queue[T])
-	queue.slice = make([]T, 0)
+	queue.slice = make([]T, 0, initialCapacity)
 
 	return queue
 }

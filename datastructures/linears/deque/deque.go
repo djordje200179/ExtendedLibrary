@@ -5,8 +5,12 @@ type Deque[T any] struct {
 }
 
 func New[T any]() *Deque[T] {
+	return NewWithCapacity[T](0)
+}
+
+func NewWithCapacity[T any](initialCapacity int) *Deque[T] {
 	deque := new(Deque[T])
-	deque.slice = make([]T, 0)
+	deque.slice = make([]T, 0, initialCapacity)
 
 	return deque
 }
