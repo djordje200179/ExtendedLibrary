@@ -118,7 +118,7 @@ func (stream *Stream[T]) Sort(comparator functions.Comparator[T]) *Stream[T] {
 			arr = append(arr, data)
 		})
 
-		sort.Slice(arr, func(i, j int) bool {
+		sort.SliceStable(arr, func(i, j int) bool {
 			return comparator(arr[i], arr[j]) == comparison.FirstSmaller
 		})
 

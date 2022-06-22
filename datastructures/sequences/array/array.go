@@ -72,7 +72,7 @@ func (array *Array[T]) Reverse() {
 }
 
 func (array *Array[T]) Sort(comparator functions.Comparator[T]) {
-	sort.Slice(array.Slice(), func(i, j int) bool {
+	sort.SliceStable(array.Slice(), func(i, j int) bool {
 		return comparator(array.Slice()[i], array.Slice()[j]) == comparison.FirstSmaller
 	})
 }
