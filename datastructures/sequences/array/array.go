@@ -9,14 +9,11 @@ import (
 	"sort"
 )
 
-type Array[T any] struct {
-	slice []T
-}
+type Array[T any] []T
 
 func New[T any](initialCapacity int) *Array[T] {
-	return &Array[T]{
-		slice: make([]T, 0, initialCapacity),
-	}
+	slice := make([]T, 0, initialCapacity)
+	return (*Array[T])(&slice)
 }
 
 func Collector[T any]() streams.Collector[T, sequences.Sequence[T]] {
@@ -24,55 +21,57 @@ func Collector[T any]() streams.Collector[T, sequences.Sequence[T]] {
 }
 
 func (array *Array[T]) Size() int {
-	return len(array.slice)
+	return len(array.Slice())
 }
 
 func (array *Array[T]) Get(i int) T {
-	return array.slice[i]
+	return array.Slice()[i]
 }
 
 func (array *Array[T]) Set(i int, value T) {
-	array.slice[i] = value
+	array.Slice()[i] = value
 }
 
 func (array *Array[T]) Append(value T) {
-	array.slice = append(array.slice, value)
+	*array = append(array.Slice(), value)
 }
 
 func (array *Array[T]) AppendMany(values ...T) {
-	array.slice = append(array.slice, values...)
+	*array = append(array.Slice(), values...)
 }
 
 func (array *Array[T]) Insert(index int, value T) {
-	array.slice = append(array.slice[:index+1], array.slice[index:]...)
-	array.slice[index] = value
+	oldSlice := array.Slice()
+	*array = append(oldSlice[:index+1], oldSlice[index:]...)
+	array.Slice()[index] = value
 }
 
 func (array *Array[T]) Remove(index int) {
-	array.slice = append(array.slice[:index], array.slice[index+1:]...)
+	oldSlice := array.Slice()
+	*array = append(oldSlice[:index], oldSlice[index+1:]...)
 }
 
 func (array *Array[T]) Clear() {
-	array.slice = nil
+	*array = nil
 }
 
 func (array *Array[T]) Reverse() {
-	n := len(array.slice)
+	n := len(array.Slice())
 	for i := 0; i < n/2; i++ {
-		array.slice[i], array.slice[n-1-i] = array.slice[n-1-i], array.slice[i]
+		array.Slice()[i], array.Slice()[n-1-i] = array.Slice()[n-1-i], array.Slice()[i]
 	}
 }
 
 func (array *Array[T]) Sort(comparator functions.Comparator[T]) {
-	sort.Slice(array.slice, func(i, j int) bool {
-		return comparator(array.slice[i], array.slice[j]) == comparison.FirstSmaller
+	sort.Slice(array.Slice(), func(i, j int) bool {
+		return comparator(array.Slice()[i], array.Slice()[j]) == comparison.FirstSmaller
 	})
 }
 
 func (array *Array[T]) Join(other sequences.Sequence[T]) {
 	switch second := other.(type) {
 	case *Array[T]:
-		array.AppendMany(second.slice...)
+		array.AppendMany(second.Slice()...)
 	default:
 		for it := other.Iterator(); it.Valid(); it.Move() {
 			array.Append(it.Get())
@@ -81,12 +80,10 @@ func (array *Array[T]) Join(other sequences.Sequence[T]) {
 }
 
 func (array *Array[T]) Clone() sequences.Sequence[T] {
-	cloned := Array[T]{
-		slice: make([]T, len(array.slice)),
-	}
-	copy(cloned.slice, array.slice)
+	clonedSlice := make([]T, len(array.Slice()))
+	copy(clonedSlice, array.Slice())
 
-	return &cloned
+	return (*Array[T])(&clonedSlice)
 }
 
 func (array *Array[T]) Iterator() datastructures.Iterator[T] {
@@ -101,9 +98,9 @@ func (array *Array[T]) ModifyingIterator() sequences.Iterator[T] {
 }
 
 func (array *Array[T]) Stream() *streams.Stream[T] {
-	return streams.FromSlice(array.slice)
+	return streams.FromSlice(array.Slice())
 }
 
 func (array *Array[T]) Slice() []T {
-	return array.slice
+	return *array
 }
