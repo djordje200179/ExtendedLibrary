@@ -36,7 +36,12 @@ func (m Map[K, V]) Size() int {
 }
 
 func (m Map[K, V]) Get(key K) V {
-	return m.find(key).Get().Second
+	if it := m.find(key); it != nil {
+		return it.Get().Second
+	} else {
+		var empty V
+		return empty
+	}
 }
 
 func (m Map[K, V]) Set(key K, value V) {
