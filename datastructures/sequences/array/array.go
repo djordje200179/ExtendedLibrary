@@ -86,7 +86,14 @@ func (array *Array[T]) Remove(index int) {
 	index = array.getRealIndex(index)
 
 	oldSlice := array.Slice()
-	*array = append(oldSlice[:index], oldSlice[index+1:]...)
+	switch {
+	case index == 0:
+		*array = oldSlice[1:]
+	case index == array.Size()-1:
+		*array = oldSlice[:index]
+	default:
+		*array = append(oldSlice[:index], oldSlice[index+1:]...)
+	}
 }
 
 func (array *Array[T]) Clear() {
