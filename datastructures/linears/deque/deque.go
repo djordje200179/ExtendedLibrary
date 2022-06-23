@@ -1,52 +1,48 @@
 package deque
 
-type Deque[T any] struct {
-	slice []T
-}
+import "github.com/djordje200179/extendedlibrary/datastructures/sequences/array"
+
+type Deque[T any] array.Array[T]
 
 func New[T any]() *Deque[T] {
 	return NewWithCapacity[T](0)
 }
 
 func NewWithCapacity[T any](initialCapacity int) *Deque[T] {
-	deque := new(Deque[T])
-	deque.slice = make([]T, 0, initialCapacity)
+	arr := array.NewWithCapacity[T](initialCapacity)
+	return (*Deque[T])(arr)
+}
 
-	return deque
+func (deque *Deque[T]) array() *array.Array[T] {
+	return (*array.Array[T])(deque)
 }
 
 func (deque *Deque[T]) PushFront(value T) {
-	newSlice := make([]T, len(deque.slice)+1)
-	newSlice[0] = value
-	copy(newSlice[1:], deque.slice)
-
-	deque.slice = newSlice
+	deque.array().Insert(0, value)
 }
 
 func (deque *Deque[T]) PushBack(value T) {
-	deque.slice = append(deque.slice, value)
+	deque.array().Append(value)
 }
 
 func (deque *Deque[T]) PopFront() T {
-	value := deque.PeekFront()
-	deque.slice = deque.slice[1:]
-	return value
+	defer deque.array().Remove(0)
+	return deque.PeekFront()
 }
 
 func (deque *Deque[T]) PopBack() T {
-	value := deque.PeekBack()
-	deque.slice = deque.slice[:len(deque.slice)-1]
-	return value
+	defer deque.array().Remove(-1)
+	return deque.PeekBack()
 }
 
 func (deque *Deque[T]) PeekFront() T {
-	return deque.slice[0]
+	return deque.array().Get(0)
 }
 
 func (deque *Deque[T]) PeekBack() T {
-	return deque.slice[len(deque.slice)-1]
+	return deque.array().Get(-1)
 }
 
 func (deque *Deque[T]) Empty() bool {
-	return len(deque.slice) == 0
+	return deque.array().Size() == 0
 }

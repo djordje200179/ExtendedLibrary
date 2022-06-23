@@ -1,40 +1,40 @@
 package stack
 
 import (
+	"github.com/djordje200179/extendedlibrary/datastructures/sequences/array"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 )
 
-type Stack[T any] struct {
-	slice []T
-}
+type Stack[T any] array.Array[T]
 
 func New[T any]() *Stack[T] {
 	return NewWithCapacity[T](0)
 }
 
 func NewWithCapacity[T any](initialCapacity int) *Stack[T] {
-	stack := new(Stack[T])
-	stack.slice = make([]T, 0, initialCapacity)
+	arr := array.NewWithCapacity[T](initialCapacity)
+	return (*Stack[T])(arr)
+}
 
-	return stack
+func (stack *Stack[T]) array() *array.Array[T] {
+	return (*array.Array[T])(stack)
 }
 
 func (stack *Stack[T]) Push(value T) {
-	stack.slice = append(stack.slice, value)
+	stack.array().Append(value)
 }
 
 func (stack *Stack[T]) Pop() T {
-	value := stack.Peek()
-	stack.slice = stack.slice[:len(stack.slice)-1]
-	return value
+	defer stack.array().Remove(-1)
+	return stack.Peek()
 }
 
 func (stack *Stack[T]) Peek() T {
-	return stack.slice[len(stack.slice)-1]
+	return stack.array().Get(-1)
 }
 
 func (stack *Stack[T]) Empty() bool {
-	return len(stack.slice) == 0
+	return stack.array().Size() == 0
 }
 
 func (stack *Stack[T]) ForEach(callback functions.ParamCallback[T]) {
