@@ -15,14 +15,14 @@ func NewEntry[K comparable, V any](m Map[K, V], key K) Entry[K, V] {
 }
 
 func (e Entry[K, V]) Get() misc.Pair[K, V] {
-	return misc.Pair[K, V]{e.key, e.GetValue()}
+	return misc.Pair[K, V]{e.key, e.Value()}
 }
 
-func (e Entry[K, V]) GetKey() K {
+func (e Entry[K, V]) Key() K {
 	return e.key
 }
 
-func (e Entry[K, V]) GetValue() V {
+func (e Entry[K, V]) Value() V {
 	return e.m.Get(e.key)
 }
 

@@ -78,6 +78,6 @@ func (m Map[K, V]) Stream() *streams.Stream[misc.Pair[K, V]] {
 		defer it.Move()
 
 		entry := it.Get()
-		return misc.Pair[K, V]{entry.GetKey(), entry.GetValue()}
+		return misc.Pair[K, V]{entry.Key(), entry.Value()}
 	})
 }

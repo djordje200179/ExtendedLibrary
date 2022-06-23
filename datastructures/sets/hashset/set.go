@@ -55,6 +55,6 @@ func (set Set[T]) Stream() *streams.Stream[T] {
 	return streams.Supply(func() T {
 		defer it.Move()
 
-		return it.Get().GetKey()
+		return it.Get().Key()
 	})
 }
