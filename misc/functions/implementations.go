@@ -2,14 +2,28 @@ package functions
 
 import "github.com/djordje200179/extendedlibrary/misc/comparison"
 
-func Increment(i int) int {
+func Increment[T integer](i T) T {
 	return i + 1
 }
 
-func NumsAscending(a, b int) comparison.Result {
-	return comparison.FromInt(b - a)
+func Ascending[T ordered](a, b T) comparison.Result {
+	switch {
+	case a < b:
+		return comparison.FirstSmaller
+	case a > b:
+		return comparison.SecondSmaller
+	default:
+		return comparison.Equal
+	}
 }
 
-func NumsDescending(a, b int) comparison.Result {
-	return comparison.FromInt(a - b)
+func Descending[T ordered](a, b T) comparison.Result {
+	switch {
+	case a < b:
+		return comparison.FirstBigger
+	case a > b:
+		return comparison.SecondBigger
+	default:
+		return comparison.Equal
+	}
 }
