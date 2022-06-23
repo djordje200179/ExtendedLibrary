@@ -48,9 +48,7 @@ func (m *Map[K, V]) Get(key K) V {
 }
 
 func (m *Map[K, V]) Set(key K, value V) {
-	it := m.find(key)
-
-	if it != nil {
+	if it := m.find(key); it != nil {
 		data := it.Get()
 		data.Second = value
 		it.Set(data)
@@ -60,8 +58,7 @@ func (m *Map[K, V]) Set(key K, value V) {
 }
 
 func (m *Map[K, V]) Remove(key K) {
-	it := m.find(key)
-	if it != nil {
+	if it := m.find(key); it != nil {
 		it.Remove()
 	}
 }
