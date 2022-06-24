@@ -91,7 +91,9 @@ func (tree *BinarySearchTree[K, V]) removeNode(node *Node[K, V]) {
 		*locationInParent = node.left
 	} else {
 		next := node.Next()
-		SwapData(node, next)
+
+		node.key, next.key = next.key, node.key
+		node.Value, next.Value = next.Value, node.Value
 
 		tree.removeNode(next)
 	}
@@ -116,10 +118,4 @@ func (tree *BinarySearchTree[K, V]) GetNode(key K) *Node[K, V] {
 	}
 
 	return nil
-}
-
-func SwapData[K comparable, V any](first *Node[K, V], second *Node[K, V]) {
-	first.left, second.left = second.left, first.left
-	first.right, second.right = second.right, first.right
-	first.parent, second.parent = second.parent, first.parent
 }
