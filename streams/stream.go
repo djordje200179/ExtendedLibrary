@@ -43,7 +43,12 @@ func (stream *Stream[T]) getNext() optional.Optional[T] {
 	return optional.New(data, ok)
 }
 
-func (stream *Stream[T]) stop()             { stream.signaler.Send(end) }
+func (stream *Stream[T]) stop() {
+	if !stream.closed {
+		stream.signaler.Send(end)
+	}
+}
+
 func (stream *Stream[T]) waitRequest() bool { return stream.signaler.ReadSync().Get() == next }
 
 func (stream *Stream[T]) Iterator() datastructures.Iterator[T] {
