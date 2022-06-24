@@ -86,5 +86,6 @@ func FromIterable[T any](iterable datastructures.Iterable[T]) *Stream[T] {
 }
 
 func Range(lower, upper int) *Stream[int] {
-	return Generate(lower, functions.Increment[int]).Limit(upper - lower)
+	increment := func(curr int) int { return curr + 1 }
+	return Generate(lower, increment).Limit(upper - lower)
 }
