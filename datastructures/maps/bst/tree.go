@@ -2,6 +2,7 @@ package bst
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures"
+	"github.com/djordje200179/extendedlibrary/datastructures/linears/queue"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/misc/comparison"
@@ -106,8 +107,28 @@ func (tree *BinarySearchTree[K, V]) Clone() maps.Map[K, V] {
 		return cloned
 	}
 
-	//TODO: Implement
-	panic("Not implemented")
+	cloned.root = tree.root.Clone()
+
+	nodesInOriginal := queue.New[*Node[K, V]]()
+	nodesInOriginal.Push(tree.root)
+
+	nodesInCloned := queue.New[*Node[K, V]]()
+	nodesInCloned.Push(cloned.root)
+
+	for !nodesInOriginal.Empty() {
+		nodeInOriginal := nodesInOriginal.Pop()
+		nodeInCloned := nodesInCloned.Pop()
+
+		if left := nodeInOriginal.left; left != nil {
+			nodesInOriginal.Push(left)
+			nodeInCloned.left = left.Clone()
+		}
+
+		if right := nodeInOriginal.right; right != nil {
+			nodesInOriginal.Push(right)
+			nodeInCloned.right = right.Clone()
+		}
+	}
 
 	return cloned
 }

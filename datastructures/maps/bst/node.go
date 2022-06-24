@@ -17,6 +17,14 @@ func (node *Node[K, V]) Parent() *Node[K, V] { return node.parent }
 
 func (tree *BinarySearchTree[K, V]) Root() *Node[K, V] { return tree.root }
 
+func (node *Node[K, V]) Clone() *Node[K, V] {
+	cloned := new(Node[K, V])
+	cloned.key = node.key
+	cloned.Value = node.Value
+
+	return cloned
+}
+
 func (node *Node[K, V]) Prev() *Node[K, V] {
 	if node.left != nil {
 		return node.left.max()
