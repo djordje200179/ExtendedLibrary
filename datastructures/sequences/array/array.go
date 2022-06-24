@@ -52,17 +52,14 @@ func (array *Array[T]) getRealIndex(index int) int {
 	return index
 }
 
-func (array *Array[T]) Get(index int) T {
+func (array *Array[T]) GetRef(index int) *T {
 	index = array.getRealIndex(index)
 
-	return array.Slice()[index]
+	return &array.Slice()[index]
 }
 
-func (array *Array[T]) Set(index int, value T) {
-	index = array.getRealIndex(index)
-
-	array.Slice()[index] = value
-}
+func (array *Array[T]) Get(index int) T        { return *array.GetRef(index) }
+func (array *Array[T]) Set(index int, value T) { *array.GetRef(index) = value }
 
 func (array *Array[T]) Append(value T) {
 	*array = append(array.Slice(), value)
@@ -139,6 +136,14 @@ func (array *Array[T]) ModifyingIterator() sequences.Iterator[T] {
 
 func (array *Array[T]) Stream() *streams.Stream[T] {
 	return streams.FromSlice(array.Slice())
+}
+
+func (array *Array[T]) PointerStream() *streams.Stream[*T] {
+	iterator := array.ModifyingIterator()
+	return streams.Supply(func() *T {
+		defer iterator.Move()
+		return iterator.GetRef()
+	})
 }
 
 func (array *Array[T]) Slice() []T {

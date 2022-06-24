@@ -34,13 +34,9 @@ func (list *LinkedList[T]) Size() int {
 	return list.size
 }
 
-func (list *LinkedList[T]) Get(index int) T {
-	return list.GetNode(index).Value
-}
-
-func (list *LinkedList[T]) Set(index int, value T) {
-	list.GetNode(index).Value = value
-}
+func (list *LinkedList[T]) GetRef(index int) *T    { return &list.GetNode(index).Value }
+func (list *LinkedList[T]) Get(index int) T        { return *list.GetRef(index) }
+func (list *LinkedList[T]) Set(index int, value T) { *list.GetRef(index) = value }
 
 func (list *LinkedList[T]) Append(value T) {
 	if list.size == 0 {
@@ -128,4 +124,12 @@ func (list *LinkedList[T]) ModifyingIterator() sequences.Iterator[T] {
 
 func (list *LinkedList[T]) Stream() *streams.Stream[T] {
 	return streams.FromIterable[T](list)
+}
+
+func (list *LinkedList[T]) PointerStream() *streams.Stream[*T] {
+	iterator := list.ModifyingIterator()
+	return streams.Supply(func() *T {
+		defer iterator.Move()
+		return iterator.GetRef()
+	})
 }

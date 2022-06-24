@@ -8,8 +8,9 @@ import (
 
 type Entry[K comparable, V any] interface {
 	Key() K
-	Value() V
 
+	Value() V
+	ValueRef() *V
 	SetValue(value V)
 }
 

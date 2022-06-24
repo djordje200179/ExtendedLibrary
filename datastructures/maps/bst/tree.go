@@ -30,9 +30,17 @@ func (tree *BinarySearchTree[K, V]) Size() int {
 	return tree.nodes
 }
 
-func (tree *BinarySearchTree[K, V]) Get(key K) V {
+func (tree *BinarySearchTree[K, V]) GetRef(key K) *V {
 	if node := tree.GetNode(key); node != nil {
-		return node.Value
+		return &node.Value
+	} else {
+		return nil
+	}
+
+}
+func (tree *BinarySearchTree[K, V]) Get(key K) V {
+	if ptr := tree.GetRef(key); ptr != nil {
+		return *ptr
 	} else {
 		var empty V
 		return empty

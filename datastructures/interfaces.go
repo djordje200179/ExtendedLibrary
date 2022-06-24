@@ -14,6 +14,7 @@ type Iterable[T any] interface {
 type Collection[K comparable, V any] interface {
 	Size() int
 
-	Get(K) V
-	Set(K, V)
+	Get(key K) V
+	GetRef(key K) *V
+	Set(key K, value V)
 }

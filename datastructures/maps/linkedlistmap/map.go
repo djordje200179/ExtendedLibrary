@@ -38,9 +38,17 @@ func (m *Map[K, V]) Size() int {
 	return m.list().Size()
 }
 
-func (m *Map[K, V]) Get(key K) V {
+func (m *Map[K, V]) GetRef(key K) *V {
 	if it := m.find(key); it != nil {
-		return it.Get().Second
+		return &it.GetRef().Second
+	} else {
+		return nil
+	}
+}
+
+func (m *Map[K, V]) Get(key K) V {
+	if ptr := m.GetRef(key); ptr != nil {
+		return *ptr
 	} else {
 		var empty V
 		return empty
@@ -48,10 +56,8 @@ func (m *Map[K, V]) Get(key K) V {
 }
 
 func (m *Map[K, V]) Set(key K, value V) {
-	if it := m.find(key); it != nil {
-		data := it.Get()
-		data.Second = value
-		it.Set(data)
+	if ptr := m.GetRef(key); ptr != nil {
+		*ptr = value
 	} else {
 		m.list().Append(misc.Pair[K, V]{key, value})
 	}

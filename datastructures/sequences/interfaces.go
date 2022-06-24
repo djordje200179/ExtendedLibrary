@@ -9,7 +9,7 @@ import (
 
 type Iterator[T any] interface {
 	datastructures.Iterator[T]
-
+	GetRef() *T
 	Set(value T)
 
 	InsertBefore(value T)
@@ -34,4 +34,5 @@ type Sequence[T any] interface {
 	datastructures.Iterable[T]
 	ModifyingIterator() Iterator[T]
 	streams.Streamer[T]
+	PointerStream() *streams.Stream[*T]
 }
