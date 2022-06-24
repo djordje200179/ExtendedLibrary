@@ -11,7 +11,7 @@ import (
 )
 
 type BinarySearchTree[K comparable, V any] struct {
-	root  *Node[K, V]
+	root  *node[K, V]
 	nodes int
 
 	comparator functions.Comparator[K]
@@ -26,13 +26,11 @@ func New[K comparable, V any](comparator functions.Comparator[K]) *BinarySearchT
 	return tree
 }
 
-func (tree *BinarySearchTree[K, V]) Size() int {
-	return tree.nodes
-}
+func (tree *BinarySearchTree[K, V]) Size() int { return tree.nodes }
 
 func (tree *BinarySearchTree[K, V]) GetRef(key K) *V {
-	if node := tree.GetNode(key); node != nil {
-		return &node.Value
+	if node := tree.getNode(key); node != nil {
+		return &node.value
 	} else {
 		return nil
 	}
@@ -49,19 +47,19 @@ func (tree *BinarySearchTree[K, V]) Get(key K) V {
 
 func (tree *BinarySearchTree[K, V]) Set(key K, value V) {
 	if tree.root == nil {
-		tree.root = &Node[K, V]{
+		tree.root = &node[K, V]{
 			key:   key,
-			Value: value,
+			value: value,
 		}
 		tree.nodes++
 
 		return
 	}
 
-	prev := (*Node[K, V])(nil)
+	prev := (*node[K, V])(nil)
 	for curr := tree.root; curr != nil; {
 		if key == curr.key {
-			curr.Value = value
+			curr.value = value
 			return
 		}
 
@@ -72,14 +70,14 @@ func (tree *BinarySearchTree[K, V]) Set(key K, value V) {
 		case comparison.FirstBigger:
 			curr = curr.right
 		case comparison.Equal:
-			curr.Value = value
+			curr.value = value
 			return
 		}
 	}
 
-	node := &Node[K, V]{
+	node := &node[K, V]{
 		key:    key,
-		Value:  value,
+		value:  value,
 		parent: prev,
 	}
 
@@ -93,13 +91,13 @@ func (tree *BinarySearchTree[K, V]) Set(key K, value V) {
 }
 
 func (tree *BinarySearchTree[K, V]) Remove(key K) {
-	if node := tree.GetNode(key); node != nil {
+	if node := tree.getNode(key); node != nil {
 		tree.removeNode(node)
 	}
 }
 
 func (tree *BinarySearchTree[K, V]) Contains(key K) bool {
-	return tree.GetNode(key) != nil
+	return tree.getNode(key) != nil
 }
 
 func (tree *BinarySearchTree[K, V]) Clear() {
@@ -117,10 +115,10 @@ func (tree *BinarySearchTree[K, V]) Clone() maps.Map[K, V] {
 
 	cloned.root = tree.root.Clone()
 
-	nodesInOriginal := queue.New[*Node[K, V]]()
+	nodesInOriginal := queue.New[*node[K, V]]()
 	nodesInOriginal.Push(tree.root)
 
-	nodesInCloned := queue.New[*Node[K, V]]()
+	nodesInCloned := queue.New[*node[K, V]]()
 	nodesInCloned.Push(cloned.root)
 
 	for !nodesInOriginal.Empty() {

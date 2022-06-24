@@ -2,30 +2,22 @@ package bst
 
 import "github.com/djordje200179/extendedlibrary/misc/comparison"
 
-type Node[K comparable, V any] struct {
+type node[K comparable, V any] struct {
 	key   K
-	Value V
+	value V
 
-	left, right, parent *Node[K, V]
+	left, right, parent *node[K, V]
 }
 
-func (node *Node[K, V]) Key() K { return node.key }
-
-func (node *Node[K, V]) Left() *Node[K, V]   { return node.left }
-func (node *Node[K, V]) Right() *Node[K, V]  { return node.right }
-func (node *Node[K, V]) Parent() *Node[K, V] { return node.parent }
-
-func (tree *BinarySearchTree[K, V]) Root() *Node[K, V] { return tree.root }
-
-func (node *Node[K, V]) Clone() *Node[K, V] {
-	cloned := new(Node[K, V])
-	cloned.key = node.key
-	cloned.Value = node.Value
+func (originalNode *node[K, V]) Clone() *node[K, V] {
+	cloned := new(node[K, V])
+	cloned.key = originalNode.key
+	cloned.value = originalNode.value
 
 	return cloned
 }
 
-func (node *Node[K, V]) Prev() *Node[K, V] {
+func (node *node[K, V]) prev() *node[K, V] {
 	if node.left != nil {
 		return node.left.max()
 	} else {
@@ -39,7 +31,7 @@ func (node *Node[K, V]) Prev() *Node[K, V] {
 	}
 }
 
-func (node *Node[K, V]) Next() *Node[K, V] {
+func (node *node[K, V]) next() *node[K, V] {
 	if node.right != nil {
 		return node.right.min()
 	} else {
@@ -53,7 +45,7 @@ func (node *Node[K, V]) Next() *Node[K, V] {
 	}
 }
 
-func (node *Node[K, V]) locationInParent() **Node[K, V] {
+func (node *node[K, V]) locationInParent() **node[K, V] {
 	if node.parent == nil {
 		return nil
 	}
@@ -65,7 +57,7 @@ func (node *Node[K, V]) locationInParent() **Node[K, V] {
 	}
 }
 
-func (node *Node[K, V]) min() *Node[K, V] {
+func (node *node[K, V]) min() *node[K, V] {
 	for curr := node; curr != nil; curr = curr.left {
 		if curr.left == nil {
 			return curr
@@ -75,7 +67,7 @@ func (node *Node[K, V]) min() *Node[K, V] {
 	return nil
 }
 
-func (node *Node[K, V]) max() *Node[K, V] {
+func (node *node[K, V]) max() *node[K, V] {
 	for curr := node; curr != nil; curr = curr.right {
 		if curr.right == nil {
 			return curr
@@ -85,7 +77,7 @@ func (node *Node[K, V]) max() *Node[K, V] {
 	return nil
 }
 
-func (tree *BinarySearchTree[K, V]) removeNode(node *Node[K, V]) {
+func (tree *BinarySearchTree[K, V]) removeNode(node *node[K, V]) {
 	locationInParent := node.locationInParent()
 	if locationInParent == nil {
 		locationInParent = &tree.root
@@ -98,10 +90,10 @@ func (tree *BinarySearchTree[K, V]) removeNode(node *Node[K, V]) {
 	} else if node.right == nil {
 		*locationInParent = node.left
 	} else {
-		next := node.Next()
+		next := node.next()
 
 		node.key, next.key = next.key, node.key
-		node.Value, next.Value = next.Value, node.Value
+		node.value, next.value = next.value, node.value
 
 		tree.removeNode(next)
 	}
@@ -109,7 +101,7 @@ func (tree *BinarySearchTree[K, V]) removeNode(node *Node[K, V]) {
 	tree.nodes--
 }
 
-func (tree *BinarySearchTree[K, V]) GetNode(key K) *Node[K, V] {
+func (tree *BinarySearchTree[K, V]) getNode(key K) *node[K, V] {
 	for curr := tree.root; curr != nil; {
 		if key == curr.key {
 			return curr

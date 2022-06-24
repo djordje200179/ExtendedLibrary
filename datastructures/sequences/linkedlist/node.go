@@ -2,24 +2,19 @@ package linkedlist
 
 import "fmt"
 
-type Node[T any] struct {
-	Value      T
-	prev, next *Node[T]
+type node[T any] struct {
+	value T
+
+	prev, next *node[T]
 }
 
-func (node *Node[T]) Prev() *Node[T] { return node.prev }
-func (node *Node[T]) Next() *Node[T] { return node.next }
-
-func (list *LinkedList[T]) Head() *Node[T] { return list.head }
-func (list *LinkedList[T]) Tail() *Node[T] { return list.tail }
-
-func (list *LinkedList[T]) GetNode(index int) *Node[T] {
+func (list *LinkedList[T]) getNode(index int) *node[T] {
 	if index >= list.size || index < -list.size {
 		//TODO: Improve panic type
 		panic(fmt.Sprintf("runtime error: index out of range [%d] with length %d", index, list.size))
 	}
 
-	var curr *Node[T]
+	var curr *node[T]
 	if index >= 0 {
 		curr = list.head
 	} else {
@@ -41,33 +36,33 @@ func (list *LinkedList[T]) GetNode(index int) *Node[T] {
 	return curr
 }
 
-func (list *LinkedList[T]) insertBeforeNode(node *Node[T], value T) {
-	newNode := &Node[T]{value, node.prev, node}
+func (list *LinkedList[T]) insertBeforeNode(nextNode *node[T], value T) {
+	newNode := &node[T]{value, nextNode.prev, nextNode}
 
-	if node.prev != nil {
-		node.prev.next = newNode
+	if nextNode.prev != nil {
+		nextNode.prev.next = newNode
 	} else {
 		list.head = newNode
 	}
 
-	node.prev = newNode
+	nextNode.prev = newNode
 	list.size++
 }
 
-func (list *LinkedList[T]) insertAfterNode(node *Node[T], value T) {
-	newNode := &Node[T]{value, node, node.next}
+func (list *LinkedList[T]) insertAfterNode(prevNode *node[T], value T) {
+	newNode := &node[T]{value, prevNode, prevNode.next}
 
-	if node.next != nil {
-		node.next.prev = newNode
+	if prevNode.next != nil {
+		prevNode.next.prev = newNode
 	} else {
 		list.tail = newNode
 	}
 
-	node.next = newNode
+	prevNode.next = newNode
 	list.size++
 }
 
-func (list *LinkedList[T]) removeNode(node *Node[T]) {
+func (list *LinkedList[T]) removeNode(node *node[T]) {
 	if node.prev != nil {
 		node.prev.next = node.next
 	} else {

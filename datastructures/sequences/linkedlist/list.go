@@ -9,7 +9,7 @@ import (
 )
 
 type LinkedList[T any] struct {
-	head, tail *Node[T]
+	head, tail *node[T]
 	size       int
 }
 
@@ -30,17 +30,15 @@ func Collector[T any]() streams.Collector[T, sequences.Sequence[T]] {
 	return sequences.Collector[T](New[T]())
 }
 
-func (list *LinkedList[T]) Size() int {
-	return list.size
-}
+func (list *LinkedList[T]) Size() int { return list.size }
 
-func (list *LinkedList[T]) GetRef(index int) *T    { return &list.GetNode(index).Value }
+func (list *LinkedList[T]) GetRef(index int) *T    { return &list.getNode(index).value }
 func (list *LinkedList[T]) Get(index int) T        { return *list.GetRef(index) }
 func (list *LinkedList[T]) Set(index int, value T) { *list.GetRef(index) = value }
 
 func (list *LinkedList[T]) Append(value T) {
 	if list.size == 0 {
-		node := &Node[T]{Value: value}
+		node := &node[T]{value: value}
 		list.head = node
 		list.tail = node
 		list.size++
@@ -56,11 +54,11 @@ func (list *LinkedList[T]) AppendMany(values ...T) {
 }
 
 func (list *LinkedList[T]) Insert(index int, value T) {
-	list.insertBeforeNode(list.GetNode(index), value)
+	list.insertBeforeNode(list.getNode(index), value)
 }
 
 func (list *LinkedList[T]) Remove(index int) {
-	list.removeNode(list.GetNode(index))
+	list.removeNode(list.getNode(index))
 }
 
 func (list *LinkedList[T]) Clear() {
@@ -80,8 +78,8 @@ func (list *LinkedList[T]) Reverse() {
 func (list *LinkedList[T]) Sort(comparator functions.Comparator[T]) {
 	for front := list.head; front.next != nil; front = front.next {
 		for back := front.next; back != nil; back = back.next {
-			if comparator(front.Value, back.Value) != comparison.FirstSmaller {
-				front.Value, back.Value = back.Value, front.Value
+			if comparator(front.value, back.value) != comparison.FirstSmaller {
+				front.value, back.value = back.value, front.value
 			}
 		}
 	}
@@ -105,15 +103,13 @@ func (list *LinkedList[T]) Join(other sequences.Sequence[T]) {
 func (list *LinkedList[T]) Clone() sequences.Sequence[T] {
 	cloned := New[T]()
 	for curr := list.head; curr != nil; curr = curr.next {
-		cloned.Append(curr.Value)
+		cloned.Append(curr.value)
 	}
 
 	return cloned
 }
 
-func (list *LinkedList[T]) Iterator() datastructures.Iterator[T] {
-	return list.ModifyingIterator()
-}
+func (list *LinkedList[T]) Iterator() datastructures.Iterator[T] { return list.ModifyingIterator() }
 
 func (list *LinkedList[T]) ModifyingIterator() sequences.Iterator[T] {
 	return &Iterator[T]{
@@ -122,9 +118,7 @@ func (list *LinkedList[T]) ModifyingIterator() sequences.Iterator[T] {
 	}
 }
 
-func (list *LinkedList[T]) Stream() *streams.Stream[T] {
-	return streams.FromIterable[T](list)
-}
+func (list *LinkedList[T]) Stream() *streams.Stream[T] { return streams.FromIterable[T](list) }
 
 func (list *LinkedList[T]) RefStream() *streams.Stream[*T] {
 	iterator := list.ModifyingIterator()
