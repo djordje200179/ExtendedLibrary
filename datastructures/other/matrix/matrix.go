@@ -4,9 +4,7 @@ type Matrix[T any] struct {
 	rows [][]T
 }
 
-func New[T any]() *Matrix[T] {
-	return NewWithSize[T](0, 0)
-}
+func New[T any]() *Matrix[T] { return NewWithSize[T](0, 0) }
 
 func NewWithCapacity[T any](initialHeightCapacity, initialWidthCapacity int) *Matrix[T] {
 	rows := make([][]T, 0, initialHeightCapacity)
@@ -44,13 +42,9 @@ func (matrix *Matrix[T]) Size() (height, width int) {
 	return
 }
 
-func (matrix *Matrix[T]) Get(i, j int) T {
-	return matrix.rows[i][j]
-}
-
-func (matrix *Matrix[T]) Set(i, j int, value T) {
-	matrix.rows[i][j] = value
-}
+func (matrix *Matrix[T]) GetRef(i, j int) *T    { return &matrix.rows[i][j] }
+func (matrix *Matrix[T]) Get(i, j int) T        { return matrix.rows[i][j] }
+func (matrix *Matrix[T]) Set(i, j int, value T) { matrix.rows[i][j] = value }
 
 func (matrix *Matrix[T]) Clone() *Matrix[T] {
 	height, width := matrix.Size()
