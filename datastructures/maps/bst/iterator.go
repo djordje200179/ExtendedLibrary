@@ -20,6 +20,5 @@ func (it *iterator[K, V]) Get() maps.Entry[K, V] {
 }
 
 func (it *iterator[K, V]) Remove() {
-	//TODO implement me
-	panic("implement me")
+	it.tree.removeNode(it.curr)
 }

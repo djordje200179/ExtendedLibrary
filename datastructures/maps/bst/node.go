@@ -18,11 +18,85 @@ func (node *Node[K, V]) Parent() *Node[K, V] { return node.parent }
 func (tree *BinarySearchTree[K, V]) Root() *Node[K, V] { return tree.root }
 
 func (node *Node[K, V]) Prev() *Node[K, V] {
+	if node.left != nil {
+		return node.left.max()
+	} else {
+		for prev, curr := node.parent, node; prev != nil && curr == prev.left; curr, prev = prev, prev.parent {
+			if curr != prev.left {
+				return prev
+			}
+		}
 
+		return nil
+	}
 }
 
 func (node *Node[K, V]) Next() *Node[K, V] {
+	if node.right != nil {
+		return node.right.min()
+	} else {
+		for prev, curr := node.parent, node; prev != nil; curr, prev = prev, prev.parent {
+			if curr != prev.right {
+				return prev
+			}
+		}
 
+		return nil
+	}
+}
+
+func (node *Node[K, V]) locationInParent() **Node[K, V] {
+	if node.parent == nil {
+		return nil
+	}
+
+	if node.parent.left == node {
+		return &node.parent.left
+	} else {
+		return &node.parent.right
+	}
+}
+
+func (node *Node[K, V]) min() *Node[K, V] {
+	for curr := node; curr != nil; curr = curr.left {
+		if curr.left == nil {
+			return curr
+		}
+	}
+
+	return nil
+}
+
+func (node *Node[K, V]) max() *Node[K, V] {
+	for curr := node; curr != nil; curr = curr.right {
+		if curr.right == nil {
+			return curr
+		}
+	}
+
+	return nil
+}
+
+func (tree *BinarySearchTree[K, V]) removeNode(node *Node[K, V]) {
+	locationInParent := node.locationInParent()
+	if locationInParent == nil {
+		locationInParent = &tree.root
+	}
+
+	if node.left == nil && node.right == nil {
+		*locationInParent = nil
+	} else if node.left == nil {
+		*locationInParent = node.right
+	} else if node.right == nil {
+		*locationInParent = node.left
+	} else {
+		next := node.Next()
+		SwapData(node, next)
+
+		tree.removeNode(next)
+	}
+
+	tree.nodes--
 }
 
 func (tree *BinarySearchTree[K, V]) GetNode(key K) *Node[K, V] {
@@ -42,4 +116,10 @@ func (tree *BinarySearchTree[K, V]) GetNode(key K) *Node[K, V] {
 	}
 
 	return nil
+}
+
+func SwapData[K comparable, V any](first *Node[K, V], second *Node[K, V]) {
+	first.left, second.left = second.left, first.left
+	first.right, second.right = second.right, first.right
+	first.parent, second.parent = second.parent, first.parent
 }
