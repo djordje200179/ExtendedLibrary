@@ -68,10 +68,13 @@ func (b *BitArray) Insert(index int, value bool) {
 	elemOff := index % 8
 	elem := b.array.Get(elemIndex)
 
+	// TODO: Implement inserting into bitarray
 }
 
 func (b *BitArray) Remove(index int) bool {
 	elemIndex := index / 8
 	elemOff := index % 8
 	elem := b.array.Get(elemIndex)
+
+	// TODO: Implement removing from bitarray
 }
