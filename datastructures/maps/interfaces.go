@@ -6,6 +6,13 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
+type Entry[K comparable, V any] interface {
+	Key() K
+	Value() V
+
+	SetValue(value V)
+}
+
 type Iterator[K comparable, V any] interface {
 	datastructures.Iterator[Entry[K, V]]
 

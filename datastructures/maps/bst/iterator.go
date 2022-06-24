@@ -16,7 +16,7 @@ func (it *iterator[K, V]) Move() {
 }
 
 func (it *iterator[K, V]) Get() maps.Entry[K, V] {
-	return maps.NewEntry[K, V](it.tree, it.curr.key)
+	return entry[K, V]{it.curr}
 }
 
 func (it *iterator[K, V]) Remove() {

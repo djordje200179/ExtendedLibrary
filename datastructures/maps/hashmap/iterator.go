@@ -17,7 +17,10 @@ func (it *iterator[K, V]) Move() {
 }
 
 func (it *iterator[K, V]) Get() maps.Entry[K, V] {
-	return maps.NewEntry[K, V](it.m, it.keys[it.index])
+	return entry[K, V]{
+		m:   it.m,
+		key: it.keys[it.index],
+	}
 }
 
 func (it *iterator[K, V]) Remove() {

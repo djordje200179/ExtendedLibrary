@@ -12,5 +12,7 @@ type iterator[K comparable, V any] struct {
 }
 
 func (it iterator[K, V]) Get() maps.Entry[K, V] {
-	return maps.NewEntry[K, V](it.m, it.Iterator.Get().First)
+	// TODO: Fix entry creation
+	panic("Not implemented")
+	return entry[K, V]{it.Iterator.Get()}
 }
