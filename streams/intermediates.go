@@ -11,17 +11,13 @@ func Map[T, P any](stream *Stream[T], mapper func(curr T) P) *Stream[P] {
 
 	go func() {
 		for elem := stream.getNext(); elem.HasValue() && ret.waitRequest(); elem = stream.getNext() {
-			ret.data <- mapper(elem.Get())
+			ret.dataChannel <- mapper(elem.Get())
 		}
 
 		ret.close()
 	}()
 
 	return ret
-}
-
-func (stream *Stream[T]) MapWithAny(mapper func(curr T) any) *Stream[any] {
-	return Map[T, any](stream, mapper)
 }
 
 func (stream *Stream[T]) Filter(predictor functions.Predictor[T]) *Stream[T] {
@@ -36,7 +32,7 @@ func (stream *Stream[T]) Filter(predictor functions.Predictor[T]) *Stream[T] {
 
 				data := elem.Get()
 				if predictor(data) {
-					ret.data <- data
+					ret.dataChannel <- data
 					break
 				}
 			}
@@ -55,7 +51,7 @@ func (stream *Stream[T]) Limit(count int) *Stream[T] {
 	go func() {
 		i := 0
 		for elem := stream.getNext(); i < count && elem.HasValue() && ret.waitRequest(); i, elem = i+1, stream.getNext() {
-			ret.data <- elem.Get()
+			ret.dataChannel <- elem.Get()
 		}
 
 		if i == count {
@@ -84,7 +80,7 @@ func (stream *Stream[T]) Seek(count int) *Stream[T] {
 			}
 
 			if i == count {
-				ret.data <- elem.Get()
+				ret.dataChannel <- elem.Get()
 			}
 		}
 
@@ -94,7 +90,7 @@ func (stream *Stream[T]) Seek(count int) *Stream[T] {
 				break
 			}
 
-			ret.data <- elem.Get()
+			ret.dataChannel <- elem.Get()
 		}
 
 	end:
@@ -122,9 +118,9 @@ func (stream *Stream[T]) Sort(comparator functions.Comparator[T]) *Stream[T] {
 			return comparator(arr[i], arr[j]) == comparison.FirstSmaller
 		})
 
-		ret.data <- arr[0]
+		ret.dataChannel <- arr[0]
 		for i := 1; i < len(arr) && ret.waitRequest(); i++ {
-			ret.data <- arr[i]
+			ret.dataChannel <- arr[i]
 		}
 
 		ret.close()

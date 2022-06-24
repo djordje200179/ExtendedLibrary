@@ -8,21 +8,19 @@ import (
 
 type signal bool
 
-const (
-	end  signal = false
-	next signal = true
-)
+const end, next signal = false, true
 
 type Stream[T any] struct {
-	data     chan T
-	signaler messenger.Messenger[signal]
-	closed   bool
+	dataChannel chan T
+	signaler    messenger.Messenger[signal]
+
+	closed bool
 }
 
 func create[T any]() *Stream[T] {
 	stream := new(Stream[T])
 
-	stream.data = make(chan T)
+	stream.dataChannel = make(chan T)
 	stream.signaler = messenger.New[signal](1)
 
 	return stream
@@ -30,7 +28,7 @@ func create[T any]() *Stream[T] {
 
 func (stream *Stream[T]) close() {
 	stream.closed = true
-	close(stream.data)
+	close(stream.dataChannel)
 	stream.signaler.Close()
 }
 
@@ -41,17 +39,12 @@ func (stream *Stream[T]) getNext() optional.Optional[T] {
 
 	stream.signaler.Send(next)
 
-	data, ok := <-stream.data
+	data, ok := <-stream.dataChannel
 	return optional.New(data, ok)
 }
 
-func (stream *Stream[T]) stop() {
-	stream.signaler.Send(end)
-}
-
-func (stream *Stream[T]) waitRequest() bool {
-	return stream.signaler.ReadSync().Get() == next
-}
+func (stream *Stream[T]) stop()             { stream.signaler.Send(end) }
+func (stream *Stream[T]) waitRequest() bool { return stream.signaler.ReadSync().Get() == next }
 
 func (stream *Stream[T]) Iterator() datastructures.Iterator[T] {
 	return &iterator[T]{

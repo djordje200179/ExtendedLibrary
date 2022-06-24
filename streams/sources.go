@@ -10,7 +10,7 @@ func Supply[T any](supplier functions.EmptyGenerator[T]) *Stream[T] {
 
 	go func() {
 		for stream.waitRequest() {
-			stream.data <- supplier()
+			stream.dataChannel <- supplier()
 		}
 
 		stream.close()
@@ -24,7 +24,7 @@ func Generate[T any](seed T, generator functions.ParamGenerator[T, T]) *Stream[T
 
 	go func() {
 		for curr := seed; stream.waitRequest(); curr = generator(curr) {
-			stream.data <- curr
+			stream.dataChannel <- curr
 		}
 
 		stream.close()
@@ -42,7 +42,7 @@ func FromSlice[T any](values []T) *Stream[T] {
 
 	go func() {
 		for i := 0; i < len(values) && stream.waitRequest(); i++ {
-			stream.data <- values[i]
+			stream.dataChannel <- values[i]
 		}
 
 		stream.close()
@@ -62,7 +62,7 @@ func FromChannel[T any](ch <-chan T) *Stream[T] {
 				break
 			}
 
-			stream.data <- data
+			stream.dataChannel <- data
 		}
 
 		stream.close()
@@ -76,7 +76,7 @@ func FromIterable[T any](iterable datastructures.Iterable[T]) *Stream[T] {
 
 	go func() {
 		for it := iterable.Iterator(); it.Valid() && stream.waitRequest(); it.Move() {
-			stream.data <- it.Get()
+			stream.dataChannel <- it.Get()
 		}
 
 		stream.close()

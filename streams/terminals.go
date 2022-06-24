@@ -22,10 +22,6 @@ func Reduce[T, P any](stream *Stream[T], accumulator P, reducer functions.Reduce
 	return acc
 }
 
-func (stream *Stream[T]) ReduceWithAny(accumulator any, reducer functions.Reducer[T, any]) any {
-	return Reduce[T, any](stream, accumulator, reducer)
-}
-
 func (stream *Stream[T]) Any(predictor functions.Predictor[T]) bool {
 	for elem := stream.getNext(); elem.HasValue(); elem = stream.getNext() {
 		if predictor(elem.Get()) {
@@ -59,10 +55,6 @@ func Collect[T, R any](stream *Stream[T], collector Collector[T, R]) R {
 	})
 
 	return collector.Finish()
-}
-
-func (stream *Stream[T]) CollectWithAny(collector Collector[T, any]) any {
-	return Collect[T, any](stream, collector)
 }
 
 func (stream *Stream[T]) Count() int {
