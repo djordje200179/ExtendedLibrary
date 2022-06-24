@@ -1,20 +1,30 @@
 package collectors
 
 import (
+	"github.com/djordje200179/extendedlibrary/datastructures/maps"
+	"github.com/djordje200179/extendedlibrary/datastructures/maps/hashmap"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps/linkedlistmap"
+	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences/array"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type groupCollector[T any, K comparable] struct {
-	m      linkedlistmap.Map[K, *array.Array[T]]
+	m      maps.Map[K, sequences.Sequence[T]]
 	mapper functions.Mapper[T, K]
 }
 
-func Group[T any, K comparable](mapper functions.Mapper[T, K]) streams.Collector[T, linkedlistmap.Map[K, *array.Array[T]]] {
+func GroupOrdered[T any, K comparable](mapper functions.Mapper[T, K]) streams.Collector[T, maps.Map[K, sequences.Sequence[T]]] {
 	return groupCollector[T, K]{
-		m:      linkedlistmap.New[K, *array.Array[T]](),
+		m:      linkedlistmap.New[K, sequences.Sequence[T]](),
+		mapper: mapper,
+	}
+}
+
+func Group[T any, K comparable](mapper functions.Mapper[T, K]) streams.Collector[T, maps.Map[K, sequences.Sequence[T]]] {
+	return groupCollector[T, K]{
+		m:      hashmap.New[K, sequences.Sequence[T]](),
 		mapper: mapper,
 	}
 }
@@ -30,10 +40,10 @@ func (collector groupCollector[T, K]) Supply(value T) {
 	arr.Append(value)
 }
 
-func (collector groupCollector[T, K]) Finish() linkedlistmap.Map[K, *array.Array[T]] {
+func (collector groupCollector[T, K]) Finish() maps.Map[K, sequences.Sequence[T]] {
 	return collector.m
 }
 
-func Partition[T any](predictor functions.Predictor[T]) streams.Collector[T, linkedlistmap.Map[bool, *array.Array[T]]] {
+func Partition[T any](predictor functions.Predictor[T]) streams.Collector[T, maps.Map[bool, sequences.Sequence[T]]] {
 	return Group[T](functions.Mapper[T, bool](predictor))
 }
