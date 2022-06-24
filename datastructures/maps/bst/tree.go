@@ -119,7 +119,7 @@ func (tree *BinarySearchTree[K, V]) Iterator() datastructures.Iterator[maps.Entr
 func (tree *BinarySearchTree[K, V]) ModifyingIterator() maps.Iterator[K, V] {
 	return &iterator[K, V]{
 		tree: tree,
-		curr: tree.root,
+		curr: tree.root.min(),
 	}
 }
 
