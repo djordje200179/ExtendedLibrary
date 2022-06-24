@@ -115,4 +115,4 @@ func (list *LinkedList[T]) ModifyingIterator() sequences.Iterator[T] {
 }
 
 func (list *LinkedList[T]) Stream() *streams.Stream[T]     { return streams.FromIterable[T](list) }
-func (list *LinkedList[T]) RefStream() *streams.Stream[*T] { return streams.FromSequenceRef[T](list) }
+func (list *LinkedList[T]) RefStream() *streams.Stream[*T] { return sequences.RefStream[T](list) }

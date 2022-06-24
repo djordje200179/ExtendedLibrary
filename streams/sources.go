@@ -2,11 +2,11 @@ package streams
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures"
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
+	"github.com/djordje200179/extendedlibrary/misc/optional"
 )
 
-func Supply[T any](supplier functions.EmptyGenerator[T]) *Stream[T] {
+func SupplyEndless[T any](supplier functions.EmptyGenerator[T]) *Stream[T] {
 	stream := create[T]()
 
 	go func() {
@@ -20,18 +20,32 @@ func Supply[T any](supplier functions.EmptyGenerator[T]) *Stream[T] {
 	return stream
 }
 
-func Generate[T any](seed T, generator functions.ParamGenerator[T, T]) *Stream[T] {
+func SupplyWithEnd[T any](supplier functions.EmptyGenerator[optional.Optional[T]]) *Stream[T] {
 	stream := create[T]()
 
 	go func() {
-		for curr := seed; stream.waitRequest(); curr = generator(curr) {
-			stream.dataChannel <- curr
+		for stream.waitRequest() {
+			if element := supplier(); element.HasValue() {
+				stream.dataChannel <- element.Get()
+			} else {
+				break
+			}
 		}
 
 		stream.close()
 	}()
 
 	return stream
+}
+
+func GenerateEndless[T any](seed T, generator functions.ParamGenerator[T, T]) *Stream[T] {
+	supplier := func() T {
+		oldValue := seed
+		seed = generator(seed)
+		return oldValue
+	}
+
+	return SupplyEndless[T](supplier)
 }
 
 func FromValues[T any](values ...T) *Stream[T] {
@@ -72,20 +86,6 @@ func FromChannel[T any](ch <-chan T) *Stream[T] {
 	return stream
 }
 
-func FromSequenceRef[T any](sequence sequences.Sequence[T]) *Stream[*T] {
-	stream := create[*T]()
-
-	go func() {
-		for it := sequence.ModifyingIterator(); it.Valid() && stream.waitRequest(); it.Move() {
-			stream.dataChannel <- it.GetRef()
-		}
-
-		stream.close()
-	}()
-
-	return stream
-}
-
 func FromIterable[T any](iterable datastructures.Iterable[T]) *Stream[T] {
 	stream := create[T]()
 
@@ -102,5 +102,5 @@ func FromIterable[T any](iterable datastructures.Iterable[T]) *Stream[T] {
 
 func Range(lower, upper int) *Stream[int] {
 	increment := func(curr int) int { return curr + 1 }
-	return Generate(lower, increment).Limit(upper - lower)
+	return GenerateEndless(lower, increment).Limit(upper - lower)
 }

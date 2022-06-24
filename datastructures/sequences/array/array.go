@@ -116,6 +116,6 @@ func (array *Array[T]) Iterator() datastructures.Iterator[T]     { return array.
 func (array *Array[T]) ModifyingIterator() sequences.Iterator[T] { return &Iterator[T]{array, 0} }
 
 func (array *Array[T]) Stream() *streams.Stream[T]     { return streams.FromSlice(array.Slice()) }
-func (array *Array[T]) RefStream() *streams.Stream[*T] { return streams.FromSequenceRef[T](array) }
+func (array *Array[T]) RefStream() *streams.Stream[*T] { return sequences.RefStream[T](array) }
 
 func (array *Array[T]) Slice() []T { return *array }
