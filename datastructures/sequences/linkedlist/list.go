@@ -121,8 +121,8 @@ func (list *LinkedList[T]) Iterator() datastructures.Iterator[T] {
 
 func (list *LinkedList[T]) ModifyingIterator() sequences.Iterator[T] {
 	return &Iterator[T]{
-		list:    list,
-		current: list.head,
+		list: list,
+		curr: list.head,
 	}
 }
 
