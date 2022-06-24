@@ -151,12 +151,5 @@ func (tree *BinarySearchTree[K, V]) ModifyingIterator() maps.Iterator[K, V] {
 }
 
 func (tree *BinarySearchTree[K, V]) Stream() *streams.Stream[misc.Pair[K, V]] {
-	it := tree.Iterator()
-
-	return streams.Supply(func() misc.Pair[K, V] {
-		defer it.Move()
-
-		entry := it.Get()
-		return misc.Pair[K, V]{entry.Key(), entry.Value()}
-	})
+	return maps.Stream[K, V](tree)
 }

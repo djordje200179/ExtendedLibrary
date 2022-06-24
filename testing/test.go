@@ -2,18 +2,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/djordje200179/extendedlibrary/datastructures/maps/hashmap"
+	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
 )
 
 func main() {
-	m := hashmap.New[int, int]()
-	m.Set(10, 1)
-	m.Set(5, 2)
-	m.Set(7, 3)
-	m.Set(11, 4)
+	l := linkedlist.New[int]()
+	l.Append(2)
+	l.AppendMany(3, 5)
 
-	for it := m.Iterator(); it.Valid(); it.Move() {
-		entry := it.Get()
-		fmt.Println(entry.Key(), entry.Value())
-	}
+	l.RefStream().ForEach(func(ref *int) {
+		fmt.Println(*ref)
+	})
 }

@@ -110,20 +110,9 @@ func (list *LinkedList[T]) Clone() sequences.Sequence[T] {
 }
 
 func (list *LinkedList[T]) Iterator() datastructures.Iterator[T] { return list.ModifyingIterator() }
-
 func (list *LinkedList[T]) ModifyingIterator() sequences.Iterator[T] {
-	return &Iterator[T]{
-		list: list,
-		curr: list.head,
-	}
+	return &Iterator[T]{list, list.head}
 }
 
-func (list *LinkedList[T]) Stream() *streams.Stream[T] { return streams.FromIterable[T](list) }
-
-func (list *LinkedList[T]) RefStream() *streams.Stream[*T] {
-	iterator := list.ModifyingIterator()
-	return streams.Supply(func() *T {
-		defer iterator.Move()
-		return iterator.GetRef()
-	})
-}
+func (list *LinkedList[T]) Stream() *streams.Stream[T]     { return streams.FromIterable[T](list) }
+func (list *LinkedList[T]) RefStream() *streams.Stream[*T] { return streams.FromSequenceRef[T](list) }

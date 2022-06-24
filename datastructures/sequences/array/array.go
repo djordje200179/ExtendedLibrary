@@ -35,9 +35,7 @@ func Collector[T any]() streams.Collector[T, sequences.Sequence[T]] {
 	return sequences.Collector[T](New[T]())
 }
 
-func (array *Array[T]) Size() int {
-	return len(array.Slice())
-}
+func (array *Array[T]) Size() int { return len(array.Slice()) }
 
 func (array *Array[T]) getRealIndex(index int) int {
 	if index >= array.Size() || index < -array.Size() {
@@ -61,13 +59,8 @@ func (array *Array[T]) GetRef(index int) *T {
 func (array *Array[T]) Get(index int) T        { return *array.GetRef(index) }
 func (array *Array[T]) Set(index int, value T) { *array.GetRef(index) = value }
 
-func (array *Array[T]) Append(value T) {
-	*array = append(array.Slice(), value)
-}
-
-func (array *Array[T]) AppendMany(values ...T) {
-	*array = append(array.Slice(), values...)
-}
+func (array *Array[T]) Append(value T)         { *array = append(array.Slice(), value) }
+func (array *Array[T]) AppendMany(values ...T) { *array = append(array.Slice(), values...) }
 
 func (array *Array[T]) Insert(index int, value T) {
 	index = array.getRealIndex(index)
@@ -91,9 +84,7 @@ func (array *Array[T]) Remove(index int) {
 	}
 }
 
-func (array *Array[T]) Clear() {
-	*array = nil
-}
+func (array *Array[T]) Clear() { *array = nil }
 
 func (array *Array[T]) Reverse() {
 	n := len(array.Slice())
@@ -119,33 +110,12 @@ func (array *Array[T]) Join(other sequences.Sequence[T]) {
 	}
 }
 
-func (array *Array[T]) Clone() sequences.Sequence[T] {
-	return NewFromSlice[T](array.Slice())
-}
+func (array *Array[T]) Clone() sequences.Sequence[T] { return NewFromSlice[T](array.Slice()) }
 
-func (array *Array[T]) Iterator() datastructures.Iterator[T] {
-	return array.ModifyingIterator()
-}
+func (array *Array[T]) Iterator() datastructures.Iterator[T]     { return array.ModifyingIterator() }
+func (array *Array[T]) ModifyingIterator() sequences.Iterator[T] { return &Iterator[T]{array, 0} }
 
-func (array *Array[T]) ModifyingIterator() sequences.Iterator[T] {
-	return &Iterator[T]{
-		array: array,
-		index: 0,
-	}
-}
+func (array *Array[T]) Stream() *streams.Stream[T]     { return streams.FromSlice(array.Slice()) }
+func (array *Array[T]) RefStream() *streams.Stream[*T] { return streams.FromSequenceRef[T](array) }
 
-func (array *Array[T]) Stream() *streams.Stream[T] {
-	return streams.FromSlice(array.Slice())
-}
-
-func (array *Array[T]) RefStream() *streams.Stream[*T] {
-	iterator := array.ModifyingIterator()
-	return streams.Supply(func() *T {
-		defer iterator.Move()
-		return iterator.GetRef()
-	})
-}
-
-func (array *Array[T]) Slice() []T {
-	return *array
-}
+func (array *Array[T]) Slice() []T { return *array }

@@ -51,11 +51,5 @@ func (set Set[T]) Iterator() datastructures.Iterator[T] {
 }
 
 func (set Set[T]) Stream() *streams.Stream[T] {
-	it := set.m().Iterator()
-
-	return streams.Supply(func() T {
-		defer it.Move()
-
-		return it.Get().Key()
-	})
+	return streams.FromIterable[T](set)
 }

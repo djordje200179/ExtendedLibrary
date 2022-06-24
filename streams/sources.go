@@ -2,6 +2,7 @@ package streams
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures"
+	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 )
 
@@ -63,6 +64,20 @@ func FromChannel[T any](ch <-chan T) *Stream[T] {
 			}
 
 			stream.dataChannel <- data
+		}
+
+		stream.close()
+	}()
+
+	return stream
+}
+
+func FromSequenceRef[T any](sequence sequences.Sequence[T]) *Stream[*T] {
+	stream := create[*T]()
+
+	go func() {
+		for it := sequence.ModifyingIterator(); it.Valid() && stream.waitRequest(); it.Move() {
+			stream.dataChannel <- it.GetRef()
 		}
 
 		stream.close()
