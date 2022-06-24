@@ -138,7 +138,7 @@ func (array *Array[T]) Stream() *streams.Stream[T] {
 	return streams.FromSlice(array.Slice())
 }
 
-func (array *Array[T]) PointerStream() *streams.Stream[*T] {
+func (array *Array[T]) RefStream() *streams.Stream[*T] {
 	iterator := array.ModifyingIterator()
 	return streams.Supply(func() *T {
 		defer iterator.Move()

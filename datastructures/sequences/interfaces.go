@@ -34,5 +34,5 @@ type Sequence[T any] interface {
 	datastructures.Iterable[T]
 	ModifyingIterator() Iterator[T]
 	streams.Streamer[T]
-	PointerStream() *streams.Stream[*T]
+	RefStream() *streams.Stream[*T]
 }

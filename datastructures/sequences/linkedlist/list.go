@@ -126,7 +126,7 @@ func (list *LinkedList[T]) Stream() *streams.Stream[T] {
 	return streams.FromIterable[T](list)
 }
 
-func (list *LinkedList[T]) PointerStream() *streams.Stream[*T] {
+func (list *LinkedList[T]) RefStream() *streams.Stream[*T] {
 	iterator := list.ModifyingIterator()
 	return streams.Supply(func() *T {
 		defer iterator.Move()
