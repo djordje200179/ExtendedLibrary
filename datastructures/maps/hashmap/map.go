@@ -62,6 +62,7 @@ func (m Map[K, V]) ModifyingIterator() maps.Iterator[K, V] {
 	i := 0
 	for k := range m {
 		keys[i] = k
+		i++
 	}
 
 	return &iterator[K, V]{
