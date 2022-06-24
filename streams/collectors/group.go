@@ -40,9 +40,7 @@ func (collector groupCollector[T, K]) Supply(value T) {
 	arr.Append(value)
 }
 
-func (collector groupCollector[T, K]) Finish() maps.Map[K, sequences.Sequence[T]] {
-	return collector.m
-}
+func (collector groupCollector[T, K]) Finish() maps.Map[K, sequences.Sequence[T]] { return collector.m }
 
 func Partition[T any](predictor functions.Predictor[T]) streams.Collector[T, maps.Map[bool, sequences.Sequence[T]]] {
 	return Group[T](functions.Mapper[T, bool](predictor))
