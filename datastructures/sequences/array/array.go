@@ -12,9 +12,7 @@ import (
 
 type Array[T any] []T
 
-func New[T any]() *Array[T] {
-	return NewWithCapacity[T](0)
-}
+func New[T any]() *Array[T] { return NewWithCapacity[T](0) }
 
 func NewWithSize[T any](initialSize int) *Array[T] {
 	slice := make([]T, initialSize)

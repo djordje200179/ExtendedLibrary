@@ -13,15 +13,7 @@ type LinkedList[T any] struct {
 	size       int
 }
 
-func New[T any]() *LinkedList[T] {
-	list := new(LinkedList[T])
-
-	list.head = nil
-	list.tail = nil
-	list.size = 0
-
-	return list
-}
+func New[T any]() *LinkedList[T] { return new(LinkedList[T]) }
 
 func NewWithSize[T any](initialSize int) *LinkedList[T] {
 	list := New[T]()
@@ -52,7 +44,7 @@ func (list *LinkedList[T]) Set(index int, value T) {
 
 func (list *LinkedList[T]) Append(value T) {
 	if list.size == 0 {
-		node := &Node[T]{value, nil, nil}
+		node := &Node[T]{Value: value}
 		list.head = node
 		list.tail = node
 		list.size++
