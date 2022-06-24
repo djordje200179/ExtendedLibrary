@@ -7,18 +7,9 @@ type iterator[K comparable, V any] struct {
 	curr *Node[K, V]
 }
 
-func (it *iterator[K, V]) Valid() bool {
-	return it.curr != nil
-}
+func (it *iterator[K, V]) Valid() bool { return it.curr != nil }
+func (it *iterator[K, V]) Move()       { it.curr = it.curr.Next() }
 
-func (it *iterator[K, V]) Move() {
-	it.curr = it.curr.Next()
-}
+func (it *iterator[K, V]) Get() maps.Entry[K, V] { return entry[K, V]{it.curr} }
 
-func (it *iterator[K, V]) Get() maps.Entry[K, V] {
-	return entry[K, V]{it.curr}
-}
-
-func (it *iterator[K, V]) Remove() {
-	it.tree.removeNode(it.curr)
-}
+func (it *iterator[K, V]) Remove() { it.tree.removeNode(it.curr) }
