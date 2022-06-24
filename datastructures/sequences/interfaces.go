@@ -19,7 +19,12 @@ type Iterator[T any] interface {
 }
 
 type Sequence[T any] interface {
-	datastructures.Collection[int, T]
+	Size() int
+
+	Get(index int) T
+	GetRef(index int) *T
+	Set(index int, value T)
+
 	Append(value T)
 	AppendMany(values ...T)
 	Insert(index int, value T)

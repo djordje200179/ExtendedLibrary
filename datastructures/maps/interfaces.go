@@ -21,7 +21,12 @@ type Iterator[K comparable, V any] interface {
 }
 
 type Map[K comparable, V any] interface {
-	datastructures.Collection[K, V]
+	Size() int
+
+	Get(key K) V
+	GetRef(key K) *V
+	Set(key K, value V)
+	
 	Remove(key K)
 	Contains(key K) bool
 

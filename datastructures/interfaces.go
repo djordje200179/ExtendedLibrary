@@ -10,11 +10,3 @@ type Iterator[T any] interface {
 type Iterable[T any] interface {
 	Iterator() Iterator[T]
 }
-
-type Collection[K comparable, V any] interface {
-	Size() int
-
-	Get(key K) V
-	GetRef(key K) *V
-	Set(key K, value V)
-}
