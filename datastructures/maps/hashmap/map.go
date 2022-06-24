@@ -58,9 +58,10 @@ func (m Map[K, V]) Iterator() datastructures.Iterator[maps.Entry[K, V]] {
 }
 
 func (m Map[K, V]) ModifyingIterator() maps.Iterator[K, V] {
-	keys := make([]K, 0, len(m))
+	keys := make([]K, len(m))
+	i := 0
 	for k := range m {
-		keys = append(keys, k)
+		keys[i] = k
 	}
 
 	return &iterator[K, V]{
