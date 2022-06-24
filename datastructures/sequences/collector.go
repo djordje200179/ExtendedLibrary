@@ -9,15 +9,8 @@ type collector[T any] struct {
 }
 
 func Collector[T any](empty Sequence[T]) streams.Collector[T, Sequence[T]] {
-	return collector[T]{
-		seq: empty,
-	}
+	return collector[T]{empty}
 }
 
-func (c collector[T]) Supply(value T) {
-	c.seq.Append(value)
-}
-
-func (c collector[T]) Finish() Sequence[T] {
-	return c.seq
-}
+func (c collector[T]) Supply(value T)      { c.seq.Append(value) }
+func (c collector[T]) Finish() Sequence[T] { return c.seq }

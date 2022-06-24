@@ -9,6 +9,4 @@ type iterator[T comparable] struct {
 	datastructures.Iterator[maps.Entry[T, bool]]
 }
 
-func (it iterator[T]) Get() T {
-	return it.Iterator.Get().Key()
-}
+func (it iterator[T]) Get() T { return it.Iterator.Get().Key() }

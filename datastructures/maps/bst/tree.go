@@ -96,9 +96,7 @@ func (tree *BinarySearchTree[K, V]) Remove(key K) {
 	}
 }
 
-func (tree *BinarySearchTree[K, V]) Contains(key K) bool {
-	return tree.getNode(key) != nil
-}
+func (tree *BinarySearchTree[K, V]) Contains(key K) bool { return tree.getNode(key) != nil }
 
 func (tree *BinarySearchTree[K, V]) Clear() {
 	tree.root = nil
@@ -144,10 +142,7 @@ func (tree *BinarySearchTree[K, V]) Iterator() datastructures.Iterator[maps.Entr
 }
 
 func (tree *BinarySearchTree[K, V]) ModifyingIterator() maps.Iterator[K, V] {
-	return &iterator[K, V]{
-		tree: tree,
-		curr: tree.root.min(),
-	}
+	return &iterator[K, V]{tree, tree.root.min()}
 }
 
 func (tree *BinarySearchTree[K, V]) Stream() *streams.Stream[misc.Pair[K, V]] {

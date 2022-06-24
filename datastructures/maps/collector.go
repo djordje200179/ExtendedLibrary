@@ -10,15 +10,8 @@ type collector[K comparable, V any] struct {
 }
 
 func Collector[K comparable, V any](empty Map[K, V]) streams.Collector[misc.Pair[K, V], Map[K, V]] {
-	return collector[K, V]{
-		m: empty,
-	}
+	return collector[K, V]{empty}
 }
 
-func (c collector[K, V]) Supply(value misc.Pair[K, V]) {
-	c.m.Set(value.First, value.Second)
-}
-
-func (c collector[K, V]) Finish() Map[K, V] {
-	return c.m
-}
+func (c collector[K, V]) Supply(value misc.Pair[K, V]) { c.m.Set(value.First, value.Second) }
+func (c collector[K, V]) Finish() Map[K, V]            { return c.m }

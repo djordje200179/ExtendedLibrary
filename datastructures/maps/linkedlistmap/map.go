@@ -34,9 +34,7 @@ func (m *Map[K, V]) find(key K) sequences.Iterator[misc.Pair[K, V]] {
 	return nil
 }
 
-func (m *Map[K, V]) Size() int {
-	return m.list().Size()
-}
+func (m *Map[K, V]) Size() int { return m.list().Size() }
 
 func (m *Map[K, V]) GetRef(key K) *V {
 	if it := m.find(key); it != nil {
@@ -69,13 +67,9 @@ func (m *Map[K, V]) Remove(key K) {
 	}
 }
 
-func (m *Map[K, V]) Contains(key K) bool {
-	return m.find(key) != nil
-}
+func (m *Map[K, V]) Contains(key K) bool { return m.find(key) != nil }
 
-func (m *Map[K, V]) Clear() {
-	m.list().Clear()
-}
+func (m *Map[K, V]) Clear() { m.list().Clear() }
 
 func (m *Map[K, V]) Clone() maps.Map[K, V] {
 	clonedList := m.list().Clone().(*linkedlist.LinkedList[misc.Pair[K, V]])
@@ -93,6 +87,4 @@ func (m *Map[K, V]) ModifyingIterator() maps.Iterator[K, V] {
 	}
 }
 
-func (m *Map[K, V]) Stream() *streams.Stream[misc.Pair[K, V]] {
-	return m.list().Stream()
-}
+func (m *Map[K, V]) Stream() *streams.Stream[misc.Pair[K, V]] { return m.list().Stream() }

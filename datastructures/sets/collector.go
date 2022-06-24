@@ -8,16 +8,7 @@ type collector[T comparable] struct {
 	set Set[T]
 }
 
-func Collector[T comparable](empty Set[T]) streams.Collector[T, Set[T]] {
-	return collector[T]{
-		set: empty,
-	}
-}
+func Collector[T comparable](empty Set[T]) streams.Collector[T, Set[T]] { return collector[T]{empty} }
 
-func (c collector[T]) Supply(value T) {
-	c.set.Add(value)
-}
-
-func (c collector[T]) Finish() Set[T] {
-	return c.set
-}
+func (c collector[T]) Supply(value T) { c.set.Add(value) }
+func (c collector[T]) Finish() Set[T] { return c.set }

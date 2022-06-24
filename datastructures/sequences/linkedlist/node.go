@@ -3,8 +3,7 @@ package linkedlist
 import "fmt"
 
 type node[T any] struct {
-	value T
-
+	value      T
 	prev, next *node[T]
 }
 

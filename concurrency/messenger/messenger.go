@@ -7,13 +7,9 @@ import (
 
 type Messenger[T any] chan T
 
-func New[T any](bufferSize int) Messenger[T] {
-	return make(chan T, bufferSize)
-}
+func New[T any](bufferSize int) Messenger[T] { return make(chan T, bufferSize) }
 
-func (messenger Messenger[T]) Send(signal T) {
-	messenger <- signal
-}
+func (messenger Messenger[T]) Send(signal T) { messenger <- signal }
 
 func (messenger Messenger[T]) ReadSync() optional.Optional[T] {
 	value, ok := <-messenger
@@ -39,6 +35,4 @@ func (messenger Messenger[T]) ReadIfHasData() optional.Optional[T] {
 	}
 }
 
-func (messenger Messenger[T]) Close() {
-	close(messenger)
-}
+func (messenger Messenger[T]) Close() { close(messenger) }

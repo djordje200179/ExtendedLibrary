@@ -11,17 +11,11 @@ type Set[T comparable] linkedlist.LinkedList[T]
 
 func New[T comparable]() *Set[T] { return (*Set[T])(linkedlist.New[T]()) }
 
-func Collector[T comparable]() streams.Collector[T, sets.Set[T]] {
-	return sets.Collector[T](New[T]())
-}
+func Collector[T comparable]() streams.Collector[T, sets.Set[T]] { return sets.Collector[T](New[T]()) }
 
-func (set *Set[T]) list() *linkedlist.LinkedList[T] {
-	return (*linkedlist.LinkedList[T])(set)
-}
+func (set *Set[T]) list() *linkedlist.LinkedList[T] { return (*linkedlist.LinkedList[T])(set) }
 
-func (set *Set[T]) Size() int {
-	return set.list().Size()
-}
+func (set *Set[T]) Size() int { return set.list().Size() }
 
 func (set *Set[T]) Add(value T) {
 	if !set.Contains(value) {
@@ -48,19 +42,12 @@ func (set *Set[T]) Contains(value T) bool {
 	return false
 }
 
-func (set *Set[T]) Clear() {
-	set.list().Clear()
-}
+func (set *Set[T]) Clear() { set.list().Clear() }
 
 func (set *Set[T]) Clone() sets.Set[T] {
 	cloned := set.list().Clone().(*linkedlist.LinkedList[T])
 	return (*Set[T])(cloned)
 }
 
-func (set *Set[T]) Iterator() datastructures.Iterator[T] {
-	return set.list().Iterator()
-}
-
-func (set *Set[T]) Stream() *streams.Stream[T] {
-	return set.list().Stream()
-}
+func (set *Set[T]) Iterator() datastructures.Iterator[T] { return set.list().Iterator() }
+func (set *Set[T]) Stream() *streams.Stream[T]           { return set.list().Stream() }

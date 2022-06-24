@@ -115,10 +115,7 @@ func (syncSeq *SynchronizedSequence[T]) Iterator() datastructures.Iterator[T] {
 }
 
 func (syncSeq *SynchronizedSequence[T]) ModifyingIterator() sequences.Iterator[T] {
-	return iterator[T]{
-		Iterator: syncSeq.sequence.ModifyingIterator(),
-		seq:      syncSeq,
-	}
+	return iterator[T]{syncSeq.sequence.ModifyingIterator(), syncSeq}
 }
 
 func (syncSeq *SynchronizedSequence[T]) Stream() *streams.Stream[T] {

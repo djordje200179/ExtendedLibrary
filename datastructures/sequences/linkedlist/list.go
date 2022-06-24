@@ -57,9 +57,7 @@ func (list *LinkedList[T]) Insert(index int, value T) {
 	list.insertBeforeNode(list.getNode(index), value)
 }
 
-func (list *LinkedList[T]) Remove(index int) {
-	list.removeNode(list.getNode(index))
-}
+func (list *LinkedList[T]) Remove(index int) { list.removeNode(list.getNode(index)) }
 
 func (list *LinkedList[T]) Clear() {
 	list.head = nil
