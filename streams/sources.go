@@ -7,20 +7,12 @@ import (
 )
 
 func SupplyEndless[T any](supplier functions.EmptyGenerator[T]) *Stream[T] {
-	stream := create[T]()
+	mapper := func() optional.Optional[T] { return optional.FromValue[T](supplier()) }
 
-	go func() {
-		for stream.waitRequest() {
-			stream.dataChannel <- supplier()
-		}
-
-		stream.close()
-	}()
-
-	return stream
+	return Supply(mapper)
 }
 
-func SupplyWithEnd[T any](supplier functions.EmptyGenerator[optional.Optional[T]]) *Stream[T] {
+func Supply[T any](supplier functions.EmptyGenerator[optional.Optional[T]]) *Stream[T] {
 	stream := create[T]()
 
 	go func() {
@@ -38,7 +30,7 @@ func SupplyWithEnd[T any](supplier functions.EmptyGenerator[optional.Optional[T]
 	return stream
 }
 
-func GenerateEndless[T any](seed T, generator functions.ParamGenerator[T, T]) *Stream[T] {
+func Generate[T any](seed T, generator functions.ParamGenerator[T, T]) *Stream[T] {
 	supplier := func() T {
 		oldValue := seed
 		seed = generator(seed)
@@ -102,5 +94,5 @@ func FromIterable[T any](iterable datastructures.Iterable[T]) *Stream[T] {
 
 func Range(lower, upper int) *Stream[int] {
 	increment := func(curr int) int { return curr + 1 }
-	return GenerateEndless(lower, increment).Limit(upper - lower)
+	return Generate(lower, increment).Limit(upper - lower)
 }

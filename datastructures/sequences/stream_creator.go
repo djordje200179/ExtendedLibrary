@@ -16,5 +16,5 @@ func RefStream[T any](sequence Sequence[T]) *streams.Stream[*T] {
 		return optional.FromValue(it.GetRef())
 	}
 
-	return streams.SupplyWithEnd[*T](supplier)
+	return streams.Supply[*T](supplier)
 }
