@@ -29,6 +29,13 @@ func (syncSeq *SynchronizedSequence[T]) Size() int {
 	return syncSeq.sequence.Size()
 }
 
+func (syncSeq *SynchronizedSequence[T]) GetRef(index int) *T {
+	syncSeq.mutex.Lock()
+	defer syncSeq.mutex.Unlock()
+
+	return syncSeq.sequence.GetRef(index)
+}
+
 func (syncSeq *SynchronizedSequence[T]) Get(index int) T {
 	syncSeq.mutex.Lock()
 	defer syncSeq.mutex.Unlock()
@@ -116,4 +123,8 @@ func (syncSeq *SynchronizedSequence[T]) ModifyingIterator() sequences.Iterator[T
 
 func (syncSeq *SynchronizedSequence[T]) Stream() *streams.Stream[T] {
 	return syncSeq.sequence.Stream()
+}
+
+func (syncSeq *SynchronizedSequence[T]) RefStream() *streams.Stream[*T] {
+	return syncSeq.sequence.RefStream()
 }
