@@ -82,8 +82,3 @@ func (list *LinkedList[T]) removeNode(node *Node[T]) {
 
 	list.size--
 }
-
-func SwapData[T any](first *Node[T], second *Node[T]) {
-	first.prev, second.prev = second.prev, first.prev
-	first.next, second.next = second.next, first.next
-}
