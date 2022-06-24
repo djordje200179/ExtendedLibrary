@@ -2,15 +2,18 @@ package main
 
 import (
 	"fmt"
-	"github.com/djordje200179/extendedlibrary/misc/functions"
-	"github.com/djordje200179/extendedlibrary/streams"
+	"github.com/djordje200179/extendedlibrary/datastructures/maps/linkedlistmap"
 )
 
 func main() {
-	streams.
-		Generate(1, functions.Increment).
-		Filter(func(value int) bool { return value%6 == 0 }).
-		Seek(5).
-		Limit(10).
-		ForEach(func(value int) { fmt.Println(value) })
+	m := linkedlistmap.New[int, int]()
+	m.Set(10, 1)
+	m.Set(5, 2)
+	m.Set(7, 3)
+	m.Set(11, 4)
+
+	for it := m.Iterator(); it.Valid(); it.Move() {
+		entry := it.Get()
+		fmt.Println(entry.Key(), " ", entry.Value())
+	}
 }

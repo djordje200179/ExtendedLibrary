@@ -1,34 +1,18 @@
 package array
 
-type iterator[T any] struct {
+type Iterator[T any] struct {
 	array *Array[T]
 	index int
 }
 
-func (it *iterator[T]) Valid() bool {
-	return it.index < it.array.Size()
-}
+func (it *Iterator[T]) Valid() bool { return it.index < it.array.Size() }
+func (it *Iterator[T]) Move()       { it.index++ }
 
-func (it *iterator[T]) Move() {
-	it.index++
-}
+func (it *Iterator[T]) Get() T      { return it.array.Get(it.index) }
+func (it *Iterator[T]) Set(value T) { it.array.Set(it.index, value) }
 
-func (it *iterator[T]) Get() T {
-	return it.array.Get(it.index)
-}
+func (it *Iterator[T]) InsertBefore(value T) { it.array.Insert(it.index, value) }
+func (it *Iterator[T]) InsertAfter(value T)  { it.array.Insert(it.index+1, value) }
+func (it *Iterator[T]) Remove()              { it.array.Remove(it.index) }
 
-func (it *iterator[T]) Set(value T) {
-	it.array.Set(it.index, value)
-}
-
-func (it *iterator[T]) InsertBefore(value T) {
-	it.array.Insert(it.index, value)
-}
-
-func (it *iterator[T]) InsertAfter(value T) {
-	it.array.Insert(it.index+1, value)
-}
-
-func (it *iterator[T]) Remove() {
-	it.array.Remove(it.index)
-}
+func (it *Iterator[T]) Index() int { return it.index }

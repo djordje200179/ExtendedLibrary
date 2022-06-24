@@ -131,7 +131,7 @@ func (array *Array[T]) Iterator() datastructures.Iterator[T] {
 }
 
 func (array *Array[T]) ModifyingIterator() sequences.Iterator[T] {
-	return &iterator[T]{
+	return &Iterator[T]{
 		array: array,
 		index: 0,
 	}
