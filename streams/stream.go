@@ -1,7 +1,6 @@
 package streams
 
 import (
-	"github.com/djordje200179/extendedlibrary/concurrency/boundedbuffer"
 	"github.com/djordje200179/extendedlibrary/datastructures"
 	"github.com/djordje200179/extendedlibrary/misc/optional"
 )
@@ -12,7 +11,7 @@ const end, next signal = false, true
 
 type Stream[T any] struct {
 	data    chan T
-	signals boundedbuffer.BoundedBuffer[signal]
+	signals chan signal
 
 	closed bool
 }
@@ -21,7 +20,7 @@ func create[T any]() *Stream[T] {
 	stream := new(Stream[T])
 
 	stream.data = make(chan T)
-	stream.signals = boundedbuffer.New[signal](1)
+	stream.signals = make(chan signal, 1)
 
 	return stream
 }
@@ -29,7 +28,7 @@ func create[T any]() *Stream[T] {
 func (stream *Stream[T]) close() {
 	stream.closed = true
 	close(stream.data)
-	stream.signals.Close()
+	close(stream.signals)
 }
 
 func (stream *Stream[T]) getNext() optional.Optional[T] {
@@ -37,19 +36,19 @@ func (stream *Stream[T]) getNext() optional.Optional[T] {
 		return optional.Empty[T]()
 	}
 
-	stream.signals.Put(next)
+	stream.signals <- next
 
 	data, ok := <-stream.data
-	return optional.New(data, ok)
+	return optional.New[T](data, ok)
 }
 
 func (stream *Stream[T]) stop() {
 	if !stream.closed {
-		stream.signals.Put(end)
+		stream.signals <- end
 	}
 }
 
-func (stream *Stream[T]) waitRequest() bool { return stream.signals.Get().Get() == next }
+func (stream *Stream[T]) waitRequest() bool { return <-stream.signals == next }
 
 func (stream *Stream[T]) Iterator() datastructures.Iterator[T] {
 	return &iterator[T]{
