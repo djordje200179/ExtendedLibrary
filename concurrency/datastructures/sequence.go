@@ -107,6 +107,9 @@ func (seq *SynchronizedSequence[T]) Join(other sequences.Sequence[T]) {
 }
 
 func (seq *SynchronizedSequence[T]) Clone() sequences.Sequence[T] {
+	seq.mutex.Lock()
+	defer seq.mutex.Unlock()
+
 	return FromSequence[T](seq.Sequence.Clone())
 }
 

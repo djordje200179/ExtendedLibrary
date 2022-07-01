@@ -72,6 +72,9 @@ func (m *SynchronizedMap[K, V]) Clear() {
 }
 
 func (m *SynchronizedMap[K, V]) Clone() maps.Map[K, V] {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+
 	return FromMap[K, V](m.Map.Clone())
 }
 
