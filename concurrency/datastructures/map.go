@@ -1,4 +1,4 @@
-package _map
+package datastructures
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures"
@@ -9,14 +9,14 @@ import (
 )
 
 type SynchronizedMap[K comparable, V any] struct {
-	m     maps.Map[K, V]
+	maps.Map[K, V]
 	mutex sync.Mutex
 }
 
-func New[K comparable, V any](m maps.Map[K, V]) *SynchronizedMap[K, V] {
+func FromMap[K comparable, V any](m maps.Map[K, V]) *SynchronizedMap[K, V] {
 	syncMap := new(SynchronizedMap[K, V])
 
-	syncMap.m = m
+	syncMap.Map = m
 	syncMap.mutex = sync.Mutex{}
 
 	return syncMap
@@ -26,53 +26,53 @@ func (m *SynchronizedMap[K, V]) Size() int {
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 
-	return m.m.Size()
+	return m.Map.Size()
 }
 
 func (m *SynchronizedMap[K, V]) Get(key K) V {
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 
-	return m.m.Get(key)
+	return m.Map.Get(key)
 }
 
 func (m *SynchronizedMap[K, V]) GetRef(key K) *V {
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 
-	return m.m.GetRef(key)
+	return m.Map.GetRef(key)
 }
 
 func (m *SynchronizedMap[K, V]) Set(key K, value V) {
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 
-	m.m.Set(key, value)
+	m.Map.Set(key, value)
 }
 
 func (m *SynchronizedMap[K, V]) Remove(key K) {
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 
-	m.m.Remove(key)
+	m.Map.Remove(key)
 }
 
 func (m *SynchronizedMap[K, V]) Contains(key K) bool {
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 
-	return m.m.Contains(key)
+	return m.Map.Contains(key)
 }
 
 func (m *SynchronizedMap[K, V]) Clear() {
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 
-	m.m.Clear()
+	m.Map.Clear()
 }
 
 func (m *SynchronizedMap[K, V]) Clone() maps.Map[K, V] {
-	return New[K, V](m.m.Clone())
+	return FromMap[K, V](m.Map.Clone())
 }
 
 func (m *SynchronizedMap[K, V]) Iterator() datastructures.Iterator[maps.Entry[K, V]] {
@@ -80,9 +80,9 @@ func (m *SynchronizedMap[K, V]) Iterator() datastructures.Iterator[maps.Entry[K,
 }
 
 func (m *SynchronizedMap[K, V]) ModifyingIterator() maps.Iterator[K, V] {
-	return iterator[K, V]{m.m.ModifyingIterator(), m}
+	return mapIterator[K, V]{m.Map.ModifyingIterator(), m}
 }
 
 func (m *SynchronizedMap[K, V]) Stream() *streams.Stream[misc.Pair[K, V]] {
-	return m.m.Stream()
+	return m.Map.Stream()
 }

@@ -1,22 +1,22 @@
-package _map
+package datastructures
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 )
 
-type iterator[K comparable, V any] struct {
+type mapIterator[K comparable, V any] struct {
 	maps.Iterator[K, V]
 	m *SynchronizedMap[K, V]
 }
 
-func (it iterator[K, V]) Get() maps.Entry[K, V] {
+func (it mapIterator[K, V]) Get() maps.Entry[K, V] {
 	it.m.mutex.Lock()
 	defer it.m.mutex.Unlock()
 
 	return it.Iterator.Get()
 }
 
-func (it iterator[K, V]) Remove() {
+func (it mapIterator[K, V]) Remove() {
 	it.m.mutex.Lock()
 	defer it.m.mutex.Unlock()
 
