@@ -15,21 +15,14 @@ type Array[T any] []T
 func New[T any]() *Array[T] { return NewWithCapacity[T](0) }
 
 func NewWithSize[T any](initialSize int) *Array[T] {
-	slice := make([]T, initialSize)
-	return (*Array[T])(&slice)
+	return NewFromSlice(make([]T, initialSize))
 }
 
 func NewWithCapacity[T any](initialCapacity int) *Array[T] {
-	slice := make([]T, 0, initialCapacity)
-	return (*Array[T])(&slice)
+	return NewFromSlice(make([]T, 0, initialCapacity))
 }
 
-func NewFromSlice[T any](slice []T) *Array[T] {
-	array := NewWithSize[T](len(slice))
-	copy(array.Slice(), slice)
-
-	return array
-}
+func NewFromSlice[T any](slice []T) *Array[T] { return (*Array[T])(&slice) }
 
 func Collector[T any]() streams.Collector[T, sequences.Sequence[T]] {
 	return sequences.Collector[T](New[T]())
@@ -110,7 +103,12 @@ func (array *Array[T]) Join(other sequences.Sequence[T]) {
 	}
 }
 
-func (array *Array[T]) Clone() sequences.Sequence[T] { return NewFromSlice[T](array.Slice()) }
+func (array *Array[T]) Clone() sequences.Sequence[T] {
+	cloned := NewWithSize[T](array.Size())
+	copy(cloned.Slice(), array.Slice())
+
+	return cloned
+}
 
 func (array *Array[T]) Iterator() datastructures.Iterator[T]     { return array.ModifyingIterator() }
 func (array *Array[T]) ModifyingIterator() sequences.Iterator[T] { return &Iterator[T]{array, 0} }

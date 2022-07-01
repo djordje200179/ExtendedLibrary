@@ -9,9 +9,9 @@ import (
 
 type Map[K comparable, V any] map[K]V
 
-func New[K comparable, V any]() Map[K, V] {
-	return make(map[K]V)
-}
+func New[K comparable, V any]() Map[K, V] { return NewFromMap(make(map[K]V)) }
+
+func NewFromMap[K comparable, V any](m map[K]V) Map[K, V] { return m }
 
 func Collector[K comparable, V any]() streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
 	return maps.Collector[K, V](New[K, V]())

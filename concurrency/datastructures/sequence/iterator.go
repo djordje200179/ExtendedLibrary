@@ -14,8 +14,19 @@ func (it iterator[T]) GetRef() *T {
 	return it.Iterator.GetRef()
 }
 
-func (it iterator[T]) Get() T      { return *it.GetRef() }
-func (it iterator[T]) Set(value T) { *it.GetRef() = value }
+func (it iterator[T]) Get() T {
+	it.seq.mutex.Lock()
+	defer it.seq.mutex.Unlock()
+
+	return it.Iterator.Get()
+}
+
+func (it iterator[T]) Set(value T) {
+	it.seq.mutex.Lock()
+	defer it.seq.mutex.Unlock()
+
+	it.Iterator.Set(value)
+}
 
 func (it iterator[T]) InsertBefore(value T) {
 	it.seq.mutex.Lock()
