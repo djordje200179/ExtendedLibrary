@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
+	streams2 "github.com/djordje200179/extendedlibrary/datastructures/dsextensions/streams"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/streams"
 	"github.com/djordje200179/extendedlibrary/streams/collectors"
-	streams2 "github.com/djordje200179/extendedlibrary/streams/extensions/streams"
 	"math"
 	"math/rand"
 )
