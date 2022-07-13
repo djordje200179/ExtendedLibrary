@@ -6,7 +6,6 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
 	"github.com/djordje200179/extendedlibrary/misc/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
-	"github.com/djordje200179/extendedlibrary/streams"
 	"sort"
 )
 
@@ -23,10 +22,6 @@ func NewWithCapacity[T any](initialCapacity int) *Array[T] {
 }
 
 func NewFromSlice[T any](slice []T) *Array[T] { return (*Array[T])(&slice) }
-
-func Collector[T any]() streams.Collector[T, sequences.Sequence[T]] {
-	return sequences.Collector[T](New[T]())
-}
 
 func (array *Array[T]) Size() int { return len(array.Slice()) }
 

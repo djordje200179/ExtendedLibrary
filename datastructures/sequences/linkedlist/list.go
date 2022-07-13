@@ -5,7 +5,6 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
 	"github.com/djordje200179/extendedlibrary/misc/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
-	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type LinkedList[T any] struct {
@@ -24,10 +23,6 @@ func NewWithSize[T any](initialSize int) *LinkedList[T] {
 	}
 
 	return list
-}
-
-func Collector[T any]() streams.Collector[T, sequences.Sequence[T]] {
-	return sequences.Collector[T](New[T]())
 }
 
 func (list *LinkedList[T]) Size() int { return list.size }
