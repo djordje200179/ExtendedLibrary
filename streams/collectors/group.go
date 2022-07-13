@@ -1,43 +1,25 @@
 package collectors
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/maps"
-	"github.com/djordje200179/extendedlibrary/datastructures/maps/hashmap"
-	"github.com/djordje200179/extendedlibrary/datastructures/maps/linkedlistmap"
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences/array"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type groupCollector[T any, K comparable] struct {
-	m      maps.Map[K, sequences.Sequence[T]]
+	m      map[K][]T
 	mapper functions.Mapper[T, K]
 }
 
-func GroupOrdered[T any, K comparable](mapper functions.Mapper[T, K]) streams.Collector[T, maps.Map[K, sequences.Sequence[T]]] {
+func Group[T any, K comparable](mapper functions.Mapper[T, K]) streams.Collector[T, map[K][]T] {
 	return groupCollector[T, K]{
-		m:      linkedlistmap.New[K, sequences.Sequence[T]](),
-		mapper: mapper,
-	}
-}
-
-func Group[T any, K comparable](mapper functions.Mapper[T, K]) streams.Collector[T, maps.Map[K, sequences.Sequence[T]]] {
-	return groupCollector[T, K]{
-		m:      hashmap.New[K, sequences.Sequence[T]](),
+		m:      make(map[K][]T),
 		mapper: mapper,
 	}
 }
 
 func (collector groupCollector[T, K]) Supply(value T) {
 	key := collector.mapper(value)
-
-	if !collector.m.Contains(key) {
-		collector.m.Set(key, array.New[T]())
-	}
-
-	arr := collector.m.Get(key)
-	arr.Append(value)
+	collector.m[key] = append(collector.m[key], value)
 }
 
-func (collector groupCollector[T, K]) Finish() maps.Map[K, sequences.Sequence[T]] { return collector.m }
+func (collector groupCollector[T, K]) Finish() map[K][]T { return collector.m }

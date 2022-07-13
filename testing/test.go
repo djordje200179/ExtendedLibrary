@@ -2,15 +2,14 @@ package main
 
 import (
 	"fmt"
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
+	"github.com/djordje200179/extendedlibrary/streams"
+	"github.com/djordje200179/extendedlibrary/streams/collectors"
+	"math"
 )
 
+func countDigits(num int) int {
+	return int(math.Floor(math.Log10(float64(num)) + 1))
+}
 func main() {
-	l := linkedlist.New[int]()
-	l.Append(2)
-	l.AppendMany(3, 5)
-
-	l.RefStream().ForEach(func(ref *int) {
-		fmt.Println(*ref)
-	})
+	fmt.Print(streams.Collect(streams.FromRange(1, 1001), collectors.Group(countDigits)))
 }

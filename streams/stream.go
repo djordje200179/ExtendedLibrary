@@ -1,63 +1,29 @@
 package streams
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures"
+	"github.com/djordje200179/extendedlibrary/misc"
+	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/misc/optional"
+	"github.com/djordje200179/extendedlibrary/streams/suppliers"
 )
 
-type signal bool
-
-const end, next signal = false, true
-
 type Stream[T any] struct {
-	data    chan T
-	signals chan signal
-
-	closed bool
+	supplier suppliers.Supplier[T]
 }
 
-func create[T any]() *Stream[T] {
-	stream := new(Stream[T])
+func New[T any](supplier suppliers.Supplier[T]) Stream[T] { return Stream[T]{supplier} }
+func FromChannel[T any](channel <-chan T) Stream[T]       { return New(suppliers.FromChannel(channel)) }
+func FromSlice[T any](slice []T) Stream[T]                { return New(suppliers.FromSlice(slice)) }
+func FromRange(lower, upper int) Stream[int]              { return New(suppliers.FromRange(lower, upper)) }
 
-	stream.data = make(chan T)
-	stream.signals = make(chan signal, 1)
-
-	return stream
+func FromMap[K comparable, V any](m map[K]V) Stream[misc.Pair[K, V]] {
+	return New(suppliers.FromMap(m))
 }
 
-func (stream *Stream[T]) close() {
-	stream.closed = true
-	close(stream.data)
-	close(stream.signals)
+func FromFiniteGenerator[T any](generator functions.EmptyGenerator[optional.Optional[T]]) Stream[T] {
+	return New(suppliers.FromFiniteGenerator(generator))
 }
 
-func (stream *Stream[T]) getNext() optional.Optional[T] {
-	if stream.closed {
-		return optional.Empty[T]()
-	}
-
-	stream.signals <- next
-
-	data, ok := <-stream.data
-	return optional.New[T](data, ok)
-}
-
-func (stream *Stream[T]) stop() {
-	if !stream.closed {
-		stream.signals <- end
-	}
-}
-
-func (stream *Stream[T]) waitRequest() bool { return <-stream.signals == next }
-
-func (stream *Stream[T]) Iterator() datastructures.Iterator[T] {
-	return &iterator[T]{
-		stream:  stream,
-		started: false,
-		ended:   false,
-	}
-}
-
-type Streamer[T any] interface {
-	Stream() *Stream[T]
+func FromInfiniteGenerator[T any](generator functions.EmptyGenerator[T]) Stream[T] {
+	return New(suppliers.FromInfiniteGenerator(generator))
 }

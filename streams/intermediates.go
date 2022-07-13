@@ -3,128 +3,86 @@ package streams
 import (
 	"github.com/djordje200179/extendedlibrary/misc/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
+	"github.com/djordje200179/extendedlibrary/misc/optional"
+	"github.com/djordje200179/extendedlibrary/streams/suppliers"
 	"sort"
 )
 
-func Map[T, P any](stream *Stream[T], mapper func(curr T) P) *Stream[P] {
-	ret := create[P]()
-
-	go func() {
-		for elem := stream.getNext(); elem.HasValue() && ret.waitRequest(); elem = stream.getNext() {
-			ret.data <- mapper(elem.Get())
+func Map[T, U any](stream Stream[T], mapper functions.Mapper[T, U]) Stream[U] {
+	generator := func() optional.Optional[U] {
+		if elem := stream.supplier.Supply(); elem.HasValue() {
+			return optional.FromValue(mapper(elem.Get()))
+		} else {
+			return optional.Empty[U]()
 		}
+	}
 
-		ret.close()
-	}()
-
-	return ret
+	supplier := suppliers.FromFiniteGenerator(generator)
+	return New(supplier)
 }
 
-func (stream *Stream[T]) Filter(predictor functions.Predictor[T]) *Stream[T] {
-	ret := create[T]()
+func (stream Stream[T]) Filter(predictor functions.Predictor[T]) Stream[T] {
+	generator := func() optional.Optional[T] {
+		for elem := stream.supplier.Supply(); elem.HasValue(); elem = stream.supplier.Supply() {
+			data := elem.Get()
 
-	go func() {
-		for ret.waitRequest() {
-			for elem := stream.getNext(); ; elem = stream.getNext() {
-				if !elem.HasValue() {
-					goto end
-				}
-
-				data := elem.Get()
-				if predictor(data) {
-					ret.data <- data
-					break
-				}
+			if predictor(data) {
+				return optional.FromValue(data)
 			}
 		}
 
-	end:
-		ret.close()
-	}()
+		return optional.Empty[T]()
+	}
 
-	return ret
+	supplier := suppliers.FromFiniteGenerator(generator)
+	return New(supplier)
 }
 
-func (stream *Stream[T]) Limit(count int) *Stream[T] {
-	ret := create[T]()
-
-	go func() {
-		i := 0
-		for elem := stream.getNext(); i < count && elem.HasValue() && ret.waitRequest(); i, elem = i+1, stream.getNext() {
-			ret.data <- elem.Get()
+func (stream Stream[T]) Limit(count int) Stream[T] {
+	generator := func() optional.Optional[T] {
+		if count > 0 {
+			count--
+			return stream.supplier.Supply()
+		} else {
+			return optional.Empty[T]()
 		}
+	}
 
-		if i == count {
-			stream.stop()
-		}
-
-		ret.close()
-	}()
-
-	return ret
+	supplier := suppliers.FromFiniteGenerator(generator)
+	return New(supplier)
 }
 
-func (stream *Stream[T]) Seek(count int) *Stream[T] {
-	ret := create[T]()
-
-	go func() {
-		if !ret.waitRequest() {
-			stream.stop()
-			return
+func (stream Stream[T]) Seek(count int) Stream[T] {
+	generator := func() optional.Optional[T] {
+		for ; count > 0; count-- {
+			stream.supplier.Supply()
 		}
 
-		for i := 0; i <= count; i++ {
-			elem := stream.getNext()
-			if !elem.HasValue() {
-				goto end
-			}
+		return stream.supplier.Supply()
+	}
 
-			if i == count {
-				ret.data <- elem.Get()
-			}
-		}
-
-		for ret.waitRequest() {
-			elem := stream.getNext()
-			if !elem.HasValue() {
-				break
-			}
-
-			ret.data <- elem.Get()
-		}
-
-	end:
-		ret.close()
-	}()
-
-	return ret
+	supplier := suppliers.FromFiniteGenerator(generator)
+	return New(supplier)
 }
 
-func (stream *Stream[T]) Sort(comparator functions.Comparator[T]) *Stream[T] {
-	ret := create[T]()
+func (stream Stream[T]) Sort(comparator functions.Comparator[T]) Stream[T] {
+	var sortedSlice []T
+	var sortedSupplier suppliers.Supplier[T]
 
-	go func() {
-		if !ret.waitRequest() {
-			ret.close()
-			return
+	generator := func() optional.Optional[T] {
+		if sortedSlice == nil {
+			for elem := stream.supplier.Supply(); elem.HasValue(); elem = stream.supplier.Supply() {
+				sortedSlice = append(sortedSlice, elem.Get())
+			}
+
+			sort.SliceStable(5, func(i, j int) bool { return comparator(sortedSlice[i], sortedSlice[j]) == comparison.FirstSmaller })
+
+			sortedSupplier = suppliers.FromSlice(sortedSlice)
 		}
 
-		arr := make([]T, 0)
-		stream.ForEach(func(data T) {
-			arr = append(arr, data)
-		})
+		return sortedSupplier.Supply()
+	}
 
-		sort.SliceStable(arr, func(i, j int) bool {
-			return comparator(arr[i], arr[j]) == comparison.FirstSmaller
-		})
-
-		ret.data <- arr[0]
-		for i := 1; i < len(arr) && ret.waitRequest(); i++ {
-			ret.data <- arr[i]
-		}
-
-		ret.close()
-	}()
-
-	return ret
+	supplier := suppliers.FromFiniteGenerator(generator)
+	return New(supplier)
 }
