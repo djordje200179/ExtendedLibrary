@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	streams2 "github.com/djordje200179/extendedlibrary/datastructures/extensions/streams"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps/hashmap"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
+	streams2 "github.com/djordje200179/extendedlibrary/dsstreams/streams"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/streams"
 	"github.com/djordje200179/extendedlibrary/streams/collectors"

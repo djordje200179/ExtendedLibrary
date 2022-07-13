@@ -6,5 +6,5 @@ use (
 	./datastructures
 	./misc
 	./streams
-	./datastructures/extensions
+	./dsstreams
 )

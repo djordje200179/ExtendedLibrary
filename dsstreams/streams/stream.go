@@ -2,9 +2,9 @@ package streams
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures"
-	"github.com/djordje200179/extendedlibrary/datastructures/extensions/suppliers"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
+	"github.com/djordje200179/extendedlibrary/dsstreams/suppliers"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
