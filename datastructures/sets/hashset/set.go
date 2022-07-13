@@ -34,4 +34,3 @@ func (set Set[T]) Clone() sets.Set[T] {
 }
 
 func (set Set[T]) Iterator() datastructures.Iterator[T] { return iterator[T]{set.m().Iterator()} }
-func (set Set[T]) Stream() *streams.Stream[T]           { return streams.FromIterable[T](set) }

@@ -111,6 +111,3 @@ func (list *LinkedList[T]) Iterator() datastructures.Iterator[T] { return list.M
 func (list *LinkedList[T]) ModifyingIterator() sequences.Iterator[T] {
 	return &Iterator[T]{list, list.head}
 }
-
-func (list *LinkedList[T]) Stream() *streams.Stream[T]     { return streams.FromIterable[T](list) }
-func (list *LinkedList[T]) RefStream() *streams.Stream[*T] { return sequences.RefStream[T](list) }

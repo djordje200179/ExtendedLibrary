@@ -3,7 +3,6 @@ package maps
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures"
 	"github.com/djordje200179/extendedlibrary/misc"
-	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type Entry[K comparable, V any] interface {
@@ -26,7 +25,7 @@ type Map[K comparable, V any] interface {
 	Get(key K) V
 	GetRef(key K) *V
 	Set(key K, value V)
-	
+
 	Remove(key K)
 	Contains(key K) bool
 
@@ -35,5 +34,4 @@ type Map[K comparable, V any] interface {
 
 	datastructures.Iterable[Entry[K, V]]
 	ModifyingIterator() Iterator[K, V]
-	streams.Streamer[misc.Pair[K, V]]
 }

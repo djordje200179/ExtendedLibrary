@@ -4,10 +4,8 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures"
 	"github.com/djordje200179/extendedlibrary/datastructures/linears/queue"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
-	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/misc/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
-	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type BinarySearchTree[K comparable, V any] struct {
@@ -143,8 +141,4 @@ func (tree *BinarySearchTree[K, V]) Iterator() datastructures.Iterator[maps.Entr
 
 func (tree *BinarySearchTree[K, V]) ModifyingIterator() maps.Iterator[K, V] {
 	return &iterator[K, V]{tree, tree.root.min()}
-}
-
-func (tree *BinarySearchTree[K, V]) Stream() *streams.Stream[misc.Pair[K, V]] {
-	return maps.Stream[K, V](tree)
 }

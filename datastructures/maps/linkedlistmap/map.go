@@ -86,5 +86,3 @@ func (m *Map[K, V]) ModifyingIterator() maps.Iterator[K, V] {
 		Iterator: m.list().ModifyingIterator(),
 	}
 }
-
-func (m *Map[K, V]) Stream() *streams.Stream[misc.Pair[K, V]] { return m.list().Stream() }
