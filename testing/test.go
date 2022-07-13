@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	streams2 "github.com/djordje200179/extendedlibrary/datastructures/extensions/streams"
+	"github.com/djordje200179/extendedlibrary/datastructures/maps/hashmap"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/streams"
@@ -25,8 +26,8 @@ func main() {
 		nums.Append(rand.Int())
 	}
 
-	dict := streams.Collect(streams2.FromIterable[int](nums), collectors.Group[int, int](countDigits))
-	counters := streams.Map(streams.FromMap(dict), countElements)
+	dict := hashmap.NewFromMap(streams.Collect(streams2.FromIterable[int](nums), collectors.Group[int, int](countDigits)))
+	counters := streams.Map(streams2.FromMap[int, []int](dict), countElements)
 
 	for it := streams2.Iterator(counters); it.Valid(); it.Move() {
 		entry := it.Get()
