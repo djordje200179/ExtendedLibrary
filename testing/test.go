@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	streams2 "github.com/djordje200179/extendedlibrary/datastructures/dsextensions/streams"
+	streams2 "github.com/djordje200179/extendedlibrary/datastructures/extensions/streams"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/streams"
