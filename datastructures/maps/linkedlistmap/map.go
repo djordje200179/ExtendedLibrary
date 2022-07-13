@@ -6,7 +6,6 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
 	"github.com/djordje200179/extendedlibrary/misc"
-	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type Map[K comparable, V any] linkedlist.LinkedList[misc.Pair[K, V]]
@@ -14,10 +13,6 @@ type Map[K comparable, V any] linkedlist.LinkedList[misc.Pair[K, V]]
 func New[K comparable, V any]() *Map[K, V] {
 	list := linkedlist.New[misc.Pair[K, V]]()
 	return (*Map[K, V])(list)
-}
-
-func Collector[K comparable, V any]() streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
-	return maps.Collector[K, V](New[K, V]())
 }
 
 func (m *Map[K, V]) list() *linkedlist.LinkedList[misc.Pair[K, V]] {

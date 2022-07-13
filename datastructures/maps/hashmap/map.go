@@ -3,31 +3,20 @@ package hashmap
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
-	"github.com/djordje200179/extendedlibrary/misc"
-	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type Map[K comparable, V any] map[K]V
 
-func New[K comparable, V any]() Map[K, V] { return NewFromMap(make(map[K]V)) }
-
+func New[K comparable, V any]() Map[K, V]                 { return NewFromMap(make(map[K]V)) }
 func NewFromMap[K comparable, V any](m map[K]V) Map[K, V] { return m }
 
-func Collector[K comparable, V any]() streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
-	return maps.Collector[K, V](New[K, V]())
-}
-
-func (m Map[K, V]) Size() int {
-	return len(m)
-}
+func (m Map[K, V]) Size() int { return len(m) }
 
 func (m Map[K, V]) GetRef(key K) *V    { panic("Not supported") }
 func (m Map[K, V]) Get(key K) V        { return m[key] }
 func (m Map[K, V]) Set(key K, value V) { m[key] = value }
 
-func (m Map[K, V]) Remove(key K) {
-	delete(m, key)
-}
+func (m Map[K, V]) Remove(key K) { delete(m, key) }
 
 func (m Map[K, V]) Contains(key K) bool {
 	_, ok := m[key]
