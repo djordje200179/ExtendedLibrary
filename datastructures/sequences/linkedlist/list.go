@@ -5,6 +5,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
 	"github.com/djordje200179/extendedlibrary/misc/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
+	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type LinkedList[T any] struct {
@@ -23,6 +24,10 @@ func NewWithSize[T any](initialSize int) *LinkedList[T] {
 	}
 
 	return list
+}
+
+func Collector[T any]() streams.Collector[T, sequences.Sequence[T]] {
+	return sequences.Collector[T](New[T]())
 }
 
 func (list *LinkedList[T]) Size() int { return list.size }
@@ -103,6 +108,17 @@ func (list *LinkedList[T]) Clone() sequences.Sequence[T] {
 }
 
 func (list *LinkedList[T]) Iterator() collections.Iterator[T] { return list.ModifyingIterator() }
+
 func (list *LinkedList[T]) ModifyingIterator() sequences.Iterator[T] {
 	return &Iterator[T]{list, list.head}
+}
+
+func (list *LinkedList[T]) Stream() streams.Stream[T] {
+	supplier := collections.Supplier[T](list)
+	return streams.New(supplier)
+}
+
+func (list *LinkedList[T]) RefStream() streams.Stream[*T] {
+	supplier := sequences.RefsSupplier[T](list)
+	return streams.New(supplier)
 }

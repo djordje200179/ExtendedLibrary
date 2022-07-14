@@ -4,8 +4,10 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/linears/queue"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
+	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/misc/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
+	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type BinarySearchTree[K comparable, V any] struct {
@@ -22,6 +24,10 @@ func New[K comparable, V any](comparator functions.Comparator[K]) *BinarySearchT
 	tree.comparator = comparator
 
 	return tree
+}
+
+func Collector[K comparable, V any](comparator functions.Comparator[K]) streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
+	return maps.Collector[K, V](New[K, V](comparator))
 }
 
 func (tree *BinarySearchTree[K, V]) Size() int { return tree.nodes }
@@ -141,4 +147,8 @@ func (tree *BinarySearchTree[K, V]) Iterator() collections.Iterator[maps.Entry[K
 
 func (tree *BinarySearchTree[K, V]) ModifyingIterator() maps.Iterator[K, V] {
 	return &iterator[K, V]{tree, tree.root.min()}
+}
+
+func (tree *BinarySearchTree[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
+	return streams.New[misc.Pair[K, V]](maps.Supplier[K, V](tree))
 }

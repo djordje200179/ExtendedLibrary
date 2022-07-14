@@ -4,6 +4,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps/hashmap"
 	"github.com/djordje200179/extendedlibrary/datastructures/sets"
+	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
@@ -34,3 +35,7 @@ func (set Set[T]) Clone() sets.Set[T] {
 }
 
 func (set Set[T]) Iterator() collections.Iterator[T] { return iterator[T]{set.m().Iterator()} }
+
+func (set Set[T]) Stream() streams.Stream[T] {
+	return streams.Map(set.m().Stream(), func(pair misc.Pair[T, bool]) T { return pair.First })
+}

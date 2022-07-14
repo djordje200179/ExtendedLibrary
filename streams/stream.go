@@ -11,6 +11,10 @@ type Stream[T any] struct {
 	supplier suppliers.Supplier[T]
 }
 
+type Streamer[T any] interface {
+	Stream() Stream[T]
+}
+
 func New[T any](supplier suppliers.Supplier[T]) Stream[T] { return Stream[T]{supplier} }
 func FromChannel[T any](channel <-chan T) Stream[T]       { return New(suppliers.FromChannel(channel)) }
 func FromSlice[T any](slice []T) Stream[T]                { return New(suppliers.FromSlice(slice)) }

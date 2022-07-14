@@ -4,11 +4,14 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
 	"github.com/djordje200179/extendedlibrary/datastructures/sets"
+	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type Set[T comparable] linkedlist.LinkedList[T]
 
 func New[T comparable]() *Set[T] { return (*Set[T])(linkedlist.New[T]()) }
+
+func Collector[T comparable]() streams.Collector[T, sets.Set[T]] { return sets.Collector[T](New[T]()) }
 
 func (set *Set[T]) list() *linkedlist.LinkedList[T] { return (*linkedlist.LinkedList[T])(set) }
 
@@ -47,3 +50,4 @@ func (set *Set[T]) Clone() sets.Set[T] {
 }
 
 func (set *Set[T]) Iterator() collections.Iterator[T] { return set.list().Iterator() }
+func (set *Set[T]) Stream() streams.Stream[T]         { return set.list().Stream() }

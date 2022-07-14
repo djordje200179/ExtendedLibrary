@@ -3,12 +3,18 @@ package hashmap
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
+	"github.com/djordje200179/extendedlibrary/misc"
+	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type Map[K comparable, V any] map[K]V
 
 func New[K comparable, V any]() Map[K, V]                 { return NewFromMap(make(map[K]V)) }
 func NewFromMap[K comparable, V any](m map[K]V) Map[K, V] { return m }
+
+func Collector[K comparable, V any]() streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
+	return maps.Collector[K, V](New[K, V]())
+}
 
 func (m Map[K, V]) Size() int { return len(m) }
 
@@ -38,9 +44,7 @@ func (m Map[K, V]) Clone() maps.Map[K, V] {
 	return cloned
 }
 
-func (m Map[K, V]) Iterator() collections.Iterator[maps.Entry[K, V]] {
-	return m.ModifyingIterator()
-}
+func (m Map[K, V]) Iterator() collections.Iterator[maps.Entry[K, V]] { return m.ModifyingIterator() }
 
 func (m Map[K, V]) ModifyingIterator() maps.Iterator[K, V] {
 	keys := make([]K, len(m))
@@ -56,3 +60,5 @@ func (m Map[K, V]) ModifyingIterator() maps.Iterator[K, V] {
 		index: 0,
 	}
 }
+
+func (m Map[K, V]) Stream() streams.Stream[misc.Pair[K, V]] { return streams.FromMap[K, V](m) }

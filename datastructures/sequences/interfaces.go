@@ -4,6 +4,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
+	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type Iterator[T any] interface {
@@ -37,4 +38,6 @@ type Sequence[T any] interface {
 
 	collections.Iterable[T]
 	ModifyingIterator() Iterator[T]
+	streams.Streamer[T]
+	RefStream() streams.Stream[*T]
 }

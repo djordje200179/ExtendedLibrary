@@ -3,6 +3,7 @@ package maps
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/misc"
+	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type Entry[K comparable, V any] interface {
@@ -34,4 +35,5 @@ type Map[K comparable, V any] interface {
 
 	collections.Iterable[Entry[K, V]]
 	ModifyingIterator() Iterator[K, V]
+	streams.Streamer[misc.Pair[K, V]]
 }

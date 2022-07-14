@@ -3,6 +3,7 @@ package sets
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/misc"
+	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type Set[T comparable] interface {
@@ -16,4 +17,5 @@ type Set[T comparable] interface {
 	misc.Cloner[Set[T]]
 
 	collections.Iterable[T]
+	streams.Streamer[T]
 }
