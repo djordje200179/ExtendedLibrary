@@ -1,7 +1,7 @@
 package linkedlistset
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures"
+	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
 	"github.com/djordje200179/extendedlibrary/datastructures/sets"
 )
@@ -46,4 +46,4 @@ func (set *Set[T]) Clone() sets.Set[T] {
 	return (*Set[T])(cloned)
 }
 
-func (set *Set[T]) Iterator() datastructures.Iterator[T] { return set.list().Iterator() }
+func (set *Set[T]) Iterator() collections.Iterator[T] { return set.list().Iterator() }

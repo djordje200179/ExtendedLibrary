@@ -1,11 +1,11 @@
 package streams
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures"
+	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
-func Iterator[T any](stream streams.Stream[T]) datastructures.Iterator[T] {
+func Iterator[T any](stream streams.Stream[T]) collections.Iterator[T] {
 	return &iterator[T]{stream: stream}
 }
 

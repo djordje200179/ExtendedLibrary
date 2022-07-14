@@ -1,7 +1,7 @@
 package streams
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures"
+	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
 	"github.com/djordje200179/extendedlibrary/dsstreams/suppliers"
@@ -9,7 +9,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
-func FromIterable[T any](iterable datastructures.Iterable[T]) streams.Stream[T] {
+func FromIterable[T any](iterable collections.Iterable[T]) streams.Stream[T] {
 	return streams.New(suppliers.FromIterable(iterable))
 }
 

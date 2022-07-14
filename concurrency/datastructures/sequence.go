@@ -1,7 +1,7 @@
 package datastructures
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures"
+	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/streams"
@@ -113,7 +113,7 @@ func (seq *SynchronizedSequence[T]) Clone() sequences.Sequence[T] {
 	return FromSequence[T](seq.Sequence.Clone())
 }
 
-func (seq *SynchronizedSequence[T]) Iterator() datastructures.Iterator[T] {
+func (seq *SynchronizedSequence[T]) Iterator() collections.Iterator[T] {
 	return seq.ModifyingIterator()
 }
 

@@ -1,7 +1,7 @@
 package hashmap
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures"
+	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 )
 
@@ -38,7 +38,7 @@ func (m Map[K, V]) Clone() maps.Map[K, V] {
 	return cloned
 }
 
-func (m Map[K, V]) Iterator() datastructures.Iterator[maps.Entry[K, V]] {
+func (m Map[K, V]) Iterator() collections.Iterator[maps.Entry[K, V]] {
 	return m.ModifyingIterator()
 }
 

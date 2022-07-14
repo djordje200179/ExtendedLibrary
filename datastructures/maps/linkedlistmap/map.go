@@ -1,7 +1,7 @@
 package linkedlistmap
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures"
+	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
@@ -71,7 +71,7 @@ func (m *Map[K, V]) Clone() maps.Map[K, V] {
 	return (*Map[K, V])(clonedList)
 }
 
-func (m *Map[K, V]) Iterator() datastructures.Iterator[maps.Entry[K, V]] {
+func (m *Map[K, V]) Iterator() collections.Iterator[maps.Entry[K, V]] {
 	return m.ModifyingIterator()
 }
 

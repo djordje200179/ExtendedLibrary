@@ -1,4 +1,4 @@
-package datastructures
+package collections
 
 type Iterator[T any] interface {
 	Valid() bool

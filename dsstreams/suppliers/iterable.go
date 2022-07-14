@@ -1,16 +1,16 @@
 package suppliers
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures"
+	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/misc/optional"
 	"github.com/djordje200179/extendedlibrary/streams/suppliers"
 )
 
 type iterableSupplier[T any] struct {
-	datastructures.Iterator[T]
+	collections.Iterator[T]
 }
 
-func FromIterable[T any](iterable datastructures.Iterable[T]) suppliers.Supplier[T] {
+func FromIterable[T any](iterable collections.Iterable[T]) suppliers.Supplier[T] {
 	return iterableSupplier[T]{iterable.Iterator()}
 }
 

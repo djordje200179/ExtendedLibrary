@@ -1,7 +1,7 @@
 package hashset
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures"
+	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps/hashmap"
 	"github.com/djordje200179/extendedlibrary/datastructures/sets"
 	"github.com/djordje200179/extendedlibrary/streams"
@@ -33,4 +33,4 @@ func (set Set[T]) Clone() sets.Set[T] {
 	return Set[T](cloned)
 }
 
-func (set Set[T]) Iterator() datastructures.Iterator[T] { return iterator[T]{set.m().Iterator()} }
+func (set Set[T]) Iterator() collections.Iterator[T] { return iterator[T]{set.m().Iterator()} }

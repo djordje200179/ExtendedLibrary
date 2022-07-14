@@ -1,7 +1,7 @@
 package datastructures
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures"
+	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/streams"
@@ -78,7 +78,7 @@ func (m *SynchronizedMap[K, V]) Clone() maps.Map[K, V] {
 	return FromMap[K, V](m.Map.Clone())
 }
 
-func (m *SynchronizedMap[K, V]) Iterator() datastructures.Iterator[maps.Entry[K, V]] {
+func (m *SynchronizedMap[K, V]) Iterator() collections.Iterator[maps.Entry[K, V]] {
 	return m.ModifyingIterator()
 }
 

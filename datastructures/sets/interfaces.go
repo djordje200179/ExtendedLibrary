@@ -1,7 +1,7 @@
 package sets
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures"
+	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/misc"
 )
 
@@ -15,5 +15,5 @@ type Set[T comparable] interface {
 	Clear()
 	misc.Cloner[Set[T]]
 
-	datastructures.Iterable[T]
+	collections.Iterable[T]
 }

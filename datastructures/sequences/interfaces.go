@@ -1,13 +1,13 @@
 package sequences
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures"
+	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 )
 
 type Iterator[T any] interface {
-	datastructures.Iterator[T]
+	collections.Iterator[T]
 	GetRef() *T
 	Set(value T)
 
@@ -35,6 +35,6 @@ type Sequence[T any] interface {
 	Join(other Sequence[T])
 	misc.Cloner[Sequence[T]]
 
-	datastructures.Iterable[T]
+	collections.Iterable[T]
 	ModifyingIterator() Iterator[T]
 }

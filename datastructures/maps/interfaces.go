@@ -1,7 +1,7 @@
 package maps
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures"
+	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/misc"
 )
 
@@ -14,7 +14,7 @@ type Entry[K comparable, V any] interface {
 }
 
 type Iterator[K comparable, V any] interface {
-	datastructures.Iterator[Entry[K, V]]
+	collections.Iterator[Entry[K, V]]
 
 	Remove()
 }
@@ -32,6 +32,6 @@ type Map[K comparable, V any] interface {
 	Clear()
 	misc.Cloner[Map[K, V]]
 
-	datastructures.Iterable[Entry[K, V]]
+	collections.Iterable[Entry[K, V]]
 	ModifyingIterator() Iterator[K, V]
 }
