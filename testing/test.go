@@ -1,36 +1,22 @@
 package main
 
 import (
-	"fmt"
-	"github.com/djordje200179/extendedlibrary/datastructures/collections"
-	"github.com/djordje200179/extendedlibrary/datastructures/maps/hashmap"
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
-	"github.com/djordje200179/extendedlibrary/misc"
-	"github.com/djordje200179/extendedlibrary/streams"
-	"github.com/djordje200179/extendedlibrary/streams/collectors"
-	"math"
-	"math/rand"
+	"github.com/djordje200179/extendedlibrary/datastructures/set"
 )
 
-func countDigits(num int) int {
-	return int(math.Floor(math.Log10(float64(num)) + 1))
-}
-
-func countElements(pair misc.Pair[int, []int]) misc.Pair[int, int] {
-	return misc.Pair[int, int]{pair.First, len(pair.Second)}
-}
-
 func main() {
-	nums := linkedlist.New[int]()
-	for i := 0; i < 10000; i++ {
-		nums.Append(rand.Int())
-	}
+	s := set.NewHashset[int]()
 
-	dict := hashmap.NewFromMap(streams.Collect(nums.Stream(), collectors.Group[int, int](countDigits)))
-	counters := streams.Map(dict.Stream(), countElements)
+	s.Add(1)
+	s.Add(6)
+	s.Add(2)
+	s.Add(5)
+	s.Add(1)
+	s.Add(5)
+	s.Add(10)
+	s.Add(1)
 
-	for it := collections.StreamIterator(counters); it.Valid(); it.Move() {
-		entry := it.Get()
-		fmt.Printf("%v: %v\n", entry.First, entry.Second)
+	for it := s.Iterator(); it.Valid(); it.Move() {
+		println(it.Get())
 	}
 }

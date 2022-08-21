@@ -1,0 +1,36 @@
+package set
+
+import (
+	"github.com/djordje200179/extendedlibrary/datastructures/collections"
+	"github.com/djordje200179/extendedlibrary/datastructures/maps"
+	"github.com/djordje200179/extendedlibrary/datastructures/maps/hashmap"
+	"github.com/djordje200179/extendedlibrary/misc"
+	"github.com/djordje200179/extendedlibrary/streams"
+)
+
+type Empty struct{}
+
+type Set[T comparable] struct {
+	m maps.Map[T, Empty]
+}
+
+func NewFrom[T comparable](m maps.Map[T, Empty]) Set[T] { return Set[T]{m} }
+func NewHashset[T comparable]() Set[T]                  { return NewFrom[T](hashmap.New[T, Empty]()) }
+
+func (set Set[T]) Size() int { return set.m.Size() }
+
+func (set Set[T]) Add(value T) {
+	if !set.Contains(value) {
+		set.m.Set(value, Empty{})
+	}
+}
+func (set Set[T]) Remove(value T)        { set.m.Remove(value) }
+func (set Set[T]) Contains(value T) bool { return set.m.Contains(value) }
+
+func (set Set[T]) Clear()        { set.m.Clear() }
+func (set Set[T]) Clone() Set[T] { return NewFrom[T](set.m.Clone()) }
+
+func (set Set[T]) Iterator() collections.Iterator[T] { return iterator[T]{set.m.Iterator()} }
+func (set Set[T]) Stream() streams.Stream[T] {
+	return streams.Map(set.m.Stream(), func(pair misc.Pair[T, Empty]) T { return pair.First })
+}

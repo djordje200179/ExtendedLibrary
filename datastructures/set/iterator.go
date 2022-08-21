@@ -1,4 +1,4 @@
-package hashset
+package set
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
@@ -6,7 +6,7 @@ import (
 )
 
 type iterator[T comparable] struct {
-	collections.Iterator[maps.Entry[T, empty]]
+	collections.Iterator[maps.Entry[T, Empty]]
 }
 
 func (it iterator[T]) Get() T { return it.Iterator.Get().Key() }
