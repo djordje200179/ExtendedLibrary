@@ -6,7 +6,7 @@ import (
 )
 
 type iterator[T comparable] struct {
-	collections.Iterator[maps.Entry[T, bool]]
+	collections.Iterator[maps.Entry[T, empty]]
 }
 
 func (it iterator[T]) Get() T { return it.Iterator.Get().Key() }
