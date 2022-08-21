@@ -60,3 +60,19 @@ func (o Optional[T]) Process(onValue functions.ParamCallback[T], onEmpty functio
 		onEmpty()
 	}
 }
+
+func Map[T any, P any](o Optional[T], mapper functions.Mapper[T, P]) Optional[P] {
+	if o.valid {
+		return FromValue(mapper(o.value))
+	} else {
+		return Empty[P]()
+	}
+}
+
+func (o Optional[T]) Filter(predicate functions.Predictor[T]) Optional[T] {
+	if o.valid && predicate(o.value) {
+		return o
+	} else {
+		return Empty[T]()
+	}
+}
