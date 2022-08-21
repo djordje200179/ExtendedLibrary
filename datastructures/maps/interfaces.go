@@ -36,4 +36,5 @@ type Map[K comparable, V any] interface {
 	collections.Iterable[Entry[K, V]]
 	ModifyingIterator() Iterator[K, V]
 	streams.Streamer[misc.Pair[K, V]]
+	RefStream() streams.Stream[misc.Pair[K, *V]]
 }

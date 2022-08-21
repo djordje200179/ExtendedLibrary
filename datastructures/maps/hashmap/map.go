@@ -61,4 +61,5 @@ func (m Map[K, V]) ModifyingIterator() maps.Iterator[K, V] {
 	}
 }
 
-func (m Map[K, V]) Stream() streams.Stream[misc.Pair[K, V]] { return streams.FromMap[K, V](m) }
+func (m Map[K, V]) Stream() streams.Stream[misc.Pair[K, V]]     { return streams.FromMap[K, V](m) }
+func (m Map[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] { panic("Not supported") }
