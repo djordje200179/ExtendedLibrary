@@ -1,32 +1,30 @@
 package deque
 
-import "github.com/djordje200179/extendedlibrary/datastructures/sequences/array"
+import (
+	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
+	"github.com/djordje200179/extendedlibrary/datastructures/sequences/array"
+)
 
-type Deque[T any] array.Array[T]
-
-func New[T any]() *Deque[T] { return NewWithCapacity[T](0) }
-
-func NewWithCapacity[T any](initialCapacity int) *Deque[T] {
-	arr := array.NewWithCapacity[T](initialCapacity)
-	return (*Deque[T])(arr)
+type Deque[T any] struct {
+	sequence sequences.Sequence[T]
 }
 
-func (deque *Deque[T]) array() *array.Array[T] { return (*array.Array[T])(deque) }
+func NewFrom[T any](sequence sequences.Sequence[T]) Deque[T] { return Deque[T]{sequence} }
+func New[T any]() Deque[T]                                   { return Deque[T]{array.New[T]()} }
 
-func (deque *Deque[T]) Empty() bool { return deque.array().Size() == 0 }
+func (deque Deque[T]) Empty() bool { return deque.sequence.Size() == 0 }
 
-func (deque *Deque[T]) PushFront(value T) { deque.array().Insert(0, value) }
-func (deque *Deque[T]) PushBack(value T)  { deque.array().Append(value) }
+func (deque Deque[T]) PushFront(value T) { deque.sequence.Insert(0, value) }
+func (deque Deque[T]) PushBack(value T)  { deque.sequence.Append(value) }
 
-func (deque *Deque[T]) PeekFront() T { return deque.array().Get(0) }
-func (deque *Deque[T]) PeekBack() T  { return deque.array().Get(-1) }
+func (deque Deque[T]) PeekFront() T { return deque.sequence.Get(0) }
+func (deque Deque[T]) PeekBack() T  { return deque.sequence.Get(-1) }
 
-func (deque *Deque[T]) PopFront() T {
-	defer deque.array().Remove(0)
+func (deque Deque[T]) PopFront() T {
+	defer deque.sequence.Remove(0)
 	return deque.PeekFront()
 }
-
-func (deque *Deque[T]) PopBack() T {
-	defer deque.array().Remove(-1)
+func (deque Deque[T]) PopBack() T {
+	defer deque.sequence.Remove(-1)
 	return deque.PeekBack()
 }

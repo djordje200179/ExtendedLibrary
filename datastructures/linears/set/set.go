@@ -15,7 +15,8 @@ type Set[T comparable] struct {
 }
 
 func NewFrom[T comparable](m maps.Map[T, empty]) Set[T] { return Set[T]{m} }
-func New[T comparable]() Set[T]                         { return NewFrom[T](hashmap.New[T, empty]()) }
+
+func New[T comparable]() Set[T] { return NewFrom[T](hashmap.New[T, empty]()) }
 
 func (set Set[T]) Size() int { return set.m.Size() }
 
