@@ -38,8 +38,8 @@ func (tree *BinarySearchTree[K, V]) GetRef(key K) *V {
 	} else {
 		return nil
 	}
-
 }
+
 func (tree *BinarySearchTree[K, V]) Get(key K) V {
 	if ptr := tree.GetRef(key); ptr != nil {
 		return *ptr
