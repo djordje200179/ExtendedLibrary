@@ -32,20 +32,20 @@ func Collector[K comparable, V any](comparator functions.Comparator[K]) streams.
 
 func (tree *BinarySearchTree[K, V]) Size() int { return tree.nodes }
 
-func (tree *BinarySearchTree[K, V]) GetRef(key K) *V {
-	if node := tree.getNode(key); node != nil {
-		return &node.value
-	} else {
-		return nil
-	}
-}
-
 func (tree *BinarySearchTree[K, V]) Get(key K) V {
 	if ptr := tree.GetRef(key); ptr != nil {
 		return *ptr
 	} else {
 		var empty V
 		return empty
+	}
+}
+
+func (tree *BinarySearchTree[K, V]) GetRef(key K) *V {
+	if node := tree.getNode(key); node != nil {
+		return &node.value
+	} else {
+		return nil
 	}
 }
 

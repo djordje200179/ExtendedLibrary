@@ -36,20 +36,20 @@ func (m *Map[K, V]) find(key K) sequences.Iterator[misc.Pair[K, V]] {
 
 func (m *Map[K, V]) Size() int { return m.list().Size() }
 
-func (m *Map[K, V]) GetRef(key K) *V {
-	if it := m.find(key); it != nil {
-		return &it.GetRef().Second
-	} else {
-		return nil
-	}
-}
-
 func (m *Map[K, V]) Get(key K) V {
 	if ptr := m.GetRef(key); ptr != nil {
 		return *ptr
 	} else {
 		var empty V
 		return empty
+	}
+}
+
+func (m *Map[K, V]) GetRef(key K) *V {
+	if it := m.find(key); it != nil {
+		return &it.GetRef().Second
+	} else {
+		return nil
 	}
 }
 

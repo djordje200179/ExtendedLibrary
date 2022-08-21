@@ -18,8 +18,8 @@ func Collector[K comparable, V any]() streams.Collector[misc.Pair[K, V], maps.Ma
 
 func (m Map[K, V]) Size() int { return len(m) }
 
-func (m Map[K, V]) GetRef(key K) *V    { panic("Not supported") }
 func (m Map[K, V]) Get(key K) V        { return m[key] }
+func (m Map[K, V]) GetRef(key K) *V    { panic("Not supported") }
 func (m Map[K, V]) Set(key K, value V) { m[key] = value }
 
 func (m Map[K, V]) Remove(key K) { delete(m, key) }
