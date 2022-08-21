@@ -7,59 +7,64 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
-type Map[K comparable, V any] map[K]V
+type HashMap[K comparable, V any] map[K]V
 
-func New[K comparable, V any]() Map[K, V]                 { return NewFromMap(make(map[K]V)) }
-func NewFromMap[K comparable, V any](m map[K]V) Map[K, V] { return m }
+func New[K comparable, V any]() HashMap[K, V]                 { return NewFromMap(make(map[K]V)) }
+func NewFromMap[K comparable, V any](m map[K]V) HashMap[K, V] { return m }
 
 func Collector[K comparable, V any]() streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
 	return maps.Collector[K, V](New[K, V]())
 }
 
-func (m Map[K, V]) Size() int { return len(m) }
+func (hashmap HashMap[K, V]) Size() int { return len(hashmap) }
 
-func (m Map[K, V]) Get(key K) V        { return m[key] }
-func (m Map[K, V]) GetRef(key K) *V    { panic("Not supported") }
-func (m Map[K, V]) Set(key K, value V) { m[key] = value }
+func (hashmap HashMap[K, V]) Get(key K) V        { return hashmap[key] }
+func (hashmap HashMap[K, V]) GetRef(key K) *V    { panic("Not supported") }
+func (hashmap HashMap[K, V]) Set(key K, value V) { hashmap[key] = value }
 
-func (m Map[K, V]) Remove(key K) { delete(m, key) }
+func (hashmap HashMap[K, V]) Remove(key K) { delete(hashmap, key) }
 
-func (m Map[K, V]) Contains(key K) bool {
-	_, ok := m[key]
+func (hashmap HashMap[K, V]) Contains(key K) bool {
+	_, ok := hashmap[key]
 	return ok
 }
 
-func (m Map[K, V]) Clear() {
-	for k := range m {
-		delete(m, k)
+func (hashmap HashMap[K, V]) Clear() {
+	for k := range hashmap {
+		delete(hashmap, k)
 	}
 }
 
-func (m Map[K, V]) Clone() maps.Map[K, V] {
+func (hashmap HashMap[K, V]) Clone() maps.Map[K, V] {
 	cloned := New[K, V]()
-	for k, v := range m {
+	for k, v := range hashmap {
 		cloned[k] = v
 	}
 
 	return cloned
 }
 
-func (m Map[K, V]) Iterator() collections.Iterator[maps.Entry[K, V]] { return m.ModifyingIterator() }
+func (hashmap HashMap[K, V]) Iterator() collections.Iterator[maps.Entry[K, V]] {
+	return hashmap.ModifyingIterator()
+}
 
-func (m Map[K, V]) ModifyingIterator() maps.Iterator[K, V] {
-	keys := make([]K, len(m))
+func (hashmap HashMap[K, V]) ModifyingIterator() maps.Iterator[K, V] {
+	keys := make([]K, len(hashmap))
 	i := 0
-	for k := range m {
+	for k := range hashmap {
 		keys[i] = k
 		i++
 	}
 
 	return &iterator[K, V]{
-		m:     m,
+		m:     hashmap,
 		keys:  keys,
 		index: 0,
 	}
 }
 
-func (m Map[K, V]) Stream() streams.Stream[misc.Pair[K, V]]     { return streams.FromMap[K, V](m) }
-func (m Map[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] { panic("Not supported") }
+func (hashmap HashMap[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
+	return streams.FromMap[K, V](hashmap)
+}
+
+func (hashmap HashMap[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] { panic("Not supported") }

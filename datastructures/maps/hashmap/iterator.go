@@ -3,7 +3,7 @@ package hashmap
 import "github.com/djordje200179/extendedlibrary/datastructures/maps"
 
 type iterator[K comparable, V any] struct {
-	m     Map[K, V]
+	m     HashMap[K, V]
 	keys  []K
 	index int
 }

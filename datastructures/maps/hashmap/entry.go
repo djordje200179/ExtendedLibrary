@@ -1,7 +1,7 @@
 package hashmap
 
 type entry[K comparable, V any] struct {
-	m   Map[K, V]
+	m   HashMap[K, V]
 	key K
 }
 
