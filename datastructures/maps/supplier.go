@@ -1,41 +1,48 @@
 package maps
 
 import (
+	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/misc"
-	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/misc/optional"
+	"github.com/djordje200179/extendedlibrary/streams/suppliers"
 )
 
-func ValueSupplier[K comparable, V any](m Map[K, V]) functions.EmptyGenerator[optional.Optional[misc.Pair[K, V]]] {
-	iterator := m.Iterator()
-
-	return func() optional.Optional[misc.Pair[K, V]] {
-		if !iterator.Valid() {
-			return optional.Empty[misc.Pair[K, V]]()
-		}
-
-		defer iterator.Move()
-
-		entry := iterator.Get()
-		data := misc.Pair[K, V]{entry.Key(), entry.Value()}
-
-		return optional.FromValue(data)
-	}
+type Supplier[K comparable, V any] struct {
+	collections.Iterator[Entry[K, V]]
 }
 
-func RefSupplier[K comparable, V any](m Map[K, V]) functions.EmptyGenerator[optional.Optional[misc.Pair[K, *V]]] {
-	iterator := m.Iterator()
+func ValuesSupplier[K comparable, V any](m Map[K, V]) suppliers.Supplier[misc.Pair[K, V]] {
+	supplier := Supplier[K, V]{m.Iterator()}
+	return suppliers.FunctionSupplier[misc.Pair[K, V]](supplier.NextValue)
+}
 
-	return func() optional.Optional[misc.Pair[K, *V]] {
-		if !iterator.Valid() {
-			return optional.Empty[misc.Pair[K, *V]]()
-		}
+func RefsSupplier[K comparable, V any](m Map[K, V]) suppliers.Supplier[misc.Pair[K, *V]] {
+	supplier := Supplier[K, V]{m.Iterator()}
+	return suppliers.FunctionSupplier[misc.Pair[K, *V]](supplier.NextRef)
+}
 
-		defer iterator.Move()
-
-		entry := iterator.Get()
-		data := misc.Pair[K, *V]{entry.Key(), entry.ValueRef()}
-
-		return optional.FromValue(data)
+func (supplier Supplier[K, V]) NextValue() optional.Optional[misc.Pair[K, V]] {
+	if !supplier.Iterator.Valid() {
+		return optional.Empty[misc.Pair[K, V]]()
 	}
+
+	defer supplier.Iterator.Move()
+
+	entry := supplier.Iterator.Get()
+	data := misc.Pair[K, V]{entry.Key(), entry.Value()}
+
+	return optional.FromValue(data)
+}
+
+func (supplier Supplier[K, V]) NextRef() optional.Optional[misc.Pair[K, *V]] {
+	if !supplier.Iterator.Valid() {
+		return optional.Empty[misc.Pair[K, *V]]()
+	}
+
+	defer supplier.Iterator.Move()
+
+	entry := supplier.Iterator.Get()
+	data := misc.Pair[K, *V]{entry.Key(), entry.ValueRef()}
+
+	return optional.FromValue(data)
 }

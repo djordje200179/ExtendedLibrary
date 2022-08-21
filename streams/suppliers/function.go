@@ -5,18 +5,16 @@ import (
 	"github.com/djordje200179/extendedlibrary/misc/optional"
 )
 
-type functionSupplier[T any] functions.EmptyGenerator[optional.Optional[T]]
+type FunctionSupplier[T any] functions.EmptyGenerator[optional.Optional[T]]
 
-func FromFiniteGenerator[T any](generator functions.EmptyGenerator[optional.Optional[T]]) Supplier[T] {
-	return functionSupplier[T](generator)
-}
+func (supplier FunctionSupplier[T]) Supply() optional.Optional[T] { return supplier() }
 
-func FromInfiniteGenerator[T any](generator functions.EmptyGenerator[T]) Supplier[T] {
-	return FromFiniteGenerator[T](func() optional.Optional[T] { return optional.FromValue[T](generator()) })
+func InfiniteGenerator[T any](generator functions.EmptyGenerator[T]) Supplier[T] {
+	return FunctionSupplier[T](func() optional.Optional[T] { return optional.FromValue[T](generator()) })
 }
 
 func FromRange(lower, upper int) Supplier[int] {
-	return FromFiniteGenerator(func() optional.Optional[int] {
+	return FunctionSupplier[int](func() optional.Optional[int] {
 		if lower < upper {
 			curr := lower
 			lower++
@@ -26,5 +24,3 @@ func FromRange(lower, upper int) Supplier[int] {
 		}
 	})
 }
-
-func (supplier functionSupplier[T]) Supply() optional.Optional[T] { return supplier() }

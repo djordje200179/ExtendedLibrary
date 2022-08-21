@@ -114,11 +114,9 @@ func (list *LinkedList[T]) ModifyingIterator() sequences.Iterator[T] {
 }
 
 func (list *LinkedList[T]) Stream() streams.Stream[T] {
-	supplier := collections.Supplier[T](list)
-	return streams.New(supplier)
+	return streams.New(sequences.ValuesSupplier[T](list))
 }
 
 func (list *LinkedList[T]) RefStream() streams.Stream[*T] {
-	supplier := sequences.RefsSupplier[T](list)
-	return streams.New(supplier)
+	return streams.New(sequences.RefsSupplier[T](list))
 }

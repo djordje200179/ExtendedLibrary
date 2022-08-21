@@ -9,15 +9,32 @@ type sliceSupplier[T any] struct {
 	index int
 }
 
-func FromSlice[T any](slice []T) Supplier[T]    { return &sliceSupplier[T]{slice, 0} }
-func FromValues[T any](values ...T) Supplier[T] { return FromSlice(values) }
-
-func (supplier *sliceSupplier[T]) Supply() optional.Optional[T] {
-	if supplier.index < len(supplier.slice) {
-		curr := supplier.slice[supplier.index]
-		supplier.index++
-		return optional.FromValue(curr)
-	} else {
+func (supplier *sliceSupplier[T]) NextValue() optional.Optional[T] {
+	if supplier.index >= len(supplier.slice) {
 		return optional.Empty[T]()
 	}
+
+	curr := supplier.slice[supplier.index]
+	supplier.index++
+	return optional.FromValue(curr)
+}
+
+func (supplier *sliceSupplier[T]) NextRef() optional.Optional[*T] {
+	if supplier.index >= len(supplier.slice) {
+		return optional.Empty[*T]()
+	}
+
+	curr := &supplier.slice[supplier.index]
+	supplier.index++
+	return optional.FromValue(curr)
+}
+
+func FromSlice[T any](slice []T) Supplier[T] {
+	supplier := sliceSupplier[T]{slice, 0}
+	return FunctionSupplier[T](supplier.NextValue)
+}
+
+func FromSliceRefs[T any](slice []T) Supplier[*T] {
+	supplier := sliceSupplier[T]{slice, 0}
+	return FunctionSupplier[*T](supplier.NextRef)
 }

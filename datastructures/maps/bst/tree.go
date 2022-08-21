@@ -150,9 +150,9 @@ func (tree *BinarySearchTree[K, V]) ModifyingIterator() maps.Iterator[K, V] {
 }
 
 func (tree *BinarySearchTree[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
-	return streams.FromFiniteGenerator(maps.ValueSupplier[K, V](tree))
+	return streams.New(maps.ValuesSupplier[K, V](tree))
 }
 
 func (tree *BinarySearchTree[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] {
-	return streams.FromFiniteGenerator(maps.RefSupplier[K, V](tree))
+	return streams.New(maps.RefsSupplier[K, V](tree))
 }

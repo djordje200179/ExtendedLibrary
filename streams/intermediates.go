@@ -17,8 +17,7 @@ func Map[T, U any](stream Stream[T], mapper functions.Mapper[T, U]) Stream[U] {
 		}
 	}
 
-	supplier := suppliers.FromFiniteGenerator(generator)
-	return New(supplier)
+	return FromFiniteGenerator(generator)
 }
 
 func (stream Stream[T]) Filter(predictor functions.Predictor[T]) Stream[T] {
@@ -34,8 +33,7 @@ func (stream Stream[T]) Filter(predictor functions.Predictor[T]) Stream[T] {
 		return optional.Empty[T]()
 	}
 
-	supplier := suppliers.FromFiniteGenerator(generator)
-	return New(supplier)
+	return FromFiniteGenerator(generator)
 }
 
 func (stream Stream[T]) Limit(count int) Stream[T] {
@@ -48,8 +46,7 @@ func (stream Stream[T]) Limit(count int) Stream[T] {
 		}
 	}
 
-	supplier := suppliers.FromFiniteGenerator(generator)
-	return New(supplier)
+	return FromFiniteGenerator(generator)
 }
 
 func (stream Stream[T]) Seek(count int) Stream[T] {
@@ -61,8 +58,7 @@ func (stream Stream[T]) Seek(count int) Stream[T] {
 		return stream.supplier.Supply()
 	}
 
-	supplier := suppliers.FromFiniteGenerator(generator)
-	return New(supplier)
+	return FromFiniteGenerator(generator)
 }
 
 func (stream Stream[T]) Sort(comparator functions.Comparator[T]) Stream[T] {
@@ -83,6 +79,5 @@ func (stream Stream[T]) Sort(comparator functions.Comparator[T]) Stream[T] {
 		return sortedSupplier.Supply()
 	}
 
-	supplier := suppliers.FromFiniteGenerator(generator)
-	return New(supplier)
+	return FromFiniteGenerator(generator)
 }
