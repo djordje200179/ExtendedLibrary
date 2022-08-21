@@ -121,10 +121,5 @@ func (seq *SynchronizedSequence[T]) ModifyingIterator() sequences.Iterator[T] {
 	return sequenceIterator[T]{seq.Sequence.ModifyingIterator(), seq}
 }
 
-func (seq *SynchronizedSequence[T]) Stream() *streams.Stream[T] {
-	return seq.Sequence.Stream()
-}
-
-func (seq *SynchronizedSequence[T]) RefStream() *streams.Stream[*T] {
-	return seq.Sequence.RefStream()
-}
+func (seq *SynchronizedSequence[T]) Stream() streams.Stream[T]     { return seq.Sequence.Stream() }
+func (seq *SynchronizedSequence[T]) RefStream() streams.Stream[*T] { return seq.Sequence.RefStream() }

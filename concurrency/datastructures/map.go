@@ -86,6 +86,7 @@ func (m *SynchronizedMap[K, V]) ModifyingIterator() maps.Iterator[K, V] {
 	return mapIterator[K, V]{m.Map.ModifyingIterator(), m}
 }
 
-func (m *SynchronizedMap[K, V]) Stream() *streams.Stream[misc.Pair[K, V]] {
-	return m.Map.Stream()
+func (m *SynchronizedMap[K, V]) Stream() streams.Stream[misc.Pair[K, V]] { return m.Map.Stream() }
+func (m *SynchronizedMap[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] {
+	return m.Map.RefStream()
 }
