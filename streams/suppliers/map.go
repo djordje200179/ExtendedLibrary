@@ -11,7 +11,7 @@ type mapSupplier[K comparable, V any] struct {
 	index int
 }
 
-func FromMap[K comparable, V any](m map[K]V) Supplier[misc.Pair[K, V]] {
+func Map[K comparable, V any](m map[K]V) Supplier[misc.Pair[K, V]] {
 	keys := make([]K, len(m))
 	i := 0
 	for key := range m {

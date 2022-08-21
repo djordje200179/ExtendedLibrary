@@ -4,13 +4,11 @@ import (
 	"github.com/djordje200179/extendedlibrary/misc/optional"
 )
 
-type channelSupplier[T any] struct {
-	channel <-chan T
+type Channel[T any] struct {
+	Channel <-chan T
 }
 
-func FromChannel[T any](channel <-chan T) Supplier[T] { return &channelSupplier[T]{channel} }
-
-func (supplier channelSupplier[T]) Supply() optional.Optional[T] {
-	data, ok := <-supplier.channel
+func (supplier Channel[T]) Supply() optional.Optional[T] {
+	data, ok := <-supplier.Channel
 	return optional.New(data, ok)
 }

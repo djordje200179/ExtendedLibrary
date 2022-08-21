@@ -73,7 +73,7 @@ func (stream Stream[T]) Sort(comparator functions.Comparator[T]) Stream[T] {
 
 			sort.SliceStable(5, func(i, j int) bool { return comparator(sortedSlice[i], sortedSlice[j]) == comparison.FirstSmaller })
 
-			sortedSupplier = suppliers.FromSlice(sortedSlice)
+			sortedSupplier = suppliers.Slice(sortedSlice)
 		}
 
 		return sortedSupplier.Supply()

@@ -15,22 +15,22 @@ type Streamer[T any] interface {
 	Stream() Stream[T]
 }
 
-func New[T any](supplier suppliers.Supplier[T]) Stream[T] { return Stream[T]{supplier} }
-func FromChannel[T any](channel <-chan T) Stream[T]       { return New(suppliers.FromChannel(channel)) }
-func FromRange(lower, upper int) Stream[int]              { return New(suppliers.FromRange(lower, upper)) }
+func FromChannel[T any](channel <-chan T) Stream[T] { return Stream[T]{suppliers.Channel[T]{channel}} }
 
-func FromSlice[T any](slice []T) Stream[T]      { return New(suppliers.FromSlice(slice)) }
-func FromSliceRefs[T any](slice []T) Stream[*T] { return New(suppliers.FromSliceRefs(slice)) }
-func FromValues[T any](values ...T) Stream[T]   { return FromSlice(values) }
+func FromValues[T any](values ...T) Stream[T] { return FromSlice(values) }
+func FromRange(lower, upper int) Stream[int]  { return Stream[int]{suppliers.Range(lower, upper)} }
+
+func FromSlice[T any](slice []T) Stream[T]      { return Stream[T]{suppliers.Slice(slice)} }
+func FromSliceRefs[T any](slice []T) Stream[*T] { return Stream[*T]{suppliers.SliceRefs(slice)} }
 
 func FromMap[K comparable, V any](m map[K]V) Stream[misc.Pair[K, V]] {
-	return New(suppliers.FromMap(m))
+	return Stream[misc.Pair[K, V]]{suppliers.Map(m)}
 }
 
 func FromFiniteGenerator[T any](generator functions.EmptyGenerator[optional.Optional[T]]) Stream[T] {
-	return New[T](suppliers.FunctionSupplier[T](generator))
+	return Stream[T]{suppliers.Function[T](generator)}
 }
 
 func FromInfiniteGenerator[T any](generator functions.EmptyGenerator[T]) Stream[T] {
-	return New(suppliers.InfiniteGenerator(generator))
+	return Stream[T]{suppliers.Infinite(generator)}
 }

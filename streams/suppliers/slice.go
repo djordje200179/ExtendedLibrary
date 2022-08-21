@@ -29,12 +29,12 @@ func (supplier *sliceSupplier[T]) NextRef() optional.Optional[*T] {
 	return optional.FromValue(curr)
 }
 
-func FromSlice[T any](slice []T) Supplier[T] {
+func Slice[T any](slice []T) Supplier[T] {
 	supplier := sliceSupplier[T]{slice, 0}
-	return FunctionSupplier[T](supplier.NextValue)
+	return Function[T](supplier.NextValue)
 }
 
-func FromSliceRefs[T any](slice []T) Supplier[*T] {
+func SliceRefs[T any](slice []T) Supplier[*T] {
 	supplier := sliceSupplier[T]{slice, 0}
-	return FunctionSupplier[*T](supplier.NextRef)
+	return Function[*T](supplier.NextRef)
 }
