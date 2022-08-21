@@ -4,24 +4,24 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/misc/optional"
-	"github.com/djordje200179/extendedlibrary/streams/suppliers"
+	"github.com/djordje200179/extendedlibrary/streams"
 )
 
-type Supplier[K comparable, V any] struct {
+type supplier[K comparable, V any] struct {
 	collections.Iterator[Entry[K, V]]
 }
 
-func ValuesSupplier[K comparable, V any](m Map[K, V]) suppliers.Supplier[misc.Pair[K, V]] {
-	supplier := Supplier[K, V]{m.Iterator()}
-	return suppliers.FunctionSupplier[misc.Pair[K, V]](supplier.NextValue)
+func ValuesStream[K comparable, V any](m Map[K, V]) streams.Stream[misc.Pair[K, V]] {
+	supplier := supplier[K, V]{m.Iterator()}
+	return streams.FromFiniteGenerator(supplier.NextValue)
 }
 
-func RefsSupplier[K comparable, V any](m Map[K, V]) suppliers.Supplier[misc.Pair[K, *V]] {
-	supplier := Supplier[K, V]{m.Iterator()}
-	return suppliers.FunctionSupplier[misc.Pair[K, *V]](supplier.NextRef)
+func RefsStream[K comparable, V any](m Map[K, V]) streams.Stream[misc.Pair[K, *V]] {
+	supplier := supplier[K, V]{m.Iterator()}
+	return streams.FromFiniteGenerator(supplier.NextRef)
 }
 
-func (supplier Supplier[K, V]) NextValue() optional.Optional[misc.Pair[K, V]] {
+func (supplier supplier[K, V]) NextValue() optional.Optional[misc.Pair[K, V]] {
 	if !supplier.Iterator.Valid() {
 		return optional.Empty[misc.Pair[K, V]]()
 	}
@@ -34,7 +34,7 @@ func (supplier Supplier[K, V]) NextValue() optional.Optional[misc.Pair[K, V]] {
 	return optional.FromValue(data)
 }
 
-func (supplier Supplier[K, V]) NextRef() optional.Optional[misc.Pair[K, *V]] {
+func (supplier supplier[K, V]) NextRef() optional.Optional[misc.Pair[K, *V]] {
 	if !supplier.Iterator.Valid() {
 		return optional.Empty[misc.Pair[K, *V]]()
 	}

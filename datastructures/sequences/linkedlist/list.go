@@ -113,10 +113,5 @@ func (list *LinkedList[T]) ModifyingIterator() sequences.Iterator[T] {
 	return &Iterator[T]{list, list.head}
 }
 
-func (list *LinkedList[T]) Stream() streams.Stream[T] {
-	return streams.New(sequences.ValuesSupplier[T](list))
-}
-
-func (list *LinkedList[T]) RefStream() streams.Stream[*T] {
-	return streams.New(sequences.RefsSupplier[T](list))
-}
+func (list *LinkedList[T]) Stream() streams.Stream[T]     { return sequences.ValuesStream[T](list) }
+func (list *LinkedList[T]) RefStream() streams.Stream[*T] { return sequences.RefsStream[T](list) }

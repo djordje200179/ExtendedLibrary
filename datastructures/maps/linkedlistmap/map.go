@@ -87,10 +87,5 @@ func (m *Map[K, V]) ModifyingIterator() maps.Iterator[K, V] {
 	}
 }
 
-func (m *Map[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
-	return streams.New(maps.ValuesSupplier[K, V](m))
-}
-
-func (m *Map[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] {
-	return streams.New(maps.RefsSupplier[K, V](m))
-}
+func (m *Map[K, V]) Stream() streams.Stream[misc.Pair[K, V]]     { return maps.ValuesStream[K, V](m) }
+func (m *Map[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] { return maps.RefsStream[K, V](m) }

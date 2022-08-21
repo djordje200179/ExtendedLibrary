@@ -1,22 +1,18 @@
 package main
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/linears/set"
+	"fmt"
+	"github.com/djordje200179/extendedlibrary/datastructures/maps/linkedlistmap"
+	"github.com/djordje200179/extendedlibrary/misc"
 )
 
 func main() {
-	s := set.New[int]()
+	m := linkedlistmap.New[string, int]()
 
-	s.Add(1)
-	s.Add(6)
-	s.Add(2)
-	s.Add(5)
-	s.Add(1)
-	s.Add(5)
-	s.Add(10)
-	s.Add(1)
+	m.Set("abc", 2)
+	m.Set("abcd", 5)
 
-	for it := s.Iterator(); it.Valid(); it.Move() {
-		println(it.Get())
-	}
+	m.Stream().ForEach(func(pair misc.Pair[string, int]) {
+		fmt.Println(pair.First, pair.Second)
+	})
 }
