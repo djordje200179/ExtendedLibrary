@@ -10,7 +10,7 @@ type collector[T comparable] struct {
 
 func Collector[T comparable](empty Set[T]) streams.Collector[T, Set[T]] { return collector[T]{empty} }
 func HashsetCollector[T comparable]() streams.Collector[T, Set[T]] {
-	return Collector[T](NewHashset[T]())
+	return Collector[T](New[T]())
 }
 
 func (collector collector[T]) Supply(value T) { collector.set.Add(value) }

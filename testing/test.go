@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/set"
+	"github.com/djordje200179/extendedlibrary/datastructures/linears/set"
 )
 
 func main() {
-	s := set.NewHashset[int]()
+	s := set.New[int]()
 
 	s.Add(1)
 	s.Add(6)
