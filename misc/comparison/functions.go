@@ -1,6 +1,8 @@
 package comparison
 
-func Ascending[T ordered](a, b T) Result {
+import "golang.org/x/exp/constraints"
+
+func Ascending[T constraints.Ordered](a, b T) Result {
 	switch {
 	case a < b:
 		return FirstSmaller
@@ -11,7 +13,7 @@ func Ascending[T ordered](a, b T) Result {
 	}
 }
 
-func Descending[T ordered](a, b T) Result {
+func Descending[T constraints.Ordered](a, b T) Result {
 	switch {
 	case a < b:
 		return FirstBigger
