@@ -52,15 +52,13 @@ func (array *Array[T]) GetRef(index int) *T {
 func (array *Array[T]) Get(index int) T        { return *array.GetRef(index) }
 func (array *Array[T]) Set(index int, value T) { *array.GetRef(index) = value }
 
-func (array *Array[T]) Append(value T)         { *array = append(array.Slice(), value) }
-func (array *Array[T]) AppendMany(values ...T) { *array = append(array.Slice(), values...) }
+func (array *Array[T]) Append(values ...T) { *array = append(array.Slice(), values...) }
 
-func (array *Array[T]) Insert(index int, value T) {
+func (array *Array[T]) Insert(index int, values ...T) {
 	index = array.getRealIndex(index)
 
-	oldSlice := array.Slice()
-	*array = append(oldSlice[:index+1], oldSlice[index:]...)
-	array.Slice()[index] = value
+	*array = append((*array)[:index], (*array)[index:]...)
+	copy((*array)[index:], values)
 }
 
 func (array *Array[T]) Remove(index int) {
@@ -95,7 +93,7 @@ func (array *Array[T]) Sort(comparator functions.Comparator[T]) {
 func (array *Array[T]) Join(other sequences.Sequence[T]) {
 	switch second := other.(type) {
 	case *Array[T]:
-		array.AppendMany(second.Slice()...)
+		array.Append(*second...)
 	default:
 		for it := other.Iterator(); it.Valid(); it.Move() {
 			array.Append(it.Get())

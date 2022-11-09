@@ -25,9 +25,8 @@ type Sequence[T any] interface {
 	GetRef(index int) *T
 	Set(index int, value T)
 
-	Append(value T)
-	AppendMany(values ...T)
-	Insert(index int, value T)
+	Append(values ...T)
+	Insert(index int, values ...T)
 	Remove(index int)
 
 	Clear()

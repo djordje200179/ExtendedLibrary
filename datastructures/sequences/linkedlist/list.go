@@ -36,25 +36,23 @@ func (list *LinkedList[T]) GetRef(index int) *T    { return &list.getNode(index)
 func (list *LinkedList[T]) Get(index int) T        { return *list.GetRef(index) }
 func (list *LinkedList[T]) Set(index int, value T) { *list.GetRef(index) = value }
 
-func (list *LinkedList[T]) Append(value T) {
-	if list.size == 0 {
-		node := &node[T]{value: value}
-		list.head = node
-		list.tail = node
-		list.size++
-	} else {
-		list.insertAfterNode(list.tail, value)
-	}
-}
-
-func (list *LinkedList[T]) AppendMany(values ...T) {
+func (list *LinkedList[T]) Append(values ...T) {
 	for _, value := range values {
-		list.Append(value)
+		if list.size == 0 {
+			node := &node[T]{value: value}
+			list.head = node
+			list.tail = node
+			list.size++
+		} else {
+			list.insertAfterNode(list.tail, value)
+		}
 	}
 }
 
-func (list *LinkedList[T]) Insert(index int, value T) {
-	list.insertBeforeNode(list.getNode(index), value)
+func (list *LinkedList[T]) Insert(index int, values ...T) {
+	for _, value := range values {
+		list.insertBeforeNode(list.getNode(index), value)
+	}
 }
 
 func (list *LinkedList[T]) Remove(index int) { list.removeNode(list.getNode(index)) }
