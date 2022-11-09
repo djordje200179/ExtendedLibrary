@@ -96,6 +96,8 @@ func (list *LinkedList[T]) Join(other sequences.Sequence[T]) {
 			list.Append(it.Get())
 		}
 	}
+
+	other.Clear()
 }
 
 func (list *LinkedList[T]) Clone() sequences.Sequence[T] {

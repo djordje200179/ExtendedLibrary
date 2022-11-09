@@ -101,6 +101,8 @@ func (array *Array[T]) Join(other sequences.Sequence[T]) {
 			array.Append(it.Get())
 		}
 	}
+
+	other.Clear()
 }
 
 func (array *Array[T]) Clone() sequences.Sequence[T] {
