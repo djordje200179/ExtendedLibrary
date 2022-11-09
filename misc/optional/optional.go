@@ -3,46 +3,23 @@ package optional
 import "github.com/djordje200179/extendedlibrary/misc/functions"
 
 type Optional[T any] struct {
-	value T
-	valid bool
+	Value T
+	Valid bool
 }
 
 func Empty[T any]() Optional[T] {
 	return Optional[T]{
-		valid: false,
+		Valid: false,
 	}
 }
 
 func FromValue[T any](value T) Optional[T] {
-	return New[T](value, true)
-}
-
-func New[T any](value T, valid bool) Optional[T] {
-	return Optional[T]{
-		value: value,
-		valid: valid,
-	}
-}
-
-func (o Optional[T]) HasValue() bool {
-	return o.valid
-}
-
-func (o Optional[T]) GetPair() (T, bool) {
-	return o.value, o.valid
-}
-
-func (o Optional[T]) Get() T {
-	if o.valid {
-		return o.value
-	} else {
-		panic("No value present")
-	}
+	return Optional[T]{value, true}
 }
 
 func (o Optional[T]) GetOrElse(other T) T {
-	if o.valid {
-		return o.value
+	if o.Valid {
+		return o.Value
 	} else {
 		return other
 	}
@@ -54,23 +31,23 @@ func (o Optional[T]) GetOrDefault() T {
 }
 
 func (o Optional[T]) Process(onValue functions.ParamCallback[T], onEmpty functions.EmptyCallback) {
-	if o.valid {
-		onValue(o.value)
+	if o.Valid {
+		onValue(o.Value)
 	} else {
 		onEmpty()
 	}
 }
 
 func Map[T any, P any](o Optional[T], mapper functions.Mapper[T, P]) Optional[P] {
-	if o.valid {
-		return FromValue(mapper(o.value))
+	if o.Valid {
+		return FromValue(mapper(o.Value))
 	} else {
 		return Empty[P]()
 	}
 }
 
 func (o Optional[T]) Filter(predicate functions.Predictor[T]) Optional[T] {
-	if o.valid && predicate(o.value) {
+	if o.Valid && predicate(o.Value) {
 		return o
 	} else {
 		return Empty[T]()

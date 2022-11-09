@@ -10,5 +10,5 @@ type Channel[T any] struct {
 
 func (supplier Channel[T]) Supply() optional.Optional[T] {
 	data, ok := <-supplier.Channel
-	return optional.New(data, ok)
+	return optional.Optional[T]{data, ok}
 }

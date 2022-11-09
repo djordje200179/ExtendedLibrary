@@ -10,8 +10,8 @@ import (
 
 func Map[T, U any](stream Stream[T], mapper functions.Mapper[T, U]) Stream[U] {
 	generator := func() optional.Optional[U] {
-		if elem := stream.supplier.Supply(); elem.HasValue() {
-			return optional.FromValue(mapper(elem.Get()))
+		if elem := stream.supplier.Supply(); elem.Valid {
+			return optional.FromValue(mapper(elem.Value))
 		} else {
 			return optional.Empty[U]()
 		}
@@ -22,11 +22,9 @@ func Map[T, U any](stream Stream[T], mapper functions.Mapper[T, U]) Stream[U] {
 
 func (stream Stream[T]) Filter(predictor functions.Predictor[T]) Stream[T] {
 	generator := func() optional.Optional[T] {
-		for elem := stream.supplier.Supply(); elem.HasValue(); elem = stream.supplier.Supply() {
-			data := elem.Get()
-
-			if predictor(data) {
-				return optional.FromValue(data)
+		for elem := stream.supplier.Supply(); elem.Valid; elem = stream.supplier.Supply() {
+			if predictor(elem.Value) {
+				return optional.FromValue(elem.Value)
 			}
 		}
 
@@ -67,8 +65,8 @@ func (stream Stream[T]) Sort(comparator functions.Comparator[T]) Stream[T] {
 
 	generator := func() optional.Optional[T] {
 		if sortedSlice == nil {
-			for elem := stream.supplier.Supply(); elem.HasValue(); elem = stream.supplier.Supply() {
-				sortedSlice = append(sortedSlice, elem.Get())
+			for elem := stream.supplier.Supply(); elem.Valid; elem = stream.supplier.Supply() {
+				sortedSlice = append(sortedSlice, elem.Value)
 			}
 
 			sort.SliceStable(5, func(i, j int) bool { return comparator(sortedSlice[i], sortedSlice[j]) == comparison.FirstSmaller })

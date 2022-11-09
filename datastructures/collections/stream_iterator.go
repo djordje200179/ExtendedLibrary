@@ -18,8 +18,8 @@ type iterator[T any] struct {
 func (it *iterator[T]) Valid() bool { return !it.ended }
 
 func (it *iterator[T]) Move() {
-	if elem := it.stream.First(); elem.HasValue() {
-		it.current = elem.Get()
+	if elem := it.stream.First(); elem.Valid {
+		it.current = elem.Value
 	} else {
 		it.ended = true
 	}
