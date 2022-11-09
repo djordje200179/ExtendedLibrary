@@ -77,7 +77,7 @@ func (array *Array[T]) Remove(index int) {
 	}
 }
 
-func (array *Array[T]) Clear() { *array = nil }
+func (array *Array[T]) Clear() { *array = make([]T, 0) }
 
 func (array *Array[T]) Reverse() {
 	n := len(array.Slice())
