@@ -1,14 +1,17 @@
 package mapbased
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 )
 
 type iterator[T comparable] struct {
-	iterable.Iterator[maps.Entry[T, empty]]
+	maps.Iterator[T, empty]
 }
 
 func (it iterator[T]) Get() T {
 	return it.Iterator.Get().Key()
+}
+
+func (it iterator[T]) Remove() {
+	it.Iterator.Remove()
 }

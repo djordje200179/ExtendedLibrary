@@ -53,7 +53,11 @@ func (set mapBased[T]) Clone() sets.Set[T] {
 }
 
 func (set mapBased[T]) Iterator() iterable.Iterator[T] {
-	return iterator[T]{set.m.Iterator()}
+	return iterator[T]{set.m.ModifyingIterator()}
+}
+
+func (set mapBased[T]) ModifyingIterator() sets.Iterator[T] {
+	return set.Iterator()
 }
 
 func (set mapBased[T]) Stream() streams.Stream[T] {
