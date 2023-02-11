@@ -1,4 +1,4 @@
-package set
+package mapbased
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
@@ -9,4 +9,6 @@ type iterator[T comparable] struct {
 	iterable.Iterator[maps.Entry[T, empty]]
 }
 
-func (it iterator[T]) Get() T { return it.Iterator.Get().Key() }
+func (it iterator[T]) Get() T {
+	return it.Iterator.Get().Key()
+}
