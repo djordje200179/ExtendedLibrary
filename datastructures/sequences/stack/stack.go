@@ -1,17 +1,17 @@
 package stack
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences/array"
+	"github.com/djordje200179/extendedlibrary/datastructures/collections"
+	"github.com/djordje200179/extendedlibrary/datastructures/collections/array"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 )
 
 type Stack[T any] struct {
-	sequence sequences.Sequence[T]
+	sequence collections.Collection[T]
 }
 
-func NewFrom[T any](sequence sequences.Sequence[T]) Stack[T] { return Stack[T]{sequence} }
-func New[T any]() Stack[T]                                   { return Stack[T]{array.New[T]()} }
+func NewFrom[T any](sequence collections.Collection[T]) Stack[T] { return Stack[T]{sequence} }
+func New[T any]() Stack[T]                                       { return Stack[T]{array.New[T]()} }
 
 func (stack Stack[T]) Empty() bool { return stack.sequence.Size() == 0 }
 

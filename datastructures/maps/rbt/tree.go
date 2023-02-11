@@ -1,7 +1,7 @@
 package rbt
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/collections"
+	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
@@ -71,7 +71,7 @@ func (tree *RedBlackTree[K, V]) Clone() maps.Map[K, V] {
 	panic("implement me")
 }
 
-func (tree *RedBlackTree[K, V]) Iterator() collections.Iterator[T] {
+func (tree *RedBlackTree[K, V]) Iterator() iterable.Iterator[T] {
 	return tree.ModifyingIterator()
 }
 

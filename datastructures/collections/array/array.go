@@ -3,7 +3,7 @@ package array
 import (
 	"fmt"
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
+	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/misc/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/streams"
@@ -24,8 +24,8 @@ func NewWithCapacity[T any](initialCapacity int) *Array[T] {
 
 func NewFromSlice[T any](slice []T) *Array[T] { return (*Array[T])(&slice) }
 
-func Collector[T any]() streams.Collector[T, sequences.Sequence[T]] {
-	return sequences.Collector[T](New[T]())
+func Collector[T any]() streams.Collector[T, collections.Collection[T]] {
+	return collections.Collector[T](New[T]())
 }
 
 func (array *Array[T]) Size() int { return len(array.Slice()) }
@@ -90,7 +90,7 @@ func (array *Array[T]) Sort(comparator functions.Comparator[T]) {
 	})
 }
 
-func (array *Array[T]) Join(other sequences.Sequence[T]) {
+func (array *Array[T]) Join(other collections.Collection[T]) {
 	switch second := other.(type) {
 	case *Array[T]:
 		array.Append(*second...)
@@ -103,16 +103,16 @@ func (array *Array[T]) Join(other sequences.Sequence[T]) {
 	other.Clear()
 }
 
-func (array *Array[T]) Clone() sequences.Sequence[T] {
+func (array *Array[T]) Clone() collections.Collection[T] {
 	cloned := NewWithSize[T](array.Size())
 	copy(cloned.Slice(), array.Slice())
 
 	return cloned
 }
 
-func (array *Array[T]) Iterator() collections.Iterator[T]        { return array.ModifyingIterator() }
-func (array *Array[T]) ModifyingIterator() sequences.Iterator[T] { return &Iterator[T]{array, 0} }
-func (array *Array[T]) Stream() streams.Stream[T]                { return streams.FromSlice(array.Slice()) }
-func (array *Array[T]) RefStream() streams.Stream[*T]            { return streams.FromSliceRefs(array.Slice()) }
+func (array *Array[T]) Iterator() iterable.Iterator[T]             { return array.ModifyingIterator() }
+func (array *Array[T]) ModifyingIterator() collections.Iterator[T] { return &Iterator[T]{array, 0} }
+func (array *Array[T]) Stream() streams.Stream[T]                  { return streams.FromSlice(array.Slice()) }
+func (array *Array[T]) RefStream() streams.Stream[*T]              { return streams.FromSliceRefs(array.Slice()) }
 
 func (array *Array[T]) Slice() []T { return *array }

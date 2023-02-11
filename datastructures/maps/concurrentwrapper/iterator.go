@@ -1,4 +1,4 @@
-package concurrent
+package concurrentwrapper
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
@@ -6,7 +6,7 @@ import (
 
 type iterator[K comparable, V any] struct {
 	maps.Iterator[K, V]
-	m *Map[K, V]
+	m *Wrapper[K, V]
 }
 
 func (it iterator[K, V]) Get() maps.Entry[K, V] {

@@ -1,4 +1,4 @@
-package collections
+package iterable
 
 type Iterator[T any] interface {
 	Valid() bool

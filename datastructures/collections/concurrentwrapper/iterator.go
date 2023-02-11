@@ -1,10 +1,10 @@
-package concurrent
+package concurrentwrapper
 
-import "github.com/djordje200179/extendedlibrary/datastructures/sequences"
+import "github.com/djordje200179/extendedlibrary/datastructures/collections"
 
 type iterator[T any] struct {
-	sequences.Iterator[T]
-	seq *Sequence[T]
+	collections.Iterator[T]
+	seq *Wrapper[T]
 }
 
 func (it iterator[T]) GetRef() *T {

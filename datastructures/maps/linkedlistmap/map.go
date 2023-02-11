@@ -2,9 +2,9 @@ package linkedlistmap
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
+	"github.com/djordje200179/extendedlibrary/datastructures/collections/linkedlist"
+	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences/linkedlist"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
@@ -24,7 +24,7 @@ func (m *LinkedListMap[K, V]) list() *linkedlist.LinkedList[misc.Pair[K, V]] {
 	return (*linkedlist.LinkedList[misc.Pair[K, V]])(m)
 }
 
-func (m *LinkedListMap[K, V]) find(key K) sequences.Iterator[misc.Pair[K, V]] {
+func (m *LinkedListMap[K, V]) find(key K) collections.Iterator[misc.Pair[K, V]] {
 	for it := m.list().ModifyingIterator(); it.Valid(); it.Move() {
 		if it.Get().First == key {
 			return it
@@ -76,7 +76,7 @@ func (m *LinkedListMap[K, V]) Clone() maps.Map[K, V] {
 	return (*LinkedListMap[K, V])(clonedList)
 }
 
-func (m *LinkedListMap[K, V]) Iterator() collections.Iterator[maps.Entry[K, V]] {
+func (m *LinkedListMap[K, V]) Iterator() iterable.Iterator[maps.Entry[K, V]] {
 	return m.ModifyingIterator()
 }
 

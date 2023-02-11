@@ -2,7 +2,7 @@ package linkedlist
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
+	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/misc/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/streams"
@@ -26,8 +26,8 @@ func NewWithSize[T any](initialSize int) *LinkedList[T] {
 	return list
 }
 
-func Collector[T any]() streams.Collector[T, sequences.Sequence[T]] {
-	return sequences.Collector[T](New[T]())
+func Collector[T any]() streams.Collector[T, collections.Collection[T]] {
+	return collections.Collector[T](New[T]())
 }
 
 func (list *LinkedList[T]) Size() int { return list.size }
@@ -81,7 +81,7 @@ func (list *LinkedList[T]) Sort(comparator functions.Comparator[T]) {
 	}
 }
 
-func (list *LinkedList[T]) Join(other sequences.Sequence[T]) {
+func (list *LinkedList[T]) Join(other collections.Collection[T]) {
 	switch second := other.(type) {
 	case *LinkedList[T]:
 		list.tail.next = second.head
@@ -98,7 +98,7 @@ func (list *LinkedList[T]) Join(other sequences.Sequence[T]) {
 	other.Clear()
 }
 
-func (list *LinkedList[T]) Clone() sequences.Sequence[T] {
+func (list *LinkedList[T]) Clone() collections.Collection[T] {
 	cloned := New[T]()
 	for curr := list.head; curr != nil; curr = curr.next {
 		cloned.Append(curr.value)
@@ -107,11 +107,11 @@ func (list *LinkedList[T]) Clone() sequences.Sequence[T] {
 	return cloned
 }
 
-func (list *LinkedList[T]) Iterator() collections.Iterator[T] { return list.ModifyingIterator() }
+func (list *LinkedList[T]) Iterator() iterable.Iterator[T] { return list.ModifyingIterator() }
 
-func (list *LinkedList[T]) ModifyingIterator() sequences.Iterator[T] {
+func (list *LinkedList[T]) ModifyingIterator() collections.Iterator[T] {
 	return &Iterator[T]{list, list.head}
 }
 
-func (list *LinkedList[T]) Stream() streams.Stream[T]     { return sequences.ValuesStream[T](list) }
-func (list *LinkedList[T]) RefStream() streams.Stream[*T] { return sequences.RefsStream[T](list) }
+func (list *LinkedList[T]) Stream() streams.Stream[T]     { return collections.ValuesStream[T](list) }
+func (list *LinkedList[T]) RefStream() streams.Stream[*T] { return collections.RefsStream[T](list) }

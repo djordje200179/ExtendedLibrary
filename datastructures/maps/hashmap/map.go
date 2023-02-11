@@ -1,7 +1,7 @@
 package hashmap
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/collections"
+	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/streams"
@@ -44,7 +44,7 @@ func (hashmap HashMap[K, V]) Clone() maps.Map[K, V] {
 	return cloned
 }
 
-func (hashmap HashMap[K, V]) Iterator() collections.Iterator[maps.Entry[K, V]] {
+func (hashmap HashMap[K, V]) Iterator() iterable.Iterator[maps.Entry[K, V]] {
 	return hashmap.ModifyingIterator()
 }
 

@@ -2,7 +2,7 @@ package bitarray
 
 import (
 	"fmt"
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences/array"
+	"github.com/djordje200179/extendedlibrary/datastructures/collections/array"
 )
 
 type BitArray struct {

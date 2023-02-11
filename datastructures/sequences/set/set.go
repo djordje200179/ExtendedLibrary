@@ -1,7 +1,7 @@
 package set
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/collections"
+	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps/hashmap"
 	"github.com/djordje200179/extendedlibrary/misc"
@@ -31,7 +31,7 @@ func (set Set[T]) Contains(value T) bool { return set.m.Contains(value) }
 func (set Set[T]) Clear()        { set.m.Clear() }
 func (set Set[T]) Clone() Set[T] { return NewFrom[T](set.m.Clone()) }
 
-func (set Set[T]) Iterator() collections.Iterator[T] { return iterator[T]{set.m.Iterator()} }
+func (set Set[T]) Iterator() iterable.Iterator[T] { return iterator[T]{set.m.Iterator()} }
 func (set Set[T]) Stream() streams.Stream[T] {
 	return streams.Map(set.m.Stream(), func(pair misc.Pair[T, empty]) T { return pair.First })
 }

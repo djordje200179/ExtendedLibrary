@@ -1,4 +1,4 @@
-package sequences
+package collections
 
 import (
 	"github.com/djordje200179/extendedlibrary/misc/optional"
@@ -9,12 +9,12 @@ type supplier[T any] struct {
 	Iterator[T]
 }
 
-func ValuesStream[T any](sequence Sequence[T]) streams.Stream[T] {
+func ValuesStream[T any](sequence Collection[T]) streams.Stream[T] {
 	supplier := supplier[T]{sequence.ModifyingIterator()}
 	return streams.FromFiniteGenerator(supplier.NextValue)
 }
 
-func RefsStream[T any](sequence Sequence[T]) streams.Stream[*T] {
+func RefsStream[T any](sequence Collection[T]) streams.Stream[*T] {
 	supplier := supplier[T]{sequence.ModifyingIterator()}
 	return streams.FromFiniteGenerator(supplier.NextRef)
 }

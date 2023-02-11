@@ -1,9 +1,9 @@
 package bst
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/collections"
-	"github.com/djordje200179/extendedlibrary/datastructures/linears/queue"
+	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
+	"github.com/djordje200179/extendedlibrary/datastructures/sequences/queue"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/misc/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
@@ -141,7 +141,7 @@ func (tree *BinarySearchTree[K, V]) Clone() maps.Map[K, V] {
 	return cloned
 }
 
-func (tree *BinarySearchTree[K, V]) Iterator() collections.Iterator[maps.Entry[K, V]] {
+func (tree *BinarySearchTree[K, V]) Iterator() iterable.Iterator[maps.Entry[K, V]] {
 	return tree.ModifyingIterator()
 }
 

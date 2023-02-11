@@ -1,17 +1,17 @@
-package sequences
+package collections
 
 import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type collector[T any] struct {
-	seq Sequence[T]
+	seq Collection[T]
 }
 
-func Collector[T any](empty Sequence[T]) streams.Collector[T, Sequence[T]] {
+func Collector[T any](empty Collection[T]) streams.Collector[T, Collection[T]] {
 	return collector[T]{empty}
 }
 
 func (collector collector[T]) Supply(value T) { collector.seq.Append(value) }
 
-func (collector collector[T]) Finish() Sequence[T] { return collector.seq }
+func (collector collector[T]) Finish() Collection[T] { return collector.seq }

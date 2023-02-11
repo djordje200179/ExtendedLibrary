@@ -1,14 +1,14 @@
 package maps
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/collections"
+	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/misc/optional"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type supplier[K comparable, V any] struct {
-	collections.Iterator[Entry[K, V]]
+	iterable.Iterator[Entry[K, V]]
 }
 
 func ValuesStream[K comparable, V any](m Map[K, V]) streams.Stream[misc.Pair[K, V]] {
