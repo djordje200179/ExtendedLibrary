@@ -11,4 +11,6 @@ type iterator[K comparable, V any] struct {
 	m *LinkedListMap[K, V]
 }
 
-func (it iterator[K, V]) Get() maps.Entry[K, V] { return entry[K, V]{it.Iterator.GetRef()} }
+func (it iterator[K, V]) Get() maps.Entry[K, V] {
+	return entry[K, V]{it.Iterator.GetRef()}
+}

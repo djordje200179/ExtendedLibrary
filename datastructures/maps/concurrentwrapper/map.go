@@ -10,33 +10,33 @@ import (
 
 type Wrapper[K comparable, V any] struct {
 	maps.Map[K, V]
-	mutex sync.Mutex
+	mutex sync.RWMutex
 }
 
 func (m *Wrapper[K, V]) Size() int {
-	m.mutex.Lock()
-	defer m.mutex.Unlock()
+	m.mutex.RLock()
+	defer m.mutex.RUnlock()
 
 	return m.Map.Size()
 }
 
 func (m *Wrapper[K, V]) Get(key K) V {
-	m.mutex.Lock()
-	defer m.mutex.Unlock()
+	m.mutex.RLock()
+	defer m.mutex.RUnlock()
 
 	return m.Map.Get(key)
 }
 
 func (m *Wrapper[K, V]) GetRef(key K) *V {
-	m.mutex.Lock()
-	defer m.mutex.Unlock()
+	m.mutex.RLock()
+	defer m.mutex.RUnlock()
 
 	return m.Map.GetRef(key)
 }
 
 func (m *Wrapper[K, V]) Set(key K, value V) {
-	m.mutex.Lock()
-	defer m.mutex.Unlock()
+	m.mutex.RLock()
+	defer m.mutex.RUnlock()
 
 	m.Map.Set(key, value)
 }
@@ -49,8 +49,8 @@ func (m *Wrapper[K, V]) Remove(key K) {
 }
 
 func (m *Wrapper[K, V]) Contains(key K) bool {
-	m.mutex.Lock()
-	defer m.mutex.Unlock()
+	m.mutex.RLock()
+	defer m.mutex.RUnlock()
 
 	return m.Map.Contains(key)
 }
@@ -63,8 +63,8 @@ func (m *Wrapper[K, V]) Clear() {
 }
 
 func (m *Wrapper[K, V]) Clone() maps.Map[K, V] {
-	m.mutex.Lock()
-	defer m.mutex.Unlock()
+	m.mutex.RLock()
+	defer m.mutex.RUnlock()
 
 	return &Wrapper[K, V]{Map: m.Map.Clone()}
 }
@@ -74,8 +74,16 @@ func (m *Wrapper[K, V]) Iterator() iterable.Iterator[maps.Entry[K, V]] {
 }
 
 func (m *Wrapper[K, V]) ModifyingIterator() maps.Iterator[K, V] {
-	return iterator[K, V]{m.Map.ModifyingIterator(), m}
+	return iterator[K, V]{
+		Iterator: m.Map.ModifyingIterator(),
+		mutex:    &m.mutex,
+	}
 }
 
-func (m *Wrapper[K, V]) Stream() streams.Stream[misc.Pair[K, V]]     { return m.Map.Stream() }
-func (m *Wrapper[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] { return m.Map.RefStream() }
+func (m *Wrapper[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
+	return m.Map.Stream()
+}
+
+func (m *Wrapper[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] {
+	return m.Map.RefStream()
+}

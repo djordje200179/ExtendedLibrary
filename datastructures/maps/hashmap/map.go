@@ -9,20 +9,39 @@ import (
 
 type HashMap[K comparable, V any] map[K]V
 
-func New[K comparable, V any]() HashMap[K, V]                 { return NewFromMap(make(map[K]V)) }
-func NewFromMap[K comparable, V any](m map[K]V) HashMap[K, V] { return m }
-
-func Collector[K comparable, V any]() streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
-	return maps.Collector[K, V](New[K, V]())
+func New[K comparable, V any]() HashMap[K, V] {
+	return NewFromMap(make(map[K]V))
 }
 
-func (hashmap HashMap[K, V]) Size() int { return len(hashmap) }
+func NewFromMap[K comparable, V any](m map[K]V) HashMap[K, V] {
+	return m
+}
 
-func (hashmap HashMap[K, V]) Get(key K) V        { return hashmap[key] }
-func (hashmap HashMap[K, V]) GetRef(key K) *V    { panic("Not supported") }
-func (hashmap HashMap[K, V]) Set(key K, value V) { hashmap[key] = value }
+func Collector[K comparable, V any]() streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
+	return maps.Collector[K, V]{
+		Map: New[K, V](),
+	}
+}
 
-func (hashmap HashMap[K, V]) Remove(key K) { delete(hashmap, key) }
+func (hashmap HashMap[K, V]) Size() int {
+	return len(hashmap)
+}
+
+func (hashmap HashMap[K, V]) Get(key K) V {
+	return hashmap[key]
+}
+
+func (hashmap HashMap[K, V]) GetRef(key K) *V {
+	panic("Not supported")
+}
+
+func (hashmap HashMap[K, V]) Set(key K, value V) {
+	hashmap[key] = value
+}
+
+func (hashmap HashMap[K, V]) Remove(key K) {
+	delete(hashmap, key)
+}
 
 func (hashmap HashMap[K, V]) Contains(key K) bool {
 	_, ok := hashmap[key]
@@ -67,4 +86,6 @@ func (hashmap HashMap[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
 	return streams.FromMap[K, V](hashmap)
 }
 
-func (hashmap HashMap[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] { panic("Not supported") }
+func (hashmap HashMap[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] {
+	panic("Not supported")
+}

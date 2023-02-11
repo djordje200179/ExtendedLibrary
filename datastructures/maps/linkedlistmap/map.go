@@ -17,7 +17,9 @@ func New[K comparable, V any]() *LinkedListMap[K, V] {
 }
 
 func Collector[K comparable, V any]() streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
-	return maps.Collector[K, V](New[K, V]())
+	return maps.Collector[K, V]{
+		Map: New[K, V](),
+	}
 }
 
 func (m *LinkedListMap[K, V]) list() *linkedlist.LinkedList[misc.Pair[K, V]] {
@@ -34,7 +36,9 @@ func (m *LinkedListMap[K, V]) find(key K) collections.Iterator[misc.Pair[K, V]] 
 	return nil
 }
 
-func (m *LinkedListMap[K, V]) Size() int { return m.list().Size() }
+func (m *LinkedListMap[K, V]) Size() int {
+	return m.list().Size()
+}
 
 func (m *LinkedListMap[K, V]) Get(key K) V {
 	if ptr := m.GetRef(key); ptr != nil {
@@ -67,9 +71,13 @@ func (m *LinkedListMap[K, V]) Remove(key K) {
 	}
 }
 
-func (m *LinkedListMap[K, V]) Contains(key K) bool { return m.find(key) != nil }
+func (m *LinkedListMap[K, V]) Contains(key K) bool {
+	return m.find(key) != nil
+}
 
-func (m *LinkedListMap[K, V]) Clear() { m.list().Clear() }
+func (m *LinkedListMap[K, V]) Clear() {
+	m.list().Clear()
+}
 
 func (m *LinkedListMap[K, V]) Clone() maps.Map[K, V] {
 	clonedList := m.list().Clone().(*linkedlist.LinkedList[misc.Pair[K, V]])

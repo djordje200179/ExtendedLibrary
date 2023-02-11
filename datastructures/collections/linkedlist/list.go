@@ -13,28 +13,31 @@ type LinkedList[T any] struct {
 	size       int
 }
 
-func New[T any]() *LinkedList[T] { return new(LinkedList[T]) }
-
-func NewWithSize[T any](initialSize int) *LinkedList[T] {
-	list := New[T]()
-
-	for i := 0; i < initialSize; i++ {
-		var zeroValue T
-		list.Append(zeroValue)
-	}
-
-	return list
+func New[T any]() *LinkedList[T] {
+	return new(LinkedList[T])
 }
 
 func Collector[T any]() streams.Collector[T, collections.Collection[T]] {
-	return collections.Collector[T](New[T]())
+	return collections.Collector[T]{
+		Collection: New[T](),
+	}
 }
 
-func (list *LinkedList[T]) Size() int { return list.size }
+func (list *LinkedList[T]) Size() int {
+	return list.size
+}
 
-func (list *LinkedList[T]) GetRef(index int) *T    { return &list.getNode(index).value }
-func (list *LinkedList[T]) Get(index int) T        { return *list.GetRef(index) }
-func (list *LinkedList[T]) Set(index int, value T) { *list.GetRef(index) = value }
+func (list *LinkedList[T]) GetRef(index int) *T {
+	return &list.getNode(index).value
+}
+
+func (list *LinkedList[T]) Get(index int) T {
+	return *list.GetRef(index)
+}
+
+func (list *LinkedList[T]) Set(index int, value T) {
+	*list.GetRef(index) = value
+}
 
 func (list *LinkedList[T]) Append(values ...T) {
 	for _, value := range values {
@@ -55,7 +58,9 @@ func (list *LinkedList[T]) Insert(index int, values ...T) {
 	}
 }
 
-func (list *LinkedList[T]) Remove(index int) { list.removeNode(list.getNode(index)) }
+func (list *LinkedList[T]) Remove(index int) {
+	list.removeNode(list.getNode(index))
+}
 
 func (list *LinkedList[T]) Clear() {
 	list.head = nil
@@ -107,11 +112,22 @@ func (list *LinkedList[T]) Clone() collections.Collection[T] {
 	return cloned
 }
 
-func (list *LinkedList[T]) Iterator() iterable.Iterator[T] { return list.ModifyingIterator() }
-
-func (list *LinkedList[T]) ModifyingIterator() collections.Iterator[T] {
-	return &Iterator[T]{list, list.head}
+func (list *LinkedList[T]) Iterator() iterable.Iterator[T] {
+	return list.ModifyingIterator()
 }
 
-func (list *LinkedList[T]) Stream() streams.Stream[T]     { return collections.ValuesStream[T](list) }
-func (list *LinkedList[T]) RefStream() streams.Stream[*T] { return collections.RefsStream[T](list) }
+func (list *LinkedList[T]) ModifyingIterator() collections.Iterator[T] {
+	return &Iterator[T]{
+		list:  list,
+		curr:  list.head,
+		index: 0,
+	}
+}
+
+func (list *LinkedList[T]) Stream() streams.Stream[T] {
+	return collections.ValuesStream[T](list)
+}
+
+func (list *LinkedList[T]) RefStream() streams.Stream[*T] {
+	return collections.RefsStream[T](list)
+}

@@ -27,10 +27,14 @@ func New[K comparable, V any](comparator functions.Comparator[K]) *BinarySearchT
 }
 
 func Collector[K comparable, V any](comparator functions.Comparator[K]) streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
-	return maps.Collector[K, V](New[K, V](comparator))
+	return maps.Collector[K, V]{
+		Map: New[K, V](comparator),
+	}
 }
 
-func (tree *BinarySearchTree[K, V]) Size() int { return tree.nodes }
+func (tree *BinarySearchTree[K, V]) Size() int {
+	return tree.nodes
+}
 
 func (tree *BinarySearchTree[K, V]) Get(key K) V {
 	if ptr := tree.GetRef(key); ptr != nil {

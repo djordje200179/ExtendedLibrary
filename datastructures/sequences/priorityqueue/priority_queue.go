@@ -23,13 +23,25 @@ func NewWithCapacity[T any](priority Priority, initialCapacity int) PriorityQueu
 
 	return PriorityQueue[T]{hs}
 }
-func New[T any](priority Priority) PriorityQueue[T] { return NewWithCapacity[T](priority, 0) }
+func New[T any](priority Priority) PriorityQueue[T] {
+	return NewWithCapacity[T](priority, 0)
+}
 
-func (pq PriorityQueue[T]) Empty() bool { return pq.hs.Len() == 0 }
+func (pq PriorityQueue[T]) Empty() bool {
+	return pq.hs.Len() == 0
+}
 
-func (pq PriorityQueue[T]) Push(value T, priority int) { heap.Push(pq.hs, item[T]{value, priority}) }
-func (pq PriorityQueue[T]) Peek() T                    { return pq.hs.slice[0].value }
-func (pq PriorityQueue[T]) Pop() T                     { return heap.Pop(pq.hs).(item[T]).value }
+func (pq PriorityQueue[T]) Push(value T, priority int) {
+	heap.Push(pq.hs, item[T]{value, priority})
+}
+
+func (pq PriorityQueue[T]) Peek() T {
+	return pq.hs.slice[0].value
+}
+
+func (pq PriorityQueue[T]) Pop() T {
+	return heap.Pop(pq.hs).(item[T]).value
+}
 
 func (pq PriorityQueue[T]) ForEach(callback functions.ParamCallback[T]) {
 	for !pq.Empty() {

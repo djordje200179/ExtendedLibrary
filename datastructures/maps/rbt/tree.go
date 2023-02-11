@@ -19,18 +19,21 @@ type RedBlackTree[K comparable, V any] struct {
 
 func New[K comparable, V any](comparator functions.Comparator[K]) *RedBlackTree[K, V] {
 	tree := new(RedBlackTree[K, V])
-	tree.root = nil
-	tree.nodes = 0
+
 	tree.comparator = comparator
 
 	return tree
 }
 
 func Collector[K comparable, V any](comparator functions.Comparator[K]) streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
-	return maps.Collector[K, V](New[K, V](comparator))
+	return maps.Collector[K, V]{
+		Map: New[K, V](comparator),
+	}
 }
 
-func (tree *RedBlackTree[K, V]) Size() int { return tree.nodes }
+func (tree *RedBlackTree[K, V]) Size() int {
+	return tree.nodes
+}
 
 func (tree *RedBlackTree[K, V]) Get(key K) V {
 	if ptr := tree.GetRef(key); ptr != nil {
@@ -59,7 +62,9 @@ func (tree *RedBlackTree[K, V]) Remove(key K) {
 	panic("implement me")
 }
 
-func (tree *RedBlackTree[K, V]) Contains(key K) bool { return tree.getNode(key) != nil }
+func (tree *RedBlackTree[K, V]) Contains(key K) bool {
+	return tree.getNode(key) != nil
+}
 
 func (tree *RedBlackTree[K, V]) Clear() {
 	tree.root = nil

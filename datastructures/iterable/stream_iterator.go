@@ -12,7 +12,9 @@ type StreamIterator[T any] struct {
 	started, ended bool
 }
 
-func (it *StreamIterator[T]) Valid() bool { return !it.ended }
+func (it *StreamIterator[T]) Valid() bool {
+	return !it.ended
+}
 
 func (it *StreamIterator[T]) Move() {
 	if elem := it.Stream.First(); elem.Valid {

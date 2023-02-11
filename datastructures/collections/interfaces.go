@@ -16,6 +16,8 @@ type Iterator[T any] interface {
 	InsertAfter(value T)
 
 	Remove()
+
+	Index() int
 }
 
 type Collection[T any] interface {

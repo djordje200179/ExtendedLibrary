@@ -10,33 +10,33 @@ import (
 
 type Wrapper[T any] struct {
 	collections.Collection[T]
-	mutex sync.Mutex
+	mutex sync.RWMutex
 }
 
 func (seq *Wrapper[T]) Size() int {
-	seq.mutex.Lock()
-	defer seq.mutex.Unlock()
+	seq.mutex.RLock()
+	defer seq.mutex.RUnlock()
 
 	return seq.Collection.Size()
 }
 
 func (seq *Wrapper[T]) Get(index int) T {
-	seq.mutex.Lock()
-	defer seq.mutex.Unlock()
+	seq.mutex.RLock()
+	defer seq.mutex.RUnlock()
 
 	return seq.Collection.Get(index)
 }
 
 func (seq *Wrapper[T]) GetRef(index int) *T {
-	seq.mutex.Lock()
-	defer seq.mutex.Unlock()
+	seq.mutex.RLock()
+	defer seq.mutex.RUnlock()
 
 	return seq.Collection.GetRef(index)
 }
 
 func (seq *Wrapper[T]) Set(index int, value T) {
-	seq.mutex.Lock()
-	defer seq.mutex.Unlock()
+	seq.mutex.RLock()
+	defer seq.mutex.RUnlock()
 
 	seq.Collection.Set(index, value)
 }
@@ -98,10 +98,12 @@ func (seq *Wrapper[T]) Join(other collections.Collection[T]) {
 }
 
 func (seq *Wrapper[T]) Clone() collections.Collection[T] {
-	seq.mutex.Lock()
-	defer seq.mutex.Unlock()
+	seq.mutex.RLock()
+	defer seq.mutex.RUnlock()
 
-	return &Wrapper[T]{Sequence: seq.Collection.Clone()}
+	return &Wrapper[T]{
+		Collection: seq.Collection.Clone(),
+	}
 }
 
 func (seq *Wrapper[T]) Iterator() iterable.Iterator[T] {
@@ -109,8 +111,16 @@ func (seq *Wrapper[T]) Iterator() iterable.Iterator[T] {
 }
 
 func (seq *Wrapper[T]) ModifyingIterator() collections.Iterator[T] {
-	return iterator[T]{seq.Collection.ModifyingIterator(), seq}
+	return iterator[T]{
+		Iterator: seq.Collection.ModifyingIterator(),
+		mutex:    &seq.mutex,
+	}
 }
 
-func (seq *Wrapper[T]) Stream() streams.Stream[T]     { return seq.Collection.Stream() }
-func (seq *Wrapper[T]) RefStream() streams.Stream[*T] { return seq.Collection.RefStream() }
+func (seq *Wrapper[T]) Stream() streams.Stream[T] {
+	return seq.Collection.Stream()
+}
+
+func (seq *Wrapper[T]) RefStream() streams.Stream[*T] {
+	return seq.Collection.RefStream()
+}

@@ -12,7 +12,9 @@ import (
 
 type Array[T any] []T
 
-func New[T any]() *Array[T] { return NewWithCapacity[T](0) }
+func New[T any]() *Array[T] {
+	return NewWithCapacity[T](0)
+}
 
 func NewWithSize[T any](initialSize int) *Array[T] {
 	return NewFromSlice(make([]T, initialSize))
@@ -22,22 +24,30 @@ func NewWithCapacity[T any](initialCapacity int) *Array[T] {
 	return NewFromSlice(make([]T, 0, initialCapacity))
 }
 
-func NewFromSlice[T any](slice []T) *Array[T] { return (*Array[T])(&slice) }
-
-func Collector[T any]() streams.Collector[T, collections.Collection[T]] {
-	return collections.Collector[T](New[T]())
+func NewFromSlice[T any](slice []T) *Array[T] {
+	return (*Array[T])(&slice)
 }
 
-func (array *Array[T]) Size() int { return len(array.Slice()) }
+func Collector[T any]() streams.Collector[T, collections.Collection[T]] {
+	return collections.Collector[T]{
+		Collection: New[T](),
+	}
+}
+
+func (array *Array[T]) Size() int {
+	return len(array.Slice())
+}
 
 func (array *Array[T]) getRealIndex(index int) int {
-	if index >= array.Size() || index < -array.Size() {
+	size := array.Size()
+
+	if index >= size || index < -size {
 		//TODO: Improve panic type
-		panic(fmt.Sprintf("runtime error: index out of range [%d] with length %d", index, array.Size()))
+		panic(fmt.Sprintf("runtime error: index out of range [%d] with length %d", index, size))
 	}
 
 	if index < 0 {
-		index += array.Size()
+		index += size
 	}
 
 	return index
@@ -49,10 +59,17 @@ func (array *Array[T]) GetRef(index int) *T {
 	return &array.Slice()[index]
 }
 
-func (array *Array[T]) Get(index int) T        { return *array.GetRef(index) }
-func (array *Array[T]) Set(index int, value T) { *array.GetRef(index) = value }
+func (array *Array[T]) Get(index int) T {
+	return *array.GetRef(index)
+}
 
-func (array *Array[T]) Append(values ...T) { *array = append(array.Slice(), values...) }
+func (array *Array[T]) Set(index int, value T) {
+	*array.GetRef(index) = value
+}
+
+func (array *Array[T]) Append(values ...T) {
+	*array = append(array.Slice(), values...)
+}
 
 func (array *Array[T]) Insert(index int, values ...T) {
 	index = array.getRealIndex(index)
@@ -75,7 +92,9 @@ func (array *Array[T]) Remove(index int) {
 	}
 }
 
-func (array *Array[T]) Clear() { *array = make([]T, 0) }
+func (array *Array[T]) Clear() {
+	*array = make([]T, 0)
+}
 
 func (array *Array[T]) Reverse() {
 	n := len(array.Slice())
@@ -110,9 +129,22 @@ func (array *Array[T]) Clone() collections.Collection[T] {
 	return cloned
 }
 
-func (array *Array[T]) Iterator() iterable.Iterator[T]             { return array.ModifyingIterator() }
-func (array *Array[T]) ModifyingIterator() collections.Iterator[T] { return &Iterator[T]{array, 0} }
-func (array *Array[T]) Stream() streams.Stream[T]                  { return streams.FromSlice(array.Slice()) }
-func (array *Array[T]) RefStream() streams.Stream[*T]              { return streams.FromSliceRefs(array.Slice()) }
+func (array *Array[T]) Iterator() iterable.Iterator[T] {
+	return array.ModifyingIterator()
+}
 
-func (array *Array[T]) Slice() []T { return *array }
+func (array *Array[T]) ModifyingIterator() collections.Iterator[T] {
+	return &Iterator[T]{array, 0}
+}
+
+func (array *Array[T]) Stream() streams.Stream[T] {
+	return streams.FromSlice(array.Slice())
+}
+
+func (array *Array[T]) RefStream() streams.Stream[*T] {
+	return streams.FromSliceRefs(array.Slice())
+}
+
+func (array *Array[T]) Slice() []T {
+	return *array
+}
