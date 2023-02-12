@@ -1,20 +1,11 @@
-package deque
+package collectionsequences
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
-	"github.com/djordje200179/extendedlibrary/datastructures/collections/array"
 )
 
 type Deque[T any] struct {
 	sequence collections.Collection[T]
-}
-
-func NewFrom[T any](sequence collections.Collection[T]) Deque[T] {
-	return Deque[T]{sequence}
-}
-
-func New[T any]() Deque[T] {
-	return Deque[T]{array.New[T]()}
 }
 
 func (deque Deque[T]) Empty() bool {

@@ -3,7 +3,7 @@ package bst
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences/queue"
+	"github.com/djordje200179/extendedlibrary/datastructures/sequences/collectionsequences"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/misc/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
@@ -121,23 +121,23 @@ func (tree *BinarySearchTree[K, V]) Clone() maps.Map[K, V] {
 
 	cloned.root = tree.root.Clone()
 
-	nodesInOriginal := queue.New[*node[K, V]]()
-	nodesInOriginal.Push(tree.root)
+	nodesInOriginal := collectionsequences.NewQueue[*node[K, V]]()
+	nodesInOriginal.PushBack(tree.root)
 
-	nodesInCloned := queue.New[*node[K, V]]()
-	nodesInCloned.Push(cloned.root)
+	nodesInCloned := collectionsequences.NewQueue[*node[K, V]]()
+	nodesInCloned.PushBack(cloned.root)
 
 	for !nodesInOriginal.Empty() {
-		nodeInOriginal := nodesInOriginal.Pop()
-		nodeInCloned := nodesInCloned.Pop()
+		nodeInOriginal := nodesInOriginal.PopFront()
+		nodeInCloned := nodesInCloned.PopFront()
 
 		if left := nodeInOriginal.left; left != nil {
-			nodesInOriginal.Push(left)
+			nodesInOriginal.PushBack(left)
 			nodeInCloned.left = left.Clone()
 		}
 
 		if right := nodeInOriginal.right; right != nil {
-			nodesInOriginal.Push(right)
+			nodesInOriginal.PushBack(right)
 			nodeInCloned.right = right.Clone()
 		}
 	}
