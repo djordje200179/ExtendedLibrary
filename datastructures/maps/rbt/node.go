@@ -1,6 +1,6 @@
 package rbt
 
-import "github.com/djordje200179/extendedlibrary/misc/comparison"
+import "github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 
 type color bool
 

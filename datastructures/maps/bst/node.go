@@ -1,6 +1,6 @@
 package bst
 
-import "github.com/djordje200179/extendedlibrary/misc/comparison"
+import "github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 
 type node[K comparable, V any] struct {
 	key   K

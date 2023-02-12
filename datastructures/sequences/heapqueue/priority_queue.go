@@ -1,8 +1,8 @@
 package heapqueue
 
 import (
-	"github.com/djordje200179/extendedlibrary/misc/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
+	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 )
 
 type PriorityQueue[T any] struct {

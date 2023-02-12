@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
-	"github.com/djordje200179/extendedlibrary/misc/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
+	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 	"github.com/djordje200179/extendedlibrary/streams"
 	"sort"
 )

@@ -1,8 +1,8 @@
 package streams
 
 import (
-	"github.com/djordje200179/extendedlibrary/misc/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
+	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/optional"
 )
 
