@@ -11,7 +11,3 @@ type iterator[T comparable] struct {
 func (it iterator[T]) Get() T {
 	return it.Iterator.Get().Key()
 }
-
-func (it iterator[T]) Remove() {
-	it.Iterator.Remove()
-}
