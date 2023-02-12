@@ -1,8 +1,10 @@
 package heapqueue
 
 import (
+	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
+	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type PriorityQueue[T any] struct {
@@ -18,6 +20,12 @@ func New[T any](comparator functions.Comparator[T]) *PriorityQueue[T] {
 	pq.comparator = comparator
 
 	return pq
+}
+
+func Collector[T any](comparator functions.Comparator[T]) streams.Collector[T, *PriorityQueue[T]] {
+	return sequences.Collector[T, *PriorityQueue[T]]{
+		BackPusher: New[T](comparator),
+	}
 }
 
 func (pq *PriorityQueue[T]) Empty() bool {
