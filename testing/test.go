@@ -2,17 +2,19 @@ package main
 
 import (
 	"fmt"
-	"github.com/djordje200179/extendedlibrary/datastructures/maps/linkedlistmap"
-	"github.com/djordje200179/extendedlibrary/misc"
+	"github.com/djordje200179/extendedlibrary/datastructures/sets/mapset"
 )
 
 func main() {
-	m := linkedlistmap.New[string, int]()
+	set := mapset.NewHashSet[string]()
 
-	m.Set("abc", 2)
-	m.Set("abcd", 5)
+	set.Add("Macka")
+	set.Add("Pas")
+	set.Add("Konj")
+	set.Add("Konj")
+	set.Add("Konj")
 
-	m.Stream().ForEach(func(pair misc.Pair[string, int]) {
-		fmt.Println(pair.First, pair.Second)
-	})
+	for it := set.Iterator(); it.Valid(); it.Move() {
+		fmt.Println(it.Get())
+	}
 }
