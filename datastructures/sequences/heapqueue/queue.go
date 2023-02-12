@@ -7,14 +7,14 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
-type PriorityQueue[T any] struct {
+type Queue[T any] struct {
 	slice []T
 
 	comparator functions.Comparator[T]
 }
 
-func New[T any](comparator functions.Comparator[T]) *PriorityQueue[T] {
-	pq := new(PriorityQueue[T])
+func New[T any](comparator functions.Comparator[T]) *Queue[T] {
+	pq := new(Queue[T])
 
 	pq.slice = make([]T, 0)
 	pq.comparator = comparator
@@ -22,17 +22,17 @@ func New[T any](comparator functions.Comparator[T]) *PriorityQueue[T] {
 	return pq
 }
 
-func Collector[T any](comparator functions.Comparator[T]) streams.Collector[T, *PriorityQueue[T]] {
-	return sequences.Collector[T, *PriorityQueue[T]]{
+func Collector[T any](comparator functions.Comparator[T]) streams.Collector[T, *Queue[T]] {
+	return sequences.Collector[T, *Queue[T]]{
 		BackPusher: New[T](comparator),
 	}
 }
 
-func (pq *PriorityQueue[T]) Empty() bool {
+func (pq *Queue[T]) Empty() bool {
 	return len(pq.slice) == 0
 }
 
-func (pq *PriorityQueue[T]) PushBack(value T) {
+func (pq *Queue[T]) PushBack(value T) {
 	pq.slice = append(pq.slice, value)
 
 	j := len(pq.slice) - 1
@@ -51,11 +51,11 @@ func (pq *PriorityQueue[T]) PushBack(value T) {
 	}
 }
 
-func (pq *PriorityQueue[T]) PeekFront() T {
+func (pq *Queue[T]) PeekFront() T {
 	return pq.slice[0]
 }
 
-func (pq *PriorityQueue[T]) PopFront() T {
+func (pq *Queue[T]) PopFront() T {
 	lastIndex := len(pq.slice) - 1
 
 	pq.slice[0], pq.slice[lastIndex] = pq.slice[lastIndex], pq.slice[0]
