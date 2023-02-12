@@ -38,11 +38,7 @@ func (pq *Queue[T]) PushBack(value T) {
 	j := len(pq.slice) - 1
 	for {
 		i := (j - 1) / 2
-		if i == j {
-			break
-		}
-
-		if pq.comparator(pq.slice[j], pq.slice[i]) != comparison.Equal {
+		if i == j || pq.comparator(pq.slice[j], pq.slice[i]) != comparison.FirstSmaller {
 			break
 		}
 
@@ -67,17 +63,12 @@ func (pq *Queue[T]) PopFront() T {
 			break
 		}
 
-		j1Elem := pq.slice[j1]
-		j2Elem := pq.slice[j1+1]
-
-		compResult := pq.comparator(j2Elem, j1Elem)
-
 		j := j1
-		if j2 := j1 + 1; j2 < lastIndex && compResult != comparison.Equal {
+		if j2 := j1 + 1; j2 < lastIndex && pq.comparator(pq.slice[j2], pq.slice[j1]) == comparison.FirstSmaller {
 			j = j2
 		}
 
-		if compResult != comparison.Equal {
+		if pq.comparator(pq.slice[j], pq.slice[i]) != comparison.FirstSmaller {
 			break
 		}
 

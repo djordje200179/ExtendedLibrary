@@ -1,20 +1,21 @@
 package main
 
 import (
-	"fmt"
-	"github.com/djordje200179/extendedlibrary/datastructures/sets/mapset"
+	"github.com/djordje200179/extendedlibrary/datastructures/sequences/heapqueue"
+	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 )
 
 func main() {
-	set := mapset.NewHashSet[string]()
+	pq := heapqueue.New[int](comparison.Ascending[int])
 
-	set.Add("Macka")
-	set.Add("Pas")
-	set.Add("Konj")
-	set.Add("Konj")
-	set.Add("Konj")
+	pq.PushBack(1)
+	pq.PushBack(8)
+	pq.PushBack(3)
+	pq.PushBack(5)
+	pq.PushBack(8)
+	pq.PushBack(2)
 
-	for it := set.Iterator(); it.Valid(); it.Move() {
-		fmt.Println(it.Get())
+	for !pq.Empty() {
+		println(pq.PopFront())
 	}
 }
