@@ -106,3 +106,17 @@ func (stream Stream[T]) Find(predictor functions.Predictor[T]) optional.Optional
 
 	return optional.Empty[T]()
 }
+
+func (stream Stream[T]) Channel() <-chan T {
+	channel := make(chan T)
+
+	go func() {
+		for elem := stream.supplier.Supply(); elem.Valid; elem = stream.supplier.Supply() {
+			channel <- elem.Value
+		}
+
+		close(channel)
+	}()
+
+	return channel
+}
