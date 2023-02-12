@@ -21,3 +21,14 @@ func FromInt(result int) Result {
 		return Equal
 	}
 }
+
+func (r Result) Int() int {
+	switch r {
+	case FirstBigger:
+		return -1
+	case SecondBigger:
+		return 1
+	default:
+		return 0
+	}
+}
