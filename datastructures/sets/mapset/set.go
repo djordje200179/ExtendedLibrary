@@ -23,8 +23,10 @@ func NewHashSet[T comparable]() sets.Set[T] {
 	return NewFrom[T](hashmap.New[T, empty]())
 }
 
-func Collector[T comparable]() streams.Collector[T, sets.Set[T]] {
-	return sets.Collector[T](NewHashSet[T]())
+func HashSetCollector[T comparable]() streams.Collector[T, sets.Set[T]] {
+	return sets.Collector[T]{
+		Set: NewHashSet[T](),
+	}
 }
 
 func (set mapBased[T]) Add(value T) {
