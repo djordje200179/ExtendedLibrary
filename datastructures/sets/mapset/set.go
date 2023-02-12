@@ -1,4 +1,4 @@
-package mapbased
+package mapset
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
