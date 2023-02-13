@@ -76,6 +76,13 @@ func (list *LinkedList[T]) Reverse() {
 	list.head, list.tail = list.tail, list.head
 }
 
+func (list *LinkedList[T]) Swap(index1, index2 int) {
+	node1 := list.getNode(index1)
+	node2 := list.getNode(index2)
+
+	node1.value, node2.value = node2.value, node1.value
+}
+
 func (list *LinkedList[T]) Sort(comparator functions.Comparator[T]) {
 	for front := list.head; front.next != nil; front = front.next {
 		for back := front.next; back != nil; back = back.next {

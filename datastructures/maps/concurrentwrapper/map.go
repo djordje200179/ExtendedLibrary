@@ -62,6 +62,13 @@ func (m *Wrapper[K, V]) Clear() {
 	m.Map.Clear()
 }
 
+func (m *Wrapper[K, V]) Swap(key1, key2 K) {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+
+	m.Map.Swap(key1, key2)
+}
+
 func (m *Wrapper[K, V]) Clone() maps.Map[K, V] {
 	m.mutex.RLock()
 	defer m.mutex.RUnlock()

@@ -83,6 +83,13 @@ func (seq *Wrapper[T]) Reverse() {
 	seq.Collection.Reverse()
 }
 
+func (seq *Wrapper[T]) Swap(index1, index2 int) {
+	seq.mutex.Lock()
+	defer seq.mutex.Unlock()
+
+	seq.Collection.Swap(index1, index2)
+}
+
 func (seq *Wrapper[T]) Sort(comparator functions.Comparator[T]) {
 	seq.mutex.Lock()
 	defer seq.mutex.Unlock()

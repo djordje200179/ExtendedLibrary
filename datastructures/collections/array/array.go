@@ -103,6 +103,13 @@ func (array *Array[T]) Reverse() {
 	}
 }
 
+func (array *Array[T]) Swap(index1, index2 int) {
+	index1 = array.getRealIndex(index1)
+	index2 = array.getRealIndex(index2)
+
+	array.Slice()[index1], array.Slice()[index2] = array.Slice()[index2], array.Slice()[index1]
+}
+
 func (array *Array[T]) Sort(comparator functions.Comparator[T]) {
 	sort.SliceStable(array.Slice(), func(i, j int) bool {
 		return comparator(array.Slice()[i], array.Slice()[j]) == comparison.FirstSmaller

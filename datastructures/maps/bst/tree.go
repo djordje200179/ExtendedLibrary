@@ -104,11 +104,19 @@ func (tree *BinarySearchTree[K, V]) Remove(key K) {
 	}
 }
 
-func (tree *BinarySearchTree[K, V]) Contains(key K) bool { return tree.getNode(key) != nil }
+func (tree *BinarySearchTree[K, V]) Contains(key K) bool {
+	return tree.getNode(key) != nil
+}
 
 func (tree *BinarySearchTree[K, V]) Clear() {
 	tree.root = nil
 	tree.nodes = 0
+}
+
+func (tree *BinarySearchTree[K, V]) Swap(key1, key2 K) {
+	node1, node2 := tree.getNode(key1), tree.getNode(key2)
+
+	node1.value, node2.value = node2.value, node1.value
 }
 
 func (tree *BinarySearchTree[K, V]) Clone() maps.Map[K, V] {

@@ -54,6 +54,10 @@ func (hashmap HashMap[K, V]) Clear() {
 	}
 }
 
+func (hashmap HashMap[K, V]) Swap(key1, key2 K) {
+	hashmap[key1], hashmap[key2] = hashmap[key2], hashmap[key1]
+}
+
 func (hashmap HashMap[K, V]) Clone() maps.Map[K, V] {
 	cloned := New[K, V]()
 	for k, v := range hashmap {

@@ -33,8 +33,10 @@ type Collection[T any] interface {
 
 	Clear()
 	Reverse()
+	Swap(index1, index2 int)
 	Sort(comparator functions.Comparator[T])
 	Join(other Collection[T])
+
 	misc.Cloner[Collection[T]]
 
 	iterable.Iterable[T]

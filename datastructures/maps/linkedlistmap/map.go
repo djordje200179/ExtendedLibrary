@@ -79,6 +79,12 @@ func (m *LinkedListMap[K, V]) Clear() {
 	m.list().Clear()
 }
 
+func (m *LinkedListMap[K, V]) Swap(key1, key2 K) {
+	it1, it2 := m.find(key1), m.find(key2)
+
+	it1.GetRef().First, it2.GetRef().First = it2.GetRef().First, it1.GetRef().First
+}
+
 func (m *LinkedListMap[K, V]) Clone() maps.Map[K, V] {
 	clonedList := m.list().Clone().(*linkedlist.LinkedList[misc.Pair[K, V]])
 	return (*LinkedListMap[K, V])(clonedList)
