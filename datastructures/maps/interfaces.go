@@ -27,6 +27,8 @@ type Map[K comparable, V any] interface {
 	GetRef(key K) *V
 	Set(key K, value V)
 
+	Keys() []K
+
 	Remove(key K)
 	Contains(key K) bool
 

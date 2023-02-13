@@ -98,6 +98,18 @@ func (tree *BinarySearchTree[K, V]) Set(key K, value V) {
 	tree.nodes++
 }
 
+func (tree *BinarySearchTree[K, V]) Keys() []K {
+	keys := make([]K, tree.nodes)
+
+	i := 0
+	for it := tree.Iterator(); it.Valid(); it.Move() {
+		keys[i] = it.Get().Key()
+		i++
+	}
+
+	return keys
+}
+
 func (tree *BinarySearchTree[K, V]) Remove(key K) {
 	if node := tree.getNode(key); node != nil {
 		tree.removeNode(node)

@@ -61,6 +61,18 @@ func (m *LinkedListMap[K, V]) Set(key K, value V) {
 	}
 }
 
+func (m *LinkedListMap[K, V]) Keys() []K {
+	keys := make([]K, m.Size())
+
+	i := 0
+	for it := m.List().Iterator(); it.Valid(); it.Move() {
+		keys[i] = it.Get().First
+		i++
+	}
+
+	return keys
+}
+
 func (m *LinkedListMap[K, V]) Remove(key K) {
 	if it := m.find(key); it != nil {
 		it.Remove()

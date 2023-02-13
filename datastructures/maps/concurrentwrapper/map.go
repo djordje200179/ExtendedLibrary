@@ -41,6 +41,13 @@ func (m *Wrapper[K, V]) Set(key K, value V) {
 	m.Map.Set(key, value)
 }
 
+func (m *Wrapper[K, V]) Keys() []K {
+	m.mutex.RLock()
+	defer m.mutex.RUnlock()
+
+	return m.Map.Keys()
+}
+
 func (m *Wrapper[K, V]) Remove(key K) {
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
