@@ -37,5 +37,9 @@ func (supplier supplier[K, V]) NextRef() optional.Optional[misc.Pair[K, *V]] {
 
 	defer supplier.Iterator.Move()
 
-	return optional.FromValue(supplier.Iterator.Get())
+	key := supplier.Iterator.Key()
+	value := supplier.Iterator.ValueRef()
+	pair := misc.Pair[K, *V]{key, value}
+
+	return optional.FromValue(pair)
 }
