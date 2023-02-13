@@ -103,7 +103,7 @@ func (tree *BinarySearchTree[K, V]) Keys() []K {
 
 	i := 0
 	for it := tree.Iterator(); it.Valid(); it.Move() {
-		keys[i] = it.Get().Key()
+		keys[i] = it.Get().First
 		i++
 	}
 
