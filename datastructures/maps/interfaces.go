@@ -6,16 +6,12 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
-type Entry[K comparable, V any] interface {
-	Key() K
+type Iterator[K comparable, V any] interface {
+	iterable.Iterator[K]
 
 	Value() V
 	ValueRef() *V
 	SetValue(value V)
-}
-
-type Iterator[K comparable, V any] interface {
-	iterable.Iterator[Entry[K, V]]
 
 	Remove()
 }
@@ -37,7 +33,7 @@ type Map[K comparable, V any] interface {
 
 	misc.Cloner[Map[K, V]]
 
-	iterable.Iterable[Entry[K, V]]
+	iterable.Iterable[K]
 	ModifyingIterator() Iterator[K, V]
 	streams.Streamer[misc.Pair[K, V]]
 	RefStream() streams.Stream[misc.Pair[K, *V]]

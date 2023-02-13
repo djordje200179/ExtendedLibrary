@@ -98,13 +98,12 @@ func (m *LinkedListMap[K, V]) Clone() maps.Map[K, V] {
 	return (*LinkedListMap[K, V])(clonedList)
 }
 
-func (m *LinkedListMap[K, V]) Iterator() iterable.Iterator[maps.Entry[K, V]] {
+func (m *LinkedListMap[K, V]) Iterator() iterable.Iterator[K] {
 	return m.ModifyingIterator()
 }
 
 func (m *LinkedListMap[K, V]) ModifyingIterator() maps.Iterator[K, V] {
 	return iterator[K, V]{
-		m:        m,
 		Iterator: m.List().ModifyingIterator(),
 	}
 }

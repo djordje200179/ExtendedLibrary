@@ -79,7 +79,7 @@ func (hashmap HashMap[K, V]) Clone() maps.Map[K, V] {
 	return cloned
 }
 
-func (hashmap HashMap[K, V]) Iterator() iterable.Iterator[maps.Entry[K, V]] {
+func (hashmap HashMap[K, V]) Iterator() iterable.Iterator[K] {
 	return hashmap.ModifyingIterator()
 }
 

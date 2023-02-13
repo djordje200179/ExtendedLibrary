@@ -1,7 +1,5 @@
 package hashmap
 
-import "github.com/djordje200179/extendedlibrary/datastructures/maps"
-
 type iterator[K comparable, V any] struct {
 	m     HashMap[K, V]
 	keys  []K
@@ -16,8 +14,20 @@ func (it *iterator[K, V]) Move() {
 	it.index++
 }
 
-func (it *iterator[K, V]) Get() maps.Entry[K, V] {
-	return entry[K, V]{it.m, it.keys[it.index]}
+func (it *iterator[K, V]) Get() K {
+	return it.keys[it.index]
+}
+
+func (it *iterator[K, V]) Value() V {
+	return it.m.Get(it.keys[it.index])
+}
+
+func (it *iterator[K, V]) ValueRef() *V {
+	return it.m.GetRef(it.keys[it.index])
+}
+
+func (it *iterator[K, V]) SetValue(value V) {
+	it.m.Set(it.keys[it.index], value)
 }
 
 func (it *iterator[K, V]) Remove() {
