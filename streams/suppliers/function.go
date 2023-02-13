@@ -7,7 +7,9 @@ import (
 
 type Function[T any] functions.EmptyGenerator[optional.Optional[T]]
 
-func (supplier Function[T]) Supply() optional.Optional[T] { return supplier() }
+func (supplier Function[T]) Supply() optional.Optional[T] {
+	return supplier()
+}
 
 func Infinite[T any](generator functions.EmptyGenerator[T]) Supplier[T] {
 	return Function[T](func() optional.Optional[T] {

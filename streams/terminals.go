@@ -76,7 +76,10 @@ func (stream Stream[T]) Max(comparator functions.Comparator[T]) optional.Optiona
 		}
 	}
 
-	return optional.Optional[T]{max, set}
+	return optional.Optional[T]{
+		Value: max,
+		Valid: set,
+	}
 }
 
 func (stream Stream[T]) Min(comparator functions.Comparator[T]) optional.Optional[T] {
@@ -90,7 +93,10 @@ func (stream Stream[T]) Min(comparator functions.Comparator[T]) optional.Optiona
 		}
 	}
 
-	return optional.Optional[T]{min, set}
+	return optional.Optional[T]{
+		Value: min,
+		Valid: set,
+	}
 }
 
 func (stream Stream[T]) First() optional.Optional[T] {

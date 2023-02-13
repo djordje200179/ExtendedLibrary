@@ -10,7 +10,7 @@ type sliceCollector[T any] struct {
 
 func ToSlice[T any]() streams.Collector[T, []T] {
 	return &sliceCollector[T]{
-		slice: nil,
+		slice: make([]T, 0),
 	}
 }
 

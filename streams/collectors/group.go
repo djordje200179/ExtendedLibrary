@@ -22,4 +22,6 @@ func (collector groupCollector[T, K]) Supply(value T) {
 	collector.m[key] = append(collector.m[key], value)
 }
 
-func (collector groupCollector[T, K]) Finish() map[K][]T { return collector.m }
+func (collector groupCollector[T, K]) Finish() map[K][]T {
+	return collector.m
+}
