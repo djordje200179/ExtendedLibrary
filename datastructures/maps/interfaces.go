@@ -7,8 +7,9 @@ import (
 )
 
 type Iterator[K comparable, V any] interface {
-	iterable.Iterator[K]
+	iterable.Iterator[misc.Pair[K, V]]
 
+	Key() K
 	Value() V
 	ValueRef() *V
 	SetValue(value V)
@@ -33,7 +34,7 @@ type Map[K comparable, V any] interface {
 
 	misc.Cloner[Map[K, V]]
 
-	iterable.Iterable[K]
+	iterable.Iterable[misc.Pair[K, V]]
 	ModifyingIterator() Iterator[K, V]
 	streams.Streamer[misc.Pair[K, V]]
 	RefStream() streams.Stream[misc.Pair[K, *V]]

@@ -165,7 +165,7 @@ func (tree *BinarySearchTree[K, V]) Clone() maps.Map[K, V] {
 	return cloned
 }
 
-func (tree *BinarySearchTree[K, V]) Iterator() iterable.Iterator[K] {
+func (tree *BinarySearchTree[K, V]) Iterator() iterable.Iterator[misc.Pair[K, V]] {
 	return tree.ModifyingIterator()
 }
 

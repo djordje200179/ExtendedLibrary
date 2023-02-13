@@ -1,5 +1,7 @@
 package bst
 
+import "github.com/djordje200179/extendedlibrary/misc"
+
 type iterator[K comparable, V any] struct {
 	tree *BinarySearchTree[K, V]
 
@@ -14,7 +16,14 @@ func (it *iterator[K, V]) Move() {
 	it.curr = it.curr.next()
 }
 
-func (it *iterator[K, V]) Get() K {
+func (it *iterator[K, V]) Get() misc.Pair[K, V] {
+	return misc.Pair[K, V]{
+		First:  it.Key(),
+		Second: it.Value(),
+	}
+}
+
+func (it *iterator[K, V]) Key() K {
 	return it.curr.key
 }
 

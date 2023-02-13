@@ -83,7 +83,7 @@ func (m *Wrapper[K, V]) Clone() maps.Map[K, V] {
 	return &Wrapper[K, V]{Map: m.Map.Clone()}
 }
 
-func (m *Wrapper[K, V]) Iterator() iterable.Iterator[K] {
+func (m *Wrapper[K, V]) Iterator() iterable.Iterator[misc.Pair[K, V]] {
 	return m.ModifyingIterator()
 }
 

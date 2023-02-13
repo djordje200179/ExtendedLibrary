@@ -2,6 +2,7 @@ package concurrentwrapper
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
+	"github.com/djordje200179/extendedlibrary/misc"
 	"sync"
 )
 
@@ -10,11 +11,21 @@ type iterator[K comparable, V any] struct {
 	mutex *sync.RWMutex
 }
 
-func (it iterator[K, V]) Get() K {
+func (it iterator[K, V]) Get() misc.Pair[K, V] {
 	it.mutex.RLock()
 	defer it.mutex.RUnlock()
 
-	return it.Iterator.Get()
+	return misc.Pair[K, V]{
+		First:  it.Iterator.Key(),
+		Second: it.Iterator.Value(),
+	}
+}
+
+func (it iterator[K, V]) Key() K {
+	it.mutex.RLock()
+	defer it.mutex.RUnlock()
+
+	return it.Iterator.Key()
 }
 
 func (it iterator[K, V]) Value() V {

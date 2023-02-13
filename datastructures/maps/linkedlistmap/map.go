@@ -98,7 +98,7 @@ func (m *LinkedListMap[K, V]) Clone() maps.Map[K, V] {
 	return (*LinkedListMap[K, V])(clonedList)
 }
 
-func (m *LinkedListMap[K, V]) Iterator() iterable.Iterator[K] {
+func (m *LinkedListMap[K, V]) Iterator() iterable.Iterator[misc.Pair[K, V]] {
 	return m.ModifyingIterator()
 }
 

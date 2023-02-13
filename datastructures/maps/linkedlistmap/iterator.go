@@ -9,18 +9,25 @@ type iterator[K comparable, V any] struct {
 	collections.Iterator[misc.Pair[K, V]]
 }
 
-func (it iterator[K, V]) Get() K {
-	return it.Iterator.Get().First
+func (it iterator[K, V]) Get() misc.Pair[K, V] {
+	return misc.Pair[K, V]{
+		First:  it.Key(),
+		Second: it.Value(),
+	}
 }
 
-func (it iterator[K, V]) Value() K {
+func (it iterator[K, V]) Key() K {
+	return it.Iterator.GetRef().First
+}
+
+func (it iterator[K, V]) Value() V {
 	return *it.ValueRef()
 }
 
-func (it iterator[K, V]) ValueRef() *K {
-	return &it.Iterator.GetRef().First
+func (it iterator[K, V]) ValueRef() *V {
+	return &it.Iterator.GetRef().Second
 }
 
-func (it iterator[K, V]) SetValue(value K) {
+func (it iterator[K, V]) SetValue(value V) {
 	*it.ValueRef() = value
 }
