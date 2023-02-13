@@ -22,12 +22,8 @@ func Collector[K comparable, V any]() streams.Collector[misc.Pair[K, V], maps.Ma
 	}
 }
 
-func (m *LinkedListMap[K, V]) list() *linkedlist.LinkedList[misc.Pair[K, V]] {
-	return (*linkedlist.LinkedList[misc.Pair[K, V]])(m)
-}
-
 func (m *LinkedListMap[K, V]) find(key K) collections.Iterator[misc.Pair[K, V]] {
-	for it := m.list().ModifyingIterator(); it.Valid(); it.Move() {
+	for it := m.List().ModifyingIterator(); it.Valid(); it.Move() {
 		if it.Get().First == key {
 			return it
 		}
@@ -37,7 +33,7 @@ func (m *LinkedListMap[K, V]) find(key K) collections.Iterator[misc.Pair[K, V]] 
 }
 
 func (m *LinkedListMap[K, V]) Size() int {
-	return m.list().Size()
+	return m.List().Size()
 }
 
 func (m *LinkedListMap[K, V]) Get(key K) V {
@@ -61,7 +57,7 @@ func (m *LinkedListMap[K, V]) Set(key K, value V) {
 	if ptr := m.GetRef(key); ptr != nil {
 		*ptr = value
 	} else {
-		m.list().Append(misc.Pair[K, V]{key, value})
+		m.List().Append(misc.Pair[K, V]{key, value})
 	}
 }
 
@@ -76,7 +72,7 @@ func (m *LinkedListMap[K, V]) Contains(key K) bool {
 }
 
 func (m *LinkedListMap[K, V]) Clear() {
-	m.list().Clear()
+	m.List().Clear()
 }
 
 func (m *LinkedListMap[K, V]) Swap(key1, key2 K) {
@@ -86,7 +82,7 @@ func (m *LinkedListMap[K, V]) Swap(key1, key2 K) {
 }
 
 func (m *LinkedListMap[K, V]) Clone() maps.Map[K, V] {
-	clonedList := m.list().Clone().(*linkedlist.LinkedList[misc.Pair[K, V]])
+	clonedList := m.List().Clone().(*linkedlist.LinkedList[misc.Pair[K, V]])
 	return (*LinkedListMap[K, V])(clonedList)
 }
 
@@ -97,7 +93,7 @@ func (m *LinkedListMap[K, V]) Iterator() iterable.Iterator[maps.Entry[K, V]] {
 func (m *LinkedListMap[K, V]) ModifyingIterator() maps.Iterator[K, V] {
 	return iterator[K, V]{
 		m:        m,
-		Iterator: m.list().ModifyingIterator(),
+		Iterator: m.List().ModifyingIterator(),
 	}
 }
 
@@ -107,4 +103,8 @@ func (m *LinkedListMap[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
 
 func (m *LinkedListMap[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] {
 	return maps.RefsStream[K, V](m)
+}
+
+func (m *LinkedListMap[K, V]) List() *linkedlist.LinkedList[misc.Pair[K, V]] {
+	return (*linkedlist.LinkedList[misc.Pair[K, V]])(m)
 }

@@ -93,3 +93,7 @@ func (hashmap HashMap[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
 func (hashmap HashMap[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] {
 	panic("Not supported")
 }
+
+func (hashmap HashMap[K, V]) Map() map[K]V {
+	return hashmap
+}
