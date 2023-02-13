@@ -132,9 +132,21 @@ func (list *LinkedList[T]) ModifyingIterator() collections.Iterator[T] {
 }
 
 func (list *LinkedList[T]) Stream() streams.Stream[T] {
-	return collections.ValuesStream[T](list)
+	supplier := iterable.IteratorSupplier[T]{
+		Iterator: list.Iterator(),
+	}
+
+	return streams.Stream[T]{
+		Supplier: supplier,
+	}
 }
 
 func (list *LinkedList[T]) RefStream() streams.Stream[*T] {
-	return collections.RefsStream[T](list)
+	supplier := collections.RefsSupplier[T]{
+		Iterator: list.ModifyingIterator(),
+	}
+
+	return streams.Stream[*T]{
+		Supplier: supplier,
+	}
 }

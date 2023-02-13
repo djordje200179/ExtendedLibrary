@@ -109,11 +109,23 @@ func (m *LinkedListMap[K, V]) ModifyingIterator() maps.Iterator[K, V] {
 }
 
 func (m *LinkedListMap[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
-	return maps.ValuesStream[K, V](m)
+	supplier := iterable.IteratorSupplier[misc.Pair[K, V]]{
+		Iterator: m.Iterator(),
+	}
+
+	return streams.Stream[misc.Pair[K, V]]{
+		Supplier: supplier,
+	}
 }
 
 func (m *LinkedListMap[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] {
-	return maps.RefsStream[K, V](m)
+	supplier := maps.RefsSupplier[K, V]{
+		Iterator: m.ModifyingIterator(),
+	}
+
+	return streams.Stream[misc.Pair[K, *V]]{
+		Supplier: supplier,
+	}
 }
 
 func (m *LinkedListMap[K, V]) List() *linkedlist.LinkedList[misc.Pair[K, V]] {

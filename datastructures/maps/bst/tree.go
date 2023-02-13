@@ -174,9 +174,21 @@ func (tree *BinarySearchTree[K, V]) ModifyingIterator() maps.Iterator[K, V] {
 }
 
 func (tree *BinarySearchTree[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
-	return maps.ValuesStream[K, V](tree)
+	supplier := iterable.IteratorSupplier[misc.Pair[K, V]]{
+		Iterator: tree.Iterator(),
+	}
+
+	return streams.Stream[misc.Pair[K, V]]{
+		Supplier: supplier,
+	}
 }
 
 func (tree *BinarySearchTree[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] {
-	return maps.RefsStream[K, V](tree)
+	supplier := maps.RefsSupplier[K, V]{
+		Iterator: tree.ModifyingIterator(),
+	}
+
+	return streams.Stream[misc.Pair[K, *V]]{
+		Supplier: supplier,
+	}
 }

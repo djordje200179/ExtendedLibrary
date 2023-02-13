@@ -8,7 +8,7 @@ import (
 )
 
 type Stream[T any] struct {
-	supplier suppliers.Supplier[T]
+	suppliers.Supplier[T]
 }
 
 type Streamer[T any] interface {

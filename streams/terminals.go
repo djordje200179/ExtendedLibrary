@@ -7,7 +7,7 @@ import (
 )
 
 func (stream Stream[T]) ForEach(function functions.ParamCallback[T]) {
-	for elem := stream.supplier.Supply(); elem.Valid; elem = stream.supplier.Supply() {
+	for elem := stream.Supplier.Supply(); elem.Valid; elem = stream.Supplier.Supply() {
 		function(elem.Value)
 	}
 }
@@ -15,7 +15,7 @@ func (stream Stream[T]) ForEach(function functions.ParamCallback[T]) {
 func Reduce[T, P any](stream Stream[T], accumulator P, reducer functions.Reducer[T, P]) P {
 	acc := accumulator
 
-	for elem := stream.supplier.Supply(); elem.Valid; elem = stream.supplier.Supply() {
+	for elem := stream.Supplier.Supply(); elem.Valid; elem = stream.Supplier.Supply() {
 		acc = reducer(acc, elem.Value)
 	}
 
@@ -23,7 +23,7 @@ func Reduce[T, P any](stream Stream[T], accumulator P, reducer functions.Reducer
 }
 
 func (stream Stream[T]) Any(predictor functions.Predictor[T]) bool {
-	for elem := stream.supplier.Supply(); elem.Valid; elem = stream.supplier.Supply() {
+	for elem := stream.Supplier.Supply(); elem.Valid; elem = stream.Supplier.Supply() {
 		if predictor(elem.Value) {
 			return true
 		}
@@ -33,7 +33,7 @@ func (stream Stream[T]) Any(predictor functions.Predictor[T]) bool {
 }
 
 func (stream Stream[T]) All(predictor functions.Predictor[T]) bool {
-	for elem := stream.supplier.Supply(); elem.Valid; elem = stream.supplier.Supply() {
+	for elem := stream.Supplier.Supply(); elem.Valid; elem = stream.Supplier.Supply() {
 		if !predictor(elem.Value) {
 			return false
 		}
@@ -58,7 +58,7 @@ func Collect[T, R any](stream Stream[T], collector Collector[T, R]) R {
 func (stream Stream[T]) Count() int {
 	count := 0
 
-	for elem := stream.supplier.Supply(); elem.Valid; elem = stream.supplier.Supply() {
+	for elem := stream.Supplier.Supply(); elem.Valid; elem = stream.Supplier.Supply() {
 		count++
 	}
 
@@ -69,7 +69,7 @@ func (stream Stream[T]) Max(comparator functions.Comparator[T]) optional.Optiona
 	var max T
 	set := false
 
-	for elem := stream.supplier.Supply(); elem.Valid; elem = stream.supplier.Supply() {
+	for elem := stream.Supplier.Supply(); elem.Valid; elem = stream.Supplier.Supply() {
 		if !set || comparator(elem.Value, max) == comparison.FirstBigger {
 			max = elem.Value
 			set = true
@@ -83,7 +83,7 @@ func (stream Stream[T]) Min(comparator functions.Comparator[T]) optional.Optiona
 	var min T
 	set := false
 
-	for elem := stream.supplier.Supply(); elem.Valid; elem = stream.supplier.Supply() {
+	for elem := stream.Supplier.Supply(); elem.Valid; elem = stream.Supplier.Supply() {
 		if !set || comparator(elem.Value, min) == comparison.FirstSmaller {
 			min = elem.Value
 			set = true
@@ -94,11 +94,11 @@ func (stream Stream[T]) Min(comparator functions.Comparator[T]) optional.Optiona
 }
 
 func (stream Stream[T]) First() optional.Optional[T] {
-	return stream.supplier.Supply()
+	return stream.Supplier.Supply()
 }
 
 func (stream Stream[T]) Find(predictor functions.Predictor[T]) optional.Optional[T] {
-	for elem := stream.supplier.Supply(); elem.Valid; elem = stream.supplier.Supply() {
+	for elem := stream.Supplier.Supply(); elem.Valid; elem = stream.Supplier.Supply() {
 		if predictor(elem.Value) {
 			return optional.FromValue(elem.Value)
 		}
@@ -111,7 +111,7 @@ func (stream Stream[T]) Channel() <-chan T {
 	channel := make(chan T)
 
 	go func() {
-		for elem := stream.supplier.Supply(); elem.Valid; elem = stream.supplier.Supply() {
+		for elem := stream.Supplier.Supply(); elem.Valid; elem = stream.Supplier.Supply() {
 			channel <- elem.Value
 		}
 

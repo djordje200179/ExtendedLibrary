@@ -10,7 +10,7 @@ import (
 
 func Map[T, U any](stream Stream[T], mapper functions.Mapper[T, U]) Stream[U] {
 	generator := func() optional.Optional[U] {
-		if elem := stream.supplier.Supply(); elem.Valid {
+		if elem := stream.Supplier.Supply(); elem.Valid {
 			return optional.FromValue(mapper(elem.Value))
 		} else {
 			return optional.Empty[U]()
@@ -22,7 +22,7 @@ func Map[T, U any](stream Stream[T], mapper functions.Mapper[T, U]) Stream[U] {
 
 func (stream Stream[T]) Filter(predictor functions.Predictor[T]) Stream[T] {
 	generator := func() optional.Optional[T] {
-		for elem := stream.supplier.Supply(); elem.Valid; elem = stream.supplier.Supply() {
+		for elem := stream.Supplier.Supply(); elem.Valid; elem = stream.Supplier.Supply() {
 			if predictor(elem.Value) {
 				return optional.FromValue(elem.Value)
 			}
@@ -38,7 +38,7 @@ func (stream Stream[T]) Limit(count int) Stream[T] {
 	generator := func() optional.Optional[T] {
 		if count > 0 {
 			count--
-			return stream.supplier.Supply()
+			return stream.Supplier.Supply()
 		} else {
 			return optional.Empty[T]()
 		}
@@ -50,10 +50,10 @@ func (stream Stream[T]) Limit(count int) Stream[T] {
 func (stream Stream[T]) Seek(count int) Stream[T] {
 	generator := func() optional.Optional[T] {
 		for ; count > 0; count-- {
-			stream.supplier.Supply()
+			stream.Supplier.Supply()
 		}
 
-		return stream.supplier.Supply()
+		return stream.Supplier.Supply()
 	}
 
 	return FromFiniteGenerator(generator)
@@ -65,7 +65,7 @@ func (stream Stream[T]) Sort(comparator functions.Comparator[T]) Stream[T] {
 
 	generator := func() optional.Optional[T] {
 		if sortedSlice == nil {
-			for elem := stream.supplier.Supply(); elem.Valid; elem = stream.supplier.Supply() {
+			for elem := stream.Supplier.Supply(); elem.Valid; elem = stream.Supplier.Supply() {
 				sortedSlice = append(sortedSlice, elem.Value)
 			}
 
