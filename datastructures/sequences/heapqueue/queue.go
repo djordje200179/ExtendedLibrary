@@ -35,15 +35,15 @@ func (pq *Queue[T]) Empty() bool {
 func (pq *Queue[T]) PushBack(value T) {
 	pq.slice = append(pq.slice, value)
 
-	j := len(pq.slice) - 1
+	currNode := len(pq.slice) - 1
 	for {
-		i := (j - 1) / 2
-		if i == j || pq.comparator(pq.slice[j], pq.slice[i]) != comparison.FirstSmaller {
+		parentNode := (currNode - 1) / 2
+		if parentNode == currNode || pq.comparator(pq.slice[currNode], pq.slice[parentNode]) != comparison.FirstSmaller {
 			break
 		}
 
-		pq.slice[i], pq.slice[j] = pq.slice[j], pq.slice[i]
-		j = i
+		pq.slice[parentNode], pq.slice[currNode] = pq.slice[currNode], pq.slice[parentNode]
+		currNode = parentNode
 	}
 }
 
@@ -56,24 +56,24 @@ func (pq *Queue[T]) PopFront() T {
 
 	pq.slice[0], pq.slice[lastIndex] = pq.slice[lastIndex], pq.slice[0]
 
-	i := 0
+	currNode := 0
 	for {
-		j1 := 2*i + 1
-		if j1 >= lastIndex || j1 < 0 {
+		leftChild := 2*currNode + 1
+		if leftChild >= lastIndex || leftChild < 0 {
 			break
 		}
 
-		j := j1
-		if j2 := j1 + 1; j2 < lastIndex && pq.comparator(pq.slice[j2], pq.slice[j1]) == comparison.FirstSmaller {
-			j = j2
+		child := leftChild
+		if rightChild := leftChild + 1; rightChild < lastIndex && pq.comparator(pq.slice[rightChild], pq.slice[leftChild]) == comparison.FirstSmaller {
+			child = rightChild
 		}
 
-		if pq.comparator(pq.slice[j], pq.slice[i]) != comparison.FirstSmaller {
+		if pq.comparator(pq.slice[child], pq.slice[currNode]) != comparison.FirstSmaller {
 			break
 		}
 
-		pq.slice[i], pq.slice[j] = pq.slice[j], pq.slice[i]
-		i = j
+		pq.slice[currNode], pq.slice[child] = pq.slice[child], pq.slice[currNode]
+		currNode = child
 	}
 
 	lastElem := pq.slice[lastIndex]
