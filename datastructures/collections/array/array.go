@@ -12,8 +12,8 @@ import (
 
 type Array[T any] []T
 
-func New[T any](elements ...T) *Array[T] {
-	return NewFromSlice(elements)
+func New[T any]() *Array[T] {
+	return NewWithSize[T](0)
 }
 
 func NewWithSize[T any](initialSize int) *Array[T] {
