@@ -1,6 +1,7 @@
 package linkedlist
 
 import (
+	"fmt"
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
@@ -9,7 +10,7 @@ import (
 )
 
 type LinkedList[T any] struct {
-	head, tail *node[T]
+	head, tail *Node[T]
 	size       int
 }
 
@@ -27,8 +28,36 @@ func (list *LinkedList[T]) Size() int {
 	return list.size
 }
 
+func (list *LinkedList[T]) GetNode(index int) *Node[T] {
+	if index >= list.size || index < -list.size {
+		//TODO: Improve panic type
+		panic(fmt.Sprintf("runtime error: index out of range [%d] with length %d", index, list.size))
+	}
+
+	var curr *Node[T]
+	if index >= 0 {
+		curr = list.head
+	} else {
+		curr = list.tail
+	}
+
+	if index < 0 {
+		index = -index - 1
+	}
+
+	for i := 0; i < index; i++ {
+		if index >= 0 {
+			curr = curr.next
+		} else {
+			curr = curr.prev
+		}
+	}
+
+	return curr
+}
+
 func (list *LinkedList[T]) GetRef(index int) *T {
-	return &list.getNode(index).value
+	return &list.GetNode(index).Value
 }
 
 func (list *LinkedList[T]) Get(index int) T {
@@ -42,24 +71,27 @@ func (list *LinkedList[T]) Set(index int, value T) {
 func (list *LinkedList[T]) Append(values ...T) {
 	for _, value := range values {
 		if list.size == 0 {
-			node := &node[T]{value: value}
+			node := &Node[T]{
+				Value: value,
+			}
+
 			list.head = node
 			list.tail = node
 			list.size++
 		} else {
-			list.insertAfterNode(list.tail, value)
+			list.insertAfter(list.tail, value)
 		}
 	}
 }
 
 func (list *LinkedList[T]) Insert(index int, values ...T) {
 	for _, value := range values {
-		list.insertBeforeNode(list.getNode(index), value)
+		list.insertBefore(list.GetNode(index), value)
 	}
 }
 
 func (list *LinkedList[T]) Remove(index int) {
-	list.removeNode(list.getNode(index))
+	list.removeNode(list.GetNode(index))
 }
 
 func (list *LinkedList[T]) Clear() {
@@ -77,17 +109,17 @@ func (list *LinkedList[T]) Reverse() {
 }
 
 func (list *LinkedList[T]) Swap(index1, index2 int) {
-	node1 := list.getNode(index1)
-	node2 := list.getNode(index2)
+	node1 := list.GetNode(index1)
+	node2 := list.GetNode(index2)
 
-	node1.value, node2.value = node2.value, node1.value
+	node1.Value, node2.Value = node2.Value, node1.Value
 }
 
 func (list *LinkedList[T]) Sort(comparator functions.Comparator[T]) {
 	for front := list.head; front.next != nil; front = front.next {
 		for back := front.next; back != nil; back = back.next {
-			if comparator(front.value, back.value) != comparison.FirstSmaller {
-				front.value, back.value = back.value, front.value
+			if comparator(front.Value, back.Value) != comparison.FirstSmaller {
+				front.Value, back.Value = back.Value, front.Value
 			}
 		}
 	}
@@ -113,7 +145,7 @@ func (list *LinkedList[T]) Join(other collections.Collection[T]) {
 func (list *LinkedList[T]) Clone() collections.Collection[T] {
 	cloned := New[T]()
 	for curr := list.head; curr != nil; curr = curr.next {
-		cloned.Append(curr.value)
+		cloned.Append(curr.Value)
 	}
 
 	return cloned
@@ -149,4 +181,12 @@ func (list *LinkedList[T]) RefStream() streams.Stream[*T] {
 	return streams.Stream[*T]{
 		Supplier: supplier,
 	}
+}
+
+func (list *LinkedList[T]) Head() *Node[T] {
+	return list.head
+}
+
+func (list *LinkedList[T]) Tail() *Node[T] {
+	return list.tail
 }

@@ -3,7 +3,7 @@ package linkedlist
 type Iterator[T any] struct {
 	list *LinkedList[T]
 
-	curr  *node[T]
+	curr  *Node[T]
 	index int
 }
 
@@ -17,24 +17,24 @@ func (it *Iterator[T]) Move() {
 }
 
 func (it *Iterator[T]) GetRef() *T {
-	return &it.curr.value
+	return &it.curr.Value
 }
 
 func (it *Iterator[T]) Get() T {
-	return it.curr.value
+	return it.curr.Value
 }
 
 func (it *Iterator[T]) Set(value T) {
-	it.curr.value = value
+	it.curr.Value = value
 }
 
 func (it *Iterator[T]) InsertBefore(value T) {
-	it.list.insertBeforeNode(it.curr, value)
+	it.list.insertBefore(it.curr, value)
 	it.index++
 }
 
 func (it *Iterator[T]) InsertAfter(value T) {
-	it.list.insertAfterNode(it.curr, value)
+	it.list.insertAfter(it.curr, value)
 }
 
 func (it *Iterator[T]) Remove() {
