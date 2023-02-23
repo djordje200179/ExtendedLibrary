@@ -28,5 +28,5 @@ func (buffer Buffer[T]) PopFront() T {
 }
 
 func (buffer Buffer[T]) PeekFront() T {
-	panic("Not supported")
+	panic("Peeking value from bounded buffer is not supported")
 }

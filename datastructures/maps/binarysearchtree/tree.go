@@ -153,11 +153,10 @@ func (tree *BinarySearchTree[K, V]) removeNode(node *Node[K, V]) {
 
 func (tree *BinarySearchTree[K, V]) Remove(key K) {
 	node := tree.GetNode(key)
-	if node == nil {
-		panic(fmt.Sprintf("Key %v not found", key))
-	}
 
-	tree.removeNode(node)
+	if node != nil {
+		tree.removeNode(node)
+	}
 }
 
 func (tree *BinarySearchTree[K, V]) Contains(key K) bool {
@@ -171,6 +170,14 @@ func (tree *BinarySearchTree[K, V]) Clear() {
 
 func (tree *BinarySearchTree[K, V]) Swap(key1, key2 K) {
 	node1, node2 := tree.GetNode(key1), tree.GetNode(key2)
+
+	if node1 == nil {
+		panic(fmt.Sprintf("Key %v not found", key1))
+	}
+
+	if node2 == nil {
+		panic(fmt.Sprintf("Key %v not found", key2))
+	}
 
 	node1.Value, node2.Value = node2.Value, node1.Value
 }

@@ -1,6 +1,7 @@
 package hashmap
 
 import (
+	"fmt"
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/misc"
@@ -28,11 +29,16 @@ func (hashmap HashMap[K, V]) Size() int {
 }
 
 func (hashmap HashMap[K, V]) Get(key K) V {
-	return hashmap[key]
+	value, ok := hashmap[key]
+	if !ok {
+		panic(fmt.Sprintf("Key %v not found", key))
+	}
+
+	return value
 }
 
 func (hashmap HashMap[K, V]) GetRef(key K) *V {
-	panic("Not supported")
+	panic("Getting reference to value from hash map is not supported")
 }
 
 func (hashmap HashMap[K, V]) Set(key K, value V) {
@@ -67,7 +73,17 @@ func (hashmap HashMap[K, V]) Clear() {
 }
 
 func (hashmap HashMap[K, V]) Swap(key1, key2 K) {
-	hashmap[key1], hashmap[key2] = hashmap[key2], hashmap[key1]
+	value1, ok1 := hashmap[key1]
+	if !ok1 {
+		panic(fmt.Sprintf("Key %v not found", key1))
+	}
+
+	value2, ok2 := hashmap[key2]
+	if !ok2 {
+		panic(fmt.Sprintf("Key %v not found", key2))
+	}
+
+	hashmap[key1], hashmap[key2] = value2, value1
 }
 
 func (hashmap HashMap[K, V]) Clone() maps.Map[K, V] {
@@ -96,7 +112,7 @@ func (hashmap HashMap[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
 }
 
 func (hashmap HashMap[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] {
-	panic("Not supported")
+	panic("Getting reference to value from hash map is not supported")
 }
 
 func (hashmap HashMap[K, V]) Map() map[K]V {

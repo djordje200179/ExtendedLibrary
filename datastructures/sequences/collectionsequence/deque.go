@@ -38,18 +38,34 @@ func (deque Deque[T]) PushBack(value T) {
 }
 
 func (deque Deque[T]) PeekFront() T {
+	if deque.Empty() {
+		panic("Deque is empty")
+	}
+
 	return deque.collection.Get(0)
 }
 
 func (deque Deque[T]) PeekBack() T {
+	if deque.Empty() {
+		panic("Deque is empty")
+	}
+
 	return deque.collection.Get(-1)
 }
 
 func (deque Deque[T]) PopFront() T {
+	if deque.Empty() {
+		panic("Deque is empty")
+	}
+
 	defer deque.collection.Remove(0)
 	return deque.PeekFront()
 }
 func (deque Deque[T]) PopBack() T {
+	if deque.Empty() {
+		panic("Deque is empty")
+	}
+	
 	defer deque.collection.Remove(-1)
 	return deque.PeekBack()
 }

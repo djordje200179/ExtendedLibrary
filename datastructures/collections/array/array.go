@@ -42,8 +42,7 @@ func (array *Array[T]) getRealIndex(index int) int {
 	size := array.Size()
 
 	if index >= size || index < -size {
-		//TODO: Improve panic type
-		panic(fmt.Sprintf("runtime error: index out of range [%d] with length %d", index, size))
+		panic(fmt.Sprintf("Index out of bounds: %d", index))
 	}
 
 	if index < 0 {

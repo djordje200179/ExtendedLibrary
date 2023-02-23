@@ -48,10 +48,18 @@ func (pq *Queue[T]) PushBack(value T) {
 }
 
 func (pq *Queue[T]) PeekFront() T {
+	if pq.Empty() {
+		panic("Priority queue is empty")
+	}
+
 	return pq.slice[0]
 }
 
 func (pq *Queue[T]) PopFront() T {
+	if pq.Empty() {
+		panic("Priority queue is empty")
+	}
+	
 	lastIndex := len(pq.slice) - 1
 
 	pq.slice[0], pq.slice[lastIndex] = pq.slice[lastIndex], pq.slice[0]

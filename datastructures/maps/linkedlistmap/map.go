@@ -1,6 +1,7 @@
 package linkedlistmap
 
 import (
+	"fmt"
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/collections/linkedlist"
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
@@ -22,6 +23,10 @@ func Collector[K comparable, V any]() streams.Collector[misc.Pair[K, V], maps.Ma
 	}
 }
 
+func (m *LinkedListMap[K, V]) Size() int {
+	return m.List().Size()
+}
+
 func (m *LinkedListMap[K, V]) find(key K) collections.Iterator[misc.Pair[K, V]] {
 	for it := m.List().ModifyingIterator(); it.Valid(); it.Move() {
 		if it.Get().First == key {
@@ -32,32 +37,25 @@ func (m *LinkedListMap[K, V]) find(key K) collections.Iterator[misc.Pair[K, V]] 
 	return nil
 }
 
-func (m *LinkedListMap[K, V]) Size() int {
-	return m.List().Size()
+func (m *LinkedListMap[K, V]) GetRef(key K) *V {
+	it := m.find(key)
+	if it == nil {
+		panic(fmt.Sprintf("Key %v not found", key))
+	}
+
+	return &it.GetRef().Second
 }
 
 func (m *LinkedListMap[K, V]) Get(key K) V {
-	if ptr := m.GetRef(key); ptr != nil {
-		return *ptr
-	} else {
-		var empty V
-		return empty
-	}
-}
-
-func (m *LinkedListMap[K, V]) GetRef(key K) *V {
-	if it := m.find(key); it != nil {
-		return &it.GetRef().Second
-	} else {
-		return nil
-	}
+	return *m.GetRef(key)
 }
 
 func (m *LinkedListMap[K, V]) Set(key K, value V) {
-	if ptr := m.GetRef(key); ptr != nil {
-		*ptr = value
-	} else {
+	it := m.find(key)
+	if it == nil {
 		m.List().Append(misc.Pair[K, V]{key, value})
+	} else {
+		it.GetRef().Second = value
 	}
 }
 
@@ -74,7 +72,9 @@ func (m *LinkedListMap[K, V]) Keys() []K {
 }
 
 func (m *LinkedListMap[K, V]) Remove(key K) {
-	if it := m.find(key); it != nil {
+	it := m.find(key)
+
+	if it != nil {
 		it.Remove()
 	}
 }
@@ -88,7 +88,15 @@ func (m *LinkedListMap[K, V]) Clear() {
 }
 
 func (m *LinkedListMap[K, V]) Swap(key1, key2 K) {
-	it1, it2 := m.find(key1), m.find(key2)
+	it1 := m.find(key1)
+	if it1 == nil {
+		panic(fmt.Sprintf("Key %v not found", key1))
+	}
+
+	it2 := m.find(key2)
+	if it2 == nil {
+		panic(fmt.Sprintf("Key %v not found", key2))
+	}
 
 	it1.GetRef().First, it2.GetRef().First = it2.GetRef().First, it1.GetRef().First
 }

@@ -30,8 +30,7 @@ func (list *LinkedList[T]) Size() int {
 
 func (list *LinkedList[T]) GetNode(index int) *Node[T] {
 	if index >= list.size || index < -list.size {
-		//TODO: Improve panic type
-		panic(fmt.Sprintf("runtime error: index out of range [%d] with length %d", index, list.size))
+		panic(fmt.Sprintf("Index out of bounds: %d", index))
 	}
 
 	var curr *Node[T]
