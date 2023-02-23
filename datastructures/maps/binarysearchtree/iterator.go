@@ -3,7 +3,7 @@ package binarysearchtree
 import "github.com/djordje200179/extendedlibrary/misc"
 
 type iterator[K comparable, V any] struct {
-	tree *BinarySearchTree[K, V]
+	tree *Tree[K, V]
 
 	curr *Node[K, V]
 }
