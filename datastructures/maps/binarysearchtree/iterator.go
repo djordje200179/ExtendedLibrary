@@ -1,11 +1,11 @@
-package bst
+package binarysearchtree
 
 import "github.com/djordje200179/extendedlibrary/misc"
 
 type iterator[K comparable, V any] struct {
 	tree *BinarySearchTree[K, V]
 
-	curr *node[K, V]
+	curr *Node[K, V]
 }
 
 func (it *iterator[K, V]) Valid() bool {
@@ -13,7 +13,7 @@ func (it *iterator[K, V]) Valid() bool {
 }
 
 func (it *iterator[K, V]) Move() {
-	it.curr = it.curr.next()
+	it.curr = it.curr.Next()
 }
 
 func (it *iterator[K, V]) Get() misc.Pair[K, V] {
@@ -32,7 +32,7 @@ func (it *iterator[K, V]) Value() V {
 }
 
 func (it *iterator[K, V]) ValueRef() *V {
-	return &it.curr.value
+	return &it.curr.Value
 }
 
 func (it *iterator[K, V]) SetValue(value V) {

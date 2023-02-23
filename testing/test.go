@@ -1,21 +1,16 @@
 package main
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences/heapqueue"
+	"github.com/djordje200179/extendedlibrary/datastructures/maps/binarysearchtree"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 )
 
 func main() {
-	pq := heapqueue.New[int](comparison.Ascending[int])
+	tree := binarysearchtree.New[int, string](comparison.Ascending[int])
 
-	pq.PushBack(1)
-	pq.PushBack(8)
-	pq.PushBack(3)
-	pq.PushBack(5)
-	pq.PushBack(8)
-	pq.PushBack(2)
+	tree.Set(1, "one")
+	tree.Set(5, "five")
+	tree.Set(3, "three")
 
-	for !pq.Empty() {
-		println(pq.PopFront())
-	}
+	for node := tree.M
 }

@@ -1,6 +1,7 @@
-package bst
+package binarysearchtree
 
 import (
+	"fmt"
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences/collectionsequences"
@@ -11,7 +12,7 @@ import (
 )
 
 type BinarySearchTree[K comparable, V any] struct {
-	root  *node[K, V]
+	root  *Node[K, V]
 	nodes int
 
 	comparator functions.Comparator[K]
@@ -36,38 +37,54 @@ func (tree *BinarySearchTree[K, V]) Size() int {
 	return tree.nodes
 }
 
-func (tree *BinarySearchTree[K, V]) Get(key K) V {
-	if ptr := tree.GetRef(key); ptr != nil {
-		return *ptr
-	} else {
-		var empty V
-		return empty
+func (tree *BinarySearchTree[K, V]) GetNode(key K) *Node[K, V] {
+	for curr := tree.root; curr != nil; {
+		if key == curr.key {
+			return curr
+		}
+
+		switch tree.comparator(key, curr.key) {
+		case comparison.FirstSmaller:
+			curr = curr.left
+		case comparison.FirstBigger:
+			curr = curr.right
+		case comparison.Equal:
+			return curr
+		}
 	}
+
+	return nil
 }
 
 func (tree *BinarySearchTree[K, V]) GetRef(key K) *V {
-	if node := tree.getNode(key); node != nil {
-		return &node.value
-	} else {
-		return nil
+	node := tree.GetNode(key)
+	if node == nil {
+		panic(fmt.Sprintf("Key %v not found", key))
 	}
+
+	return &node.Value
+}
+
+func (tree *BinarySearchTree[K, V]) Get(key K) V {
+	return *tree.GetRef(key)
 }
 
 func (tree *BinarySearchTree[K, V]) Set(key K, value V) {
 	if tree.root == nil {
-		tree.root = &node[K, V]{
+		tree.root = &Node[K, V]{
 			key:   key,
-			value: value,
+			Value: value,
 		}
+
 		tree.nodes++
 
 		return
 	}
 
-	prev := (*node[K, V])(nil)
+	var prev *Node[K, V]
 	for curr := tree.root; curr != nil; {
 		if key == curr.key {
-			curr.value = value
+			curr.Value = value
 			return
 		}
 
@@ -78,14 +95,14 @@ func (tree *BinarySearchTree[K, V]) Set(key K, value V) {
 		case comparison.FirstBigger:
 			curr = curr.right
 		case comparison.Equal:
-			curr.value = value
+			curr.Value = value
 			return
 		}
 	}
 
-	node := &node[K, V]{
+	node := &Node[K, V]{
 		key:    key,
-		value:  value,
+		Value:  value,
 		parent: prev,
 	}
 
@@ -110,14 +127,41 @@ func (tree *BinarySearchTree[K, V]) Keys() []K {
 	return keys
 }
 
-func (tree *BinarySearchTree[K, V]) Remove(key K) {
-	if node := tree.getNode(key); node != nil {
-		tree.removeNode(node)
+func (tree *BinarySearchTree[K, V]) removeNode(node *Node[K, V]) {
+	locationInParent := node.locationInParent()
+	if locationInParent == nil {
+		locationInParent = &tree.root
 	}
+
+	if node.left == nil && node.right == nil {
+		*locationInParent = nil
+	} else if node.left == nil {
+		*locationInParent = node.right
+	} else if node.right == nil {
+		*locationInParent = node.left
+	} else {
+		next := node.Next()
+
+		node.key, next.key = next.key, node.key
+		node.Value, next.Value = next.Value, node.Value
+
+		tree.removeNode(next)
+	}
+
+	tree.nodes--
+}
+
+func (tree *BinarySearchTree[K, V]) Remove(key K) {
+	node := tree.GetNode(key)
+	if node == nil {
+		panic(fmt.Sprintf("Key %v not found", key))
+	}
+
+	tree.removeNode(node)
 }
 
 func (tree *BinarySearchTree[K, V]) Contains(key K) bool {
-	return tree.getNode(key) != nil
+	return tree.GetNode(key) != nil
 }
 
 func (tree *BinarySearchTree[K, V]) Clear() {
@@ -126,14 +170,16 @@ func (tree *BinarySearchTree[K, V]) Clear() {
 }
 
 func (tree *BinarySearchTree[K, V]) Swap(key1, key2 K) {
-	node1, node2 := tree.getNode(key1), tree.getNode(key2)
+	node1, node2 := tree.GetNode(key1), tree.GetNode(key2)
 
-	node1.value, node2.value = node2.value, node1.value
+	node1.Value, node2.Value = node2.Value, node1.Value
 }
 
 func (tree *BinarySearchTree[K, V]) Clone() maps.Map[K, V] {
-	cloned := New[K, V](tree.comparator)
-	cloned.nodes = tree.nodes
+	cloned := &BinarySearchTree[K, V]{
+		nodes:      tree.nodes,
+		comparator: tree.comparator,
+	}
 
 	if tree.root == nil {
 		return cloned
@@ -141,10 +187,10 @@ func (tree *BinarySearchTree[K, V]) Clone() maps.Map[K, V] {
 
 	cloned.root = tree.root.Clone()
 
-	nodesInOriginal := collectionsequences.NewQueue[*node[K, V]]()
+	nodesInOriginal := collectionsequences.NewDeque[*Node[K, V]]()
 	nodesInOriginal.PushBack(tree.root)
 
-	nodesInCloned := collectionsequences.NewQueue[*node[K, V]]()
+	nodesInCloned := collectionsequences.NewDeque[*Node[K, V]]()
 	nodesInCloned.PushBack(cloned.root)
 
 	for !nodesInOriginal.Empty() {
@@ -170,7 +216,7 @@ func (tree *BinarySearchTree[K, V]) Iterator() iterable.Iterator[misc.Pair[K, V]
 }
 
 func (tree *BinarySearchTree[K, V]) ModifyingIterator() maps.Iterator[K, V] {
-	return &iterator[K, V]{tree, tree.root.min()}
+	return &iterator[K, V]{tree, tree.root.Min()}
 }
 
 func (tree *BinarySearchTree[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
@@ -191,4 +237,8 @@ func (tree *BinarySearchTree[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]]
 	return streams.Stream[misc.Pair[K, *V]]{
 		Supplier: supplier,
 	}
+}
+
+func (tree *BinarySearchTree[K, V]) Root() *Node[K, V] {
+	return tree.root
 }
