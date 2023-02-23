@@ -9,5 +9,5 @@ type iterator[T comparable] struct {
 }
 
 func (it iterator[T]) Get() T {
-	return it.Iterator.Get().Key()
+	return it.Iterator.Key()
 }
