@@ -1,4 +1,4 @@
-package readonlywrapper
+package readonlycollection
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"

@@ -1,4 +1,4 @@
-package concurrentwrapper
+package concurrentcollection
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
