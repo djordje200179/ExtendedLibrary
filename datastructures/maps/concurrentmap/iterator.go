@@ -1,4 +1,4 @@
-package concurrentwrapper
+package concurrentmap
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
@@ -43,8 +43,8 @@ func (it iterator[K, V]) ValueRef() *V {
 }
 
 func (it iterator[K, V]) SetValue(value V) {
-	it.mutex.RLock()
-	defer it.mutex.RUnlock()
+	it.mutex.Lock()
+	defer it.mutex.Unlock()
 
 	it.Iterator.SetValue(value)
 }
