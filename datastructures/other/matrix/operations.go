@@ -6,17 +6,20 @@ type Number interface {
 	constraints.Complex | constraints.Float | constraints.Integer
 }
 
-func Add[T Number](first, second *Matrix[T]) *Matrix[T] {
-	if first.Size() != second.Size() {
-		panic("Matrix sizes don't match")
+func Add[T Number](matrices ...*Matrix[T]) *Matrix[T] {
+	for i := 1; i < len(matrices); i++ {
+		if matrices[i].Size() != matrices[i-1].Size() {
+			panic("Matrix sizes don't match")
+		}
 	}
 
-	size := first.Size()
+	size := matrices[0].Size()
 
-	result := NewWithSize[T](size)
-
+	result := Zeros[T](size)
 	for i := 0; i < size.Elements(); i++ {
-		result.values[i] = first.values[i] + second.values[i]
+		for _, matrix := range matrices {
+			result.values[i] += matrix.values[i]
+		}
 	}
 
 	return result
@@ -59,7 +62,6 @@ func Multiply[T Number](first, second *Matrix[T]) *Matrix[T] {
 	}
 
 	result := Zeros[T](resultSize)
-
 	for i := 0; i < result.Size().Height; i++ {
 		for j := 0; j < result.Size().Width; j++ {
 			var sum T
@@ -74,15 +76,21 @@ func Multiply[T Number](first, second *Matrix[T]) *Matrix[T] {
 	return result
 }
 
-func DotMultiply[T Number](first, second *Matrix[T]) *Matrix[T] {
-	if first.Size() != second.Size() {
-		panic("Matrix sizes don't match")
+func DotMultiply[T Number](matrices ...*Matrix[T]) *Matrix[T] {
+	for i := 1; i < len(matrices); i++ {
+		if matrices[i].Size() != matrices[i-1].Size() {
+			panic("Matrix sizes don't match")
+		}
 	}
 
-	result := NewWithSize[T](first.Size())
+	size := matrices[0].Size()
 
-	for i := 0; i < result.Size().Elements(); i++ {
-		result.values[i] = first.values[i] * second.values[i]
+	result := NewWithSize[T](size)
+	for i := 0; i < size.Elements(); i++ {
+		result.values[i] = 1
+		for _, matrix := range matrices {
+			result.values[i] *= matrix.values[i]
+		}
 	}
 
 	return result
