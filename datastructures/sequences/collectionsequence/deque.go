@@ -11,12 +11,12 @@ type Deque[T any] struct {
 	collection collections.Collection[T]
 }
 
-func NewDequeFrom[T any](sequence collections.Collection[T]) Deque[T] {
-	return Deque[T]{sequence}
-}
-
 func NewDeque[T any]() Deque[T] {
 	return Deque[T]{array.New[T]()}
+}
+
+func From[T any](sequence collections.Collection[T]) Deque[T] {
+	return Deque[T]{sequence}
 }
 
 func Collector[T any]() streams.Collector[T, sequences.Queue[T]] {

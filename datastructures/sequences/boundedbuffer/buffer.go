@@ -11,6 +11,10 @@ func New[T any](size int) Buffer[T] {
 	return make(chan T, size)
 }
 
+func From[T any](channel chan T) Buffer[T] {
+	return channel
+}
+
 func Collector[T any]() streams.Collector[T, sequences.Queue[T]] {
 	return sequences.Collector[T, sequences.Queue[T]]{New[T]()}
 }

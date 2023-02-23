@@ -14,6 +14,10 @@ type LinkedListMap[K comparable, V any] linkedlist.List[misc.Pair[K, V]]
 
 func New[K comparable, V any]() *LinkedListMap[K, V] {
 	list := linkedlist.New[misc.Pair[K, V]]()
+	return From(list)
+}
+
+func From[K comparable, V any](list *linkedlist.List[misc.Pair[K, V]]) *LinkedListMap[K, V] {
 	return (*LinkedListMap[K, V])(list)
 }
 

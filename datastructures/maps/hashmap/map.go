@@ -11,10 +11,14 @@ import (
 type HashMap[K comparable, V any] map[K]V
 
 func New[K comparable, V any]() HashMap[K, V] {
-	return NewFromMap(make(map[K]V))
+	return NewWithCapacity[K, V](0)
 }
 
-func NewFromMap[K comparable, V any](m map[K]V) HashMap[K, V] {
+func NewWithCapacity[K comparable, V any](capacity int) HashMap[K, V] {
+	return From(make(map[K]V, capacity))
+}
+
+func From[K comparable, V any](m map[K]V) HashMap[K, V] {
 	return m
 }
 

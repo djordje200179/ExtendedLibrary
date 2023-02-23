@@ -17,14 +17,14 @@ func New[T any]() *Array[T] {
 }
 
 func NewWithSize[T any](initialSize int) *Array[T] {
-	return NewFromSlice(make([]T, initialSize))
+	return From(make([]T, initialSize))
 }
 
 func NewWithCapacity[T any](initialCapacity int) *Array[T] {
-	return NewFromSlice(make([]T, 0, initialCapacity))
+	return From(make([]T, 0, initialCapacity))
 }
 
-func NewFromSlice[T any](slice []T) *Array[T] {
+func From[T any](slice []T) *Array[T] {
 	return (*Array[T])(&slice)
 }
 
