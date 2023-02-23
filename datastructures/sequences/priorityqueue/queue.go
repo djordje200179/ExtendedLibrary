@@ -1,4 +1,4 @@
-package heapqueue
+package priorityqueue
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
