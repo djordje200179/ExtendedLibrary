@@ -14,8 +14,8 @@ type Wrapper[T any] struct {
 	mutex sync.RWMutex
 }
 
-func From[T any](collection collections.Collection[T]) Wrapper[T] {
-	return Wrapper[T]{collection, sync.RWMutex{}}
+func From[T any](collection collections.Collection[T]) *Wrapper[T] {
+	return &Wrapper[T]{collection, sync.RWMutex{}}
 }
 
 func (wrapper *Wrapper[T]) Size() int {
@@ -40,8 +40,8 @@ func (wrapper *Wrapper[T]) GetRef(index int) *T {
 }
 
 func (wrapper *Wrapper[T]) Set(index int, value T) {
-	wrapper.mutex.RLock()
-	defer wrapper.mutex.RUnlock()
+	wrapper.mutex.Lock()
+	defer wrapper.mutex.Unlock()
 
 	wrapper.collection.Set(index, value)
 }
@@ -115,10 +115,7 @@ func (wrapper *Wrapper[T]) Iterator() iterable.Iterator[T] {
 }
 
 func (wrapper *Wrapper[T]) ModifyingIterator() collections.Iterator[T] {
-	return iterator[T]{
-		Iterator: wrapper.collection.ModifyingIterator(),
-		mutex:    &wrapper.mutex,
-	}
+	return iterator[T]{wrapper.collection.ModifyingIterator(), &wrapper.mutex}
 }
 
 func (wrapper *Wrapper[T]) Stream() streams.Stream[T] {

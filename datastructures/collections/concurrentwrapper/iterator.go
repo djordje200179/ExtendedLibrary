@@ -26,8 +26,8 @@ func (it iterator[T]) Get() T {
 }
 
 func (it iterator[T]) Set(value T) {
-	it.mutex.RLock()
-	defer it.mutex.RUnlock()
+	it.mutex.Lock()
+	defer it.mutex.Unlock()
 
 	it.Iterator.Set(value)
 }
