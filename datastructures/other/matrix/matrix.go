@@ -8,16 +8,37 @@ type Matrix[T any] struct {
 	columns int
 }
 
-func New[T any]() *Matrix[T] {
-	return NewWithSize[T](Size{0, 0})
-}
-
 func NewWithSize[T any](size Size) *Matrix[T] {
 	values := make([]T, size.Elements())
 
 	matrix := &Matrix[T]{
 		values:  values,
 		columns: size.Width,
+	}
+
+	return matrix
+}
+
+func From[T any](values [][]T) *Matrix[T] {
+	if len(values) == 0 {
+		return NewWithSize[T](Size{})
+	}
+
+	rows := len(values)
+	columns := len(values[0])
+
+	for _, row := range values {
+		if len(row) != columns {
+			panic("Matrix rows have different length")
+		}
+	}
+
+	matrix := NewWithSize[T](Size{rows, columns})
+
+	for i, row := range values {
+		for j, value := range row {
+			matrix.Set(i, j, value)
+		}
 	}
 
 	return matrix

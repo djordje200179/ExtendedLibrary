@@ -2,22 +2,21 @@ package matrix
 
 import "golang.org/x/exp/constraints"
 
-type number interface {
+type Number interface {
 	constraints.Complex | constraints.Float | constraints.Integer
 }
 
-func Add[T number](first, second *Matrix[T]) *Matrix[T] {
+func Add[T Number](first, second *Matrix[T]) *Matrix[T] {
 	if first.Size() != second.Size() {
-		//TODO: Improve panic type
 		panic("Matrix sizes don't match")
 	}
 
-	height, width := first.Size()
+	size := first.Size()
 
-	result := NewWithSize[T](height, width)
+	result := NewWithSize[T](size)
 
-	for i := 0; i < height; i++ {
-		for j := 0; j < width; j++ {
+	for i := 0; i < size.Height; i++ {
+		for j := 0; j < size.Width; j++ {
 			sum := first.Get(i, j) + second.Get(i, j)
 			result.Set(i, j, sum)
 		}
@@ -26,18 +25,17 @@ func Add[T number](first, second *Matrix[T]) *Matrix[T] {
 	return result
 }
 
-func Subtract[T number](first, second *Matrix[T]) *Matrix[T] {
+func Subtract[T Number](first, second *Matrix[T]) *Matrix[T] {
 	if first.Size() != second.Size() {
-		//TODO: Improve panic type
 		panic("Matrix sizes don't match")
 	}
 
-	height, width := first.Size()
+	size := first.Size()
 
-	result := NewWithSize[T](height, width)
+	result := NewWithSize[T](size)
 
-	for i := 0; i < height; i++ {
-		for j := 0; j < width; j++ {
+	for i := 0; i < size.Height; i++ {
+		for j := 0; j < size.Width; j++ {
 			diff := first.Get(i, j) - second.Get(i, j)
 			result.Set(i, j, diff)
 		}
