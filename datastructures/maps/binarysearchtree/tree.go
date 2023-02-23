@@ -19,18 +19,15 @@ type BinarySearchTree[K comparable, V any] struct {
 }
 
 func New[K comparable, V any](comparator functions.Comparator[K]) *BinarySearchTree[K, V] {
-	tree := new(BinarySearchTree[K, V])
-	tree.root = nil
-	tree.nodes = 0
-	tree.comparator = comparator
+	tree := &BinarySearchTree[K, V]{
+		comparator: comparator,
+	}
 
 	return tree
 }
 
 func Collector[K comparable, V any](comparator functions.Comparator[K]) streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
-	return maps.Collector[K, V]{
-		Map: New[K, V](comparator),
-	}
+	return maps.Collector[K, V]{New[K, V](comparator)}
 }
 
 func (tree *BinarySearchTree[K, V]) Size() int {
@@ -227,23 +224,13 @@ func (tree *BinarySearchTree[K, V]) ModifyingIterator() maps.Iterator[K, V] {
 }
 
 func (tree *BinarySearchTree[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
-	supplier := iterable.IteratorSupplier[misc.Pair[K, V]]{
-		Iterator: tree.Iterator(),
-	}
-
-	return streams.Stream[misc.Pair[K, V]]{
-		Supplier: supplier,
-	}
+	supplier := iterable.IteratorSupplier[misc.Pair[K, V]]{tree.Iterator()}
+	return streams.Stream[misc.Pair[K, V]]{supplier}
 }
 
 func (tree *BinarySearchTree[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] {
-	supplier := maps.RefsSupplier[K, V]{
-		Iterator: tree.ModifyingIterator(),
-	}
-
-	return streams.Stream[misc.Pair[K, *V]]{
-		Supplier: supplier,
-	}
+	supplier := maps.RefsSupplier[K, V]{tree.ModifyingIterator()}
+	return streams.Stream[misc.Pair[K, *V]]{supplier}
 }
 
 func (tree *BinarySearchTree[K, V]) Root() *Node[K, V] {

@@ -14,7 +14,7 @@ func (node *Node[T]) Next() *Node[T] {
 	return node.next
 }
 
-func (list *LinkedList[T]) insertBefore(nextNode *Node[T], value T) {
+func (list *List[T]) insertBefore(nextNode *Node[T], value T) {
 	newNode := &Node[T]{value, nextNode.prev, nextNode}
 
 	if nextNode.prev != nil {
@@ -27,7 +27,7 @@ func (list *LinkedList[T]) insertBefore(nextNode *Node[T], value T) {
 	list.size++
 }
 
-func (list *LinkedList[T]) insertAfter(prevNode *Node[T], value T) {
+func (list *List[T]) insertAfter(prevNode *Node[T], value T) {
 	newNode := &Node[T]{value, prevNode, prevNode.next}
 
 	if prevNode.next != nil {
@@ -40,7 +40,7 @@ func (list *LinkedList[T]) insertAfter(prevNode *Node[T], value T) {
 	list.size++
 }
 
-func (list *LinkedList[T]) removeNode(node *Node[T]) {
+func (list *List[T]) removeNode(node *Node[T]) {
 	if node.prev != nil {
 		node.prev.next = node.next
 	} else {

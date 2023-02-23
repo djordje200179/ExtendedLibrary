@@ -1,7 +1,7 @@
 package sets
 
 type Collector[T comparable] struct {
-	Set[T]
+	Set Set[T]
 }
 
 func (collector Collector[T]) Supply(value T) {

@@ -19,9 +19,7 @@ func NewFromMap[K comparable, V any](m map[K]V) HashMap[K, V] {
 }
 
 func Collector[K comparable, V any]() streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
-	return maps.Collector[K, V]{
-		Map: New[K, V](),
-	}
+	return maps.Collector[K, V]{New[K, V]()}
 }
 
 func (hashmap HashMap[K, V]) Size() int {

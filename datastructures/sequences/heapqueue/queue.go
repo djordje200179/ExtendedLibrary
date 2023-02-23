@@ -14,18 +14,17 @@ type Queue[T any] struct {
 }
 
 func New[T any](comparator functions.Comparator[T]) *Queue[T] {
-	pq := new(Queue[T])
+	pq := &Queue[T]{
+		slice: make([]T, 0),
 
-	pq.slice = make([]T, 0)
-	pq.comparator = comparator
+		comparator: comparator,
+	}
 
 	return pq
 }
 
 func Collector[T any](comparator functions.Comparator[T]) streams.Collector[T, *Queue[T]] {
-	return sequences.Collector[T, *Queue[T]]{
-		BackPusher: New[T](comparator),
-	}
+	return sequences.Collector[T, *Queue[T]]{New[T](comparator)}
 }
 
 func (pq *Queue[T]) Empty() bool {
@@ -59,7 +58,7 @@ func (pq *Queue[T]) PopFront() T {
 	if pq.Empty() {
 		panic("Priority queue is empty")
 	}
-	
+
 	lastIndex := len(pq.slice) - 1
 
 	pq.slice[0], pq.slice[lastIndex] = pq.slice[lastIndex], pq.slice[0]

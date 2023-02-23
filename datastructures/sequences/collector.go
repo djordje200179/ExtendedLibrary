@@ -5,7 +5,7 @@ type BackPusher[T any] interface {
 }
 
 type Collector[T any, Sequence BackPusher[T]] struct {
-	BackPusher[T]
+	BackPusher BackPusher[T]
 }
 
 func (collector Collector[T, Sequence]) Supply(value T) {

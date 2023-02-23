@@ -24,9 +24,7 @@ func NewHashSet[T comparable]() sets.Set[T] {
 }
 
 func HashSetCollector[T comparable]() streams.Collector[T, sets.Set[T]] {
-	return sets.Collector[T]{
-		Set: NewHashSet[T](),
-	}
+	return sets.Collector[T]{NewHashSet[T]()}
 }
 
 func (set mapBased[T]) Add(value T) {
@@ -44,9 +42,7 @@ func (set mapBased[T]) Iterator() iterable.Iterator[T] {
 }
 
 func (set mapBased[T]) ModifyingIterator() sets.Iterator[T] {
-	return iterator[T]{
-		Iterator: set.Map.ModifyingIterator(),
-	}
+	return iterator[T]{set.Map.ModifyingIterator()}
 }
 
 func (set mapBased[T]) Stream() streams.Stream[T] {

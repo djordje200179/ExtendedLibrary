@@ -29,9 +29,7 @@ func NewFromSlice[T any](slice []T) *Array[T] {
 }
 
 func Collector[T any]() streams.Collector[T, collections.Collection[T]] {
-	return collections.Collector[T]{
-		Collection: New[T](),
-	}
+	return collections.Collector[T]{New[T]()}
 }
 
 func (array *Array[T]) Size() int {

@@ -5,7 +5,7 @@ import (
 )
 
 type Collector[K comparable, V any] struct {
-	Map[K, V]
+	Map Map[K, V]
 }
 
 func (collector Collector[K, V]) Supply(value misc.Pair[K, V]) {

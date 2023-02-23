@@ -1,7 +1,7 @@
 package linkedlist
 
 type Iterator[T any] struct {
-	list *LinkedList[T]
+	list *List[T]
 
 	curr  *Node[T]
 	index int

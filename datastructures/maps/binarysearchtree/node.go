@@ -24,9 +24,10 @@ func (node *Node[K, V]) Parent() *Node[K, V] {
 }
 
 func (node *Node[K, V]) Clone() *Node[K, V] {
-	cloned := new(Node[K, V])
-	cloned.key = node.key
-	cloned.Value = node.Value
+	cloned := &Node[K, V]{
+		key:   node.key,
+		Value: node.Value,
+	}
 
 	return cloned
 }
@@ -34,29 +35,29 @@ func (node *Node[K, V]) Clone() *Node[K, V] {
 func (node *Node[K, V]) Prev() *Node[K, V] {
 	if node.left != nil {
 		return node.left.Max()
-	} else {
-		for prev, curr := node.parent, node; prev != nil && curr == prev.left; curr, prev = prev, prev.parent {
-			if curr != prev.left {
-				return prev
-			}
-		}
-
-		return nil
 	}
+
+	for prev, curr := node.parent, node; prev != nil && curr == prev.left; curr, prev = prev, prev.parent {
+		if curr != prev.left {
+			return prev
+		}
+	}
+
+	return nil
 }
 
 func (node *Node[K, V]) Next() *Node[K, V] {
 	if node.right != nil {
 		return node.right.Min()
-	} else {
-		for prev, curr := node.parent, node; prev != nil; curr, prev = prev, prev.parent {
-			if curr != prev.right {
-				return prev
-			}
-		}
-
-		return nil
 	}
+
+	for prev, curr := node.parent, node; prev != nil; curr, prev = prev, prev.parent {
+		if curr != prev.right {
+			return prev
+		}
+	}
+
+	return nil
 }
 
 func (node *Node[K, V]) locationInParent() **Node[K, V] {

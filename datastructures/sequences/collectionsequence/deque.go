@@ -20,9 +20,7 @@ func NewDeque[T any]() Deque[T] {
 }
 
 func Collector[T any]() streams.Collector[T, sequences.Queue[T]] {
-	return sequences.Collector[T, sequences.Queue[T]]{
-		BackPusher: NewDeque[T](),
-	}
+	return sequences.Collector[T, sequences.Queue[T]]{NewDeque[T]()}
 }
 
 func (deque Deque[T]) Empty() bool {
@@ -65,7 +63,7 @@ func (deque Deque[T]) PopBack() T {
 	if deque.Empty() {
 		panic("Deque is empty")
 	}
-	
+
 	defer deque.collection.Remove(-1)
 	return deque.PeekBack()
 }

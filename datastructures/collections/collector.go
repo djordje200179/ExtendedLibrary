@@ -1,7 +1,7 @@
 package collections
 
 type Collector[T any] struct {
-	Collection[T]
+	Collection Collection[T]
 }
 
 func (collector Collector[T]) Supply(value T) {

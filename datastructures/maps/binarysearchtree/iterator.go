@@ -17,10 +17,7 @@ func (it *iterator[K, V]) Move() {
 }
 
 func (it *iterator[K, V]) Get() misc.Pair[K, V] {
-	return misc.Pair[K, V]{
-		First:  it.Key(),
-		Second: it.Value(),
-	}
+	return misc.Pair[K, V]{it.Key(), it.Value()}
 }
 
 func (it *iterator[K, V]) Key() K {

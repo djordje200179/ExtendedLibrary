@@ -9,26 +9,24 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
-type LinkedList[T any] struct {
+type List[T any] struct {
 	head, tail *Node[T]
 	size       int
 }
 
-func New[T any]() *LinkedList[T] {
-	return new(LinkedList[T])
+func New[T any]() *List[T] {
+	return new(List[T])
 }
 
 func Collector[T any]() streams.Collector[T, collections.Collection[T]] {
-	return collections.Collector[T]{
-		Collection: New[T](),
-	}
+	return collections.Collector[T]{New[T]()}
 }
 
-func (list *LinkedList[T]) Size() int {
+func (list *List[T]) Size() int {
 	return list.size
 }
 
-func (list *LinkedList[T]) GetNode(index int) *Node[T] {
+func (list *List[T]) GetNode(index int) *Node[T] {
 	if index >= list.size || index < -list.size {
 		panic(fmt.Sprintf("Index out of bounds: %d", index))
 	}
@@ -55,19 +53,19 @@ func (list *LinkedList[T]) GetNode(index int) *Node[T] {
 	return curr
 }
 
-func (list *LinkedList[T]) GetRef(index int) *T {
+func (list *List[T]) GetRef(index int) *T {
 	return &list.GetNode(index).Value
 }
 
-func (list *LinkedList[T]) Get(index int) T {
+func (list *List[T]) Get(index int) T {
 	return *list.GetRef(index)
 }
 
-func (list *LinkedList[T]) Set(index int, value T) {
+func (list *List[T]) Set(index int, value T) {
 	*list.GetRef(index) = value
 }
 
-func (list *LinkedList[T]) Append(values ...T) {
+func (list *List[T]) Append(values ...T) {
 	for _, value := range values {
 		if list.size == 0 {
 			node := &Node[T]{
@@ -83,23 +81,23 @@ func (list *LinkedList[T]) Append(values ...T) {
 	}
 }
 
-func (list *LinkedList[T]) Insert(index int, values ...T) {
+func (list *List[T]) Insert(index int, values ...T) {
 	for _, value := range values {
 		list.insertBefore(list.GetNode(index), value)
 	}
 }
 
-func (list *LinkedList[T]) Remove(index int) {
+func (list *List[T]) Remove(index int) {
 	list.removeNode(list.GetNode(index))
 }
 
-func (list *LinkedList[T]) Clear() {
+func (list *List[T]) Clear() {
 	list.head = nil
 	list.tail = nil
 	list.size = 0
 }
 
-func (list *LinkedList[T]) Reverse() {
+func (list *List[T]) Reverse() {
 	for curr := list.head; curr != nil; curr = curr.prev {
 		curr.prev, curr.next = curr.next, curr.prev
 	}
@@ -107,14 +105,14 @@ func (list *LinkedList[T]) Reverse() {
 	list.head, list.tail = list.tail, list.head
 }
 
-func (list *LinkedList[T]) Swap(index1, index2 int) {
+func (list *List[T]) Swap(index1, index2 int) {
 	node1 := list.GetNode(index1)
 	node2 := list.GetNode(index2)
 
 	node1.Value, node2.Value = node2.Value, node1.Value
 }
 
-func (list *LinkedList[T]) Sort(comparator functions.Comparator[T]) {
+func (list *List[T]) Sort(comparator functions.Comparator[T]) {
 	for front := list.head; front.next != nil; front = front.next {
 		for back := front.next; back != nil; back = back.next {
 			if comparator(front.Value, back.Value) != comparison.FirstSmaller {
@@ -124,9 +122,9 @@ func (list *LinkedList[T]) Sort(comparator functions.Comparator[T]) {
 	}
 }
 
-func (list *LinkedList[T]) Join(other collections.Collection[T]) {
+func (list *List[T]) Join(other collections.Collection[T]) {
 	switch second := other.(type) {
-	case *LinkedList[T]:
+	case *List[T]:
 		list.tail.next = second.head
 		second.head.prev = list.tail
 		list.tail = second.tail
@@ -141,7 +139,7 @@ func (list *LinkedList[T]) Join(other collections.Collection[T]) {
 	other.Clear()
 }
 
-func (list *LinkedList[T]) Clone() collections.Collection[T] {
+func (list *List[T]) Clone() collections.Collection[T] {
 	cloned := New[T]()
 	for curr := list.head; curr != nil; curr = curr.next {
 		cloned.Append(curr.Value)
@@ -150,11 +148,11 @@ func (list *LinkedList[T]) Clone() collections.Collection[T] {
 	return cloned
 }
 
-func (list *LinkedList[T]) Iterator() iterable.Iterator[T] {
+func (list *List[T]) Iterator() iterable.Iterator[T] {
 	return list.ModifyingIterator()
 }
 
-func (list *LinkedList[T]) ModifyingIterator() collections.Iterator[T] {
+func (list *List[T]) ModifyingIterator() collections.Iterator[T] {
 	return &Iterator[T]{
 		list:  list,
 		curr:  list.head,
@@ -162,30 +160,20 @@ func (list *LinkedList[T]) ModifyingIterator() collections.Iterator[T] {
 	}
 }
 
-func (list *LinkedList[T]) Stream() streams.Stream[T] {
-	supplier := iterable.IteratorSupplier[T]{
-		Iterator: list.Iterator(),
-	}
-
-	return streams.Stream[T]{
-		Supplier: supplier,
-	}
+func (list *List[T]) Stream() streams.Stream[T] {
+	supplier := iterable.IteratorSupplier[T]{list.Iterator()}
+	return streams.Stream[T]{supplier}
 }
 
-func (list *LinkedList[T]) RefStream() streams.Stream[*T] {
-	supplier := collections.RefsSupplier[T]{
-		Iterator: list.ModifyingIterator(),
-	}
-
-	return streams.Stream[*T]{
-		Supplier: supplier,
-	}
+func (list *List[T]) RefStream() streams.Stream[*T] {
+	supplier := collections.RefsSupplier[T]{list.ModifyingIterator()}
+	return streams.Stream[*T]{supplier}
 }
 
-func (list *LinkedList[T]) Head() *Node[T] {
+func (list *List[T]) Head() *Node[T] {
 	return list.head
 }
 
-func (list *LinkedList[T]) Tail() *Node[T] {
+func (list *List[T]) Tail() *Node[T] {
 	return list.tail
 }
