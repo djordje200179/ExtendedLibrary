@@ -1,11 +1,11 @@
 package matrix
 
-type Matrix[T any] struct {
-	rows [][]T
-}
+import "fmt"
 
-type Size struct {
-	Height, Width int
+type Matrix[T any] struct {
+	values []T
+
+	columns int
 }
 
 func New[T any]() *Matrix[T] {
@@ -13,116 +13,122 @@ func New[T any]() *Matrix[T] {
 }
 
 func NewWithSize[T any](size Size) *Matrix[T] {
-	rows := make([][]T, size.Height)
-	for i := 0; i < size.Height; i++ {
-		rows[i] = make([]T, size.Width)
-	}
+	values := make([]T, size.Elements())
 
 	matrix := &Matrix[T]{
-		rows: rows,
+		values:  values,
+		columns: size.Width,
 	}
 
 	return matrix
 }
 
 func (matrix *Matrix[T]) Size() Size {
-	height := len(matrix.rows)
+	rows := len(matrix.values) / matrix.columns
 
-	var width int
-	if height > 0 {
-		width = len(matrix.rows[0])
-	} else {
-		width = 0
-	}
-
-	return Size{height, width}
+	return Size{rows, matrix.columns}
 }
 
 func (matrix *Matrix[T]) GetRef(row, column int) *T {
-	return &matrix.rows[row][column]
+	index := matrix.Size().Index(row, column)
+	return &matrix.values[index]
 }
 
 func (matrix *Matrix[T]) Get(row, column int) T {
-	return matrix.rows[row][column]
+	return *matrix.GetRef(row, column)
 }
 
 func (matrix *Matrix[T]) Set(row, column int, value T) {
-	matrix.rows[row][column] = value
+	*matrix.GetRef(row, column) = value
 }
 
 func (matrix *Matrix[T]) Clone() *Matrix[T] {
-	size := matrix.Size()
-
-	newMatrix := NewWithSize[T](size)
-	for i := 0; i < size.Height; i++ {
-		copy(newMatrix.rows[i], matrix.rows[i])
-	}
+	newMatrix := NewWithSize[T](matrix.Size())
+	copy(newMatrix.values, matrix.values)
 
 	return newMatrix
 }
 
 func (matrix *Matrix[T]) InsertRow(index int, row []T) {
-
-}
-
-func (matrix *Matrix[T]) InsertColumn(index int, column []T) {
-
-}
-
-func (matrix *Matrix[T]) AppendRow(row []T) {
-	if len(row) != matrix.Size().Width {
+	if len(row) != matrix.columns {
 		panic("runtime error: row length does not match matrix width")
 	}
 
-	matrix.rows = append(matrix.rows, row)
+	newValues := make([]T, len(matrix.values)+matrix.columns)
+
+	oldPrevPart := matrix.values[:index*matrix.columns]
+	newPrevPart := newValues[:index*matrix.columns]
+	copy(newPrevPart, oldPrevPart)
+
+	oldNextPart := matrix.values[index*matrix.columns:]
+	newNextPart := newValues[(index+1)*matrix.columns:]
+	copy(newNextPart, oldNextPart)
+
+	newPart := newValues[index*matrix.columns : (index+1)*matrix.columns]
+	copy(newPart, row)
+
+	matrix.values = newValues
 }
 
-func (matrix *Matrix[T]) AppendColumn(column []T) {
-	if len(column) != matrix.Size().Height {
+func (matrix *Matrix[T]) InsertColumn(index int, column []T) {
+	size := matrix.Size()
+
+	if len(column) != size.Height {
 		panic("runtime error: column length does not match matrix height")
 	}
 
-	for i := 0; i < len(matrix.rows); i++ {
-		matrix.rows[i] = append(matrix.rows[i], column[i])
+	newValues := make([]T, len(matrix.values)+size.Height)
+
+	for i := size.Height - 1; i >= 0; i-- {
+		oldRow := matrix.values[i*size.Width : (i+1)*size.Width]
+		newRow := newValues[i*(size.Width+1) : (i+1)*(size.Width+1)]
+
+		copy(newRow[:index], oldRow[:index])
+		copy(newRow[index+1:], oldRow[index:])
+		newRow[index] = column[i]
 	}
+
+	matrix.values = newValues
+	matrix.columns++
+}
+
+func (matrix *Matrix[T]) AppendRow(row []T) {
+	if len(row) != matrix.columns {
+		panic("runtime error: row length does not match matrix width")
+	}
+
+	matrix.values = append(matrix.values, row...)
+}
+
+func (matrix *Matrix[T]) AppendColumn(column []T) {
+	matrix.InsertColumn(matrix.columns, column)
 }
 
 func (matrix *Matrix[T]) Reshape(newSize Size) {
 	oldSize := matrix.Size()
 
-	if oldSize.Height*oldSize.Width != newSize.Height*newSize.Width {
-		panic("runtime error: can't reshape matrix into new size")
+	if oldSize.Elements() != newSize.Elements() {
+		panic(fmt.Sprintf("runtime error: can't reshape matrix into %s", newSize))
 	}
 
-	newRows := NewWithSize[T](newSize).rows
-
-	currRow, currColumn := 0, 0
-	for i := 0; i < oldSize.Width; i++ {
-		for j := 0; j < oldSize.Height; j++ {
-			newRows[currRow][currColumn] = matrix.rows[i][j]
-
-			currColumn++
-			if currColumn == newSize.Width {
-				currRow++
-				currColumn = 0
-			}
-		}
-	}
-
-	matrix.rows = newRows
+	matrix.columns = newSize.Width
 }
 
 func (matrix *Matrix[T]) Transpose() {
 	oldSize := matrix.Size()
-	newSize := Size{oldSize.Width, oldSize.Height}
+	newSize := oldSize.Transposed()
 
-	newRows := NewWithSize[T](newSize).rows
+	newValues := make([]T, newSize.Elements())
 
-	for i := 0; i < oldSize.Height; i++ {
-		for j := 0; j < oldSize.Width; j++ {
-			newRows[j][i] = matrix.rows[i][j]
+	for i := 0; i < newSize.Height; i++ {
+		for j := 0; j < newSize.Width; j++ {
+			newIndex := newSize.Index(i, j)
+			oldIndex := oldSize.Index(j, i)
+
+			newValues[newIndex] = matrix.values[oldIndex]
 		}
 	}
 
-	matrix.rows = newRows
+	matrix.values = newValues
+	matrix.columns = newSize.Width
 }
