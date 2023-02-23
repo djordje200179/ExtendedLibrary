@@ -1,11 +1,11 @@
 package matrix
 
 func Zeros[T Number](size Size) *Matrix[T] {
-	return NewWithSize[T](size)
+	return New[T](size)
 }
 
 func Ones[T Number](size Size) *Matrix[T] {
-	matrix := NewWithSize[T](size)
+	matrix := New[T](size)
 
 	for i := 0; i < size.Elements(); i++ {
 		matrix.values[i] = 1

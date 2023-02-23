@@ -8,7 +8,7 @@ type Matrix[T any] struct {
 	columns int
 }
 
-func NewWithSize[T any](size Size) *Matrix[T] {
+func New[T any](size Size) *Matrix[T] {
 	values := make([]T, size.Elements())
 
 	matrix := &Matrix[T]{
@@ -21,7 +21,7 @@ func NewWithSize[T any](size Size) *Matrix[T] {
 
 func From[T any](values [][]T) *Matrix[T] {
 	if len(values) == 0 {
-		return NewWithSize[T](Size{})
+		return New[T](Size{})
 	}
 
 	rows := len(values)
@@ -33,7 +33,7 @@ func From[T any](values [][]T) *Matrix[T] {
 		}
 	}
 
-	matrix := NewWithSize[T](Size{rows, columns})
+	matrix := New[T](Size{rows, columns})
 
 	for i, row := range values {
 		for j, value := range row {
@@ -64,7 +64,7 @@ func (matrix *Matrix[T]) Set(row, column int, value T) {
 }
 
 func (matrix *Matrix[T]) Clone() *Matrix[T] {
-	newMatrix := NewWithSize[T](matrix.Size())
+	newMatrix := New[T](matrix.Size())
 	copy(newMatrix.values, matrix.values)
 
 	return newMatrix

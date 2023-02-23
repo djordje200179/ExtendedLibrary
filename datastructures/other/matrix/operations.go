@@ -32,7 +32,7 @@ func Subtract[T Number](first, second *Matrix[T]) *Matrix[T] {
 
 	size := first.Size()
 
-	result := NewWithSize[T](size)
+	result := New[T](size)
 
 	for i := 0; i < size.Elements(); i++ {
 		result.values[i] = first.values[i] - second.values[i]
@@ -42,7 +42,7 @@ func Subtract[T Number](first, second *Matrix[T]) *Matrix[T] {
 }
 
 func ScalarMultiply[T Number](matrix *Matrix[T], scalar T) *Matrix[T] {
-	result := NewWithSize[T](matrix.Size())
+	result := New[T](matrix.Size())
 
 	for i := 0; i < result.Size().Elements(); i++ {
 		result.values[i] = matrix.values[i] * scalar
@@ -85,7 +85,7 @@ func DotMultiply[T Number](matrices ...*Matrix[T]) *Matrix[T] {
 
 	size := matrices[0].Size()
 
-	result := NewWithSize[T](size)
+	result := New[T](size)
 	for i := 0; i < size.Elements(); i++ {
 		result.values[i] = 1
 		for _, matrix := range matrices {
