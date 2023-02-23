@@ -104,6 +104,37 @@ func (matrix *Matrix[T]) AppendColumn(column []T) {
 	matrix.InsertColumn(matrix.columns, column)
 }
 
+func (matrix *Matrix[T]) RemoveRow(index int) {
+	newValues := make([]T, len(matrix.values)-matrix.columns)
+
+	oldPrevPart := matrix.values[:index*matrix.columns]
+	newPrevPart := newValues[:index*matrix.columns]
+	copy(newPrevPart, oldPrevPart)
+
+	oldNextPart := matrix.values[(index+1)*matrix.columns:]
+	newNextPart := newValues[index*matrix.columns:]
+	copy(newNextPart, oldNextPart)
+
+	matrix.values = newValues
+}
+
+func (matrix *Matrix[T]) RemoveColumn(index int) {
+	size := matrix.Size()
+
+	newValues := make([]T, len(matrix.values)-size.Height)
+
+	for i := 0; i < size.Height; i++ {
+		oldRow := matrix.values[i*(size.Width+1) : (i+1)*(size.Width+1)]
+		newRow := newValues[i*size.Width : (i+1)*size.Width]
+
+		copy(newRow[:index], oldRow[:index])
+		copy(newRow[index:], oldRow[index+1:])
+	}
+
+	matrix.values = newValues
+	matrix.columns--
+}
+
 func (matrix *Matrix[T]) Reshape(newSize Size) {
 	oldSize := matrix.Size()
 
