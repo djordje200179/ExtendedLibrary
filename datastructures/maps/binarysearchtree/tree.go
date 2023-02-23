@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
-	"github.com/djordje200179/extendedlibrary/datastructures/sequences/collectionsequences"
+	"github.com/djordje200179/extendedlibrary/datastructures/sequences/collectionsequence"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
@@ -187,10 +187,10 @@ func (tree *BinarySearchTree[K, V]) Clone() maps.Map[K, V] {
 
 	cloned.root = tree.root.Clone()
 
-	nodesInOriginal := collectionsequences.NewDeque[*Node[K, V]]()
+	nodesInOriginal := collectionsequence.NewDeque[*Node[K, V]]()
 	nodesInOriginal.PushBack(tree.root)
 
-	nodesInCloned := collectionsequences.NewDeque[*Node[K, V]]()
+	nodesInCloned := collectionsequence.NewDeque[*Node[K, V]]()
 	nodesInCloned.PushBack(cloned.root)
 
 	for !nodesInOriginal.Empty() {
