@@ -15,11 +15,8 @@ func Add[T Number](first, second *Matrix[T]) *Matrix[T] {
 
 	result := NewWithSize[T](size)
 
-	for i := 0; i < size.Height; i++ {
-		for j := 0; j < size.Width; j++ {
-			sum := first.Get(i, j) + second.Get(i, j)
-			result.Set(i, j, sum)
-		}
+	for i := 0; i < size.Elements(); i++ {
+		result.values[i] = first.values[i] + second.values[i]
 	}
 
 	return result
@@ -34,11 +31,8 @@ func Subtract[T Number](first, second *Matrix[T]) *Matrix[T] {
 
 	result := NewWithSize[T](size)
 
-	for i := 0; i < size.Height; i++ {
-		for j := 0; j < size.Width; j++ {
-			diff := first.Get(i, j) - second.Get(i, j)
-			result.Set(i, j, diff)
-		}
+	for i := 0; i < size.Elements(); i++ {
+		result.values[i] = first.values[i] - second.values[i]
 	}
 
 	return result
@@ -47,10 +41,8 @@ func Subtract[T Number](first, second *Matrix[T]) *Matrix[T] {
 func ScalarMultiply[T Number](matrix *Matrix[T], scalar T) *Matrix[T] {
 	result := NewWithSize[T](matrix.Size())
 
-	for i := 0; i < result.Size().Height; i++ {
-		for j := 0; j < result.Size().Width; j++ {
-			result.Set(i, j, matrix.Get(i, j)*scalar)
-		}
+	for i := 0; i < result.Size().Elements(); i++ {
+		result.values[i] = matrix.values[i] * scalar
 	}
 
 	return result
