@@ -51,7 +51,7 @@ func (matrix *Matrix[T]) Clone() *Matrix[T] {
 
 func (matrix *Matrix[T]) InsertRow(index int, row []T) {
 	if len(row) != matrix.columns {
-		panic("runtime error: row length does not match matrix width")
+		panic("Row length does not match matrix width")
 	}
 
 	newValues := make([]T, len(matrix.values)+matrix.columns)
@@ -74,7 +74,7 @@ func (matrix *Matrix[T]) InsertColumn(index int, column []T) {
 	size := matrix.Size()
 
 	if len(column) != size.Height {
-		panic("runtime error: column length does not match matrix height")
+		panic("Column length does not match matrix height")
 	}
 
 	newValues := make([]T, len(matrix.values)+size.Height)
@@ -94,7 +94,7 @@ func (matrix *Matrix[T]) InsertColumn(index int, column []T) {
 
 func (matrix *Matrix[T]) AppendRow(row []T) {
 	if len(row) != matrix.columns {
-		panic("runtime error: row length does not match matrix width")
+		panic("Row length does not match matrix width")
 	}
 
 	matrix.values = append(matrix.values, row...)
@@ -139,7 +139,7 @@ func (matrix *Matrix[T]) Reshape(newSize Size) {
 	oldSize := matrix.Size()
 
 	if oldSize.Elements() != newSize.Elements() {
-		panic(fmt.Sprintf("runtime error: can't reshape matrix into %s", newSize))
+		panic(fmt.Sprintf("Can't reshape matrix into %s", newSize))
 	}
 
 	matrix.columns = newSize.Width
