@@ -64,15 +64,36 @@ func (array *Array[T]) Set(index int, value T) {
 	*array.GetRef(index) = value
 }
 
-func (array *Array[T]) Append(values ...T) {
+func (array *Array[T]) Append(value T) {
+	*array = append(array.Slice(), value)
+}
+
+func (array *Array[T]) AppendMany(values ...T) {
 	*array = append(array.Slice(), values...)
 }
 
-func (array *Array[T]) Insert(index int, values ...T) {
+func (array *Array[T]) Insert(index int, value T) {
 	index = array.getRealIndex(index)
 
-	*array = append((*array)[:index], (*array)[index:]...)
-	copy((*array)[index:], values)
+	newArray := make([]T, array.Size()+1)
+
+	copy(newArray, array.Slice()[:index])
+	newArray[index] = value
+	copy(newArray[index+1:], array.Slice()[index:])
+
+	*array = newArray
+}
+
+func (array *Array[T]) InsertMany(index int, values ...T) {
+	index = array.getRealIndex(index)
+
+	newArray := make([]T, array.Size()+len(values))
+
+	copy(newArray, array.Slice()[:index])
+	copy(newArray[index:], values)
+	copy(newArray[index+len(values):], array.Slice()[index:])
+
+	*array = newArray
 }
 
 func (array *Array[T]) Remove(index int) {
@@ -116,7 +137,7 @@ func (array *Array[T]) Sort(comparator functions.Comparator[T]) {
 func (array *Array[T]) Join(other collections.Collection[T]) {
 	switch second := other.(type) {
 	case *Array[T]:
-		array.Append(*second...)
+		array.AppendMany(*second...)
 	default:
 		for it := other.Iterator(); it.Valid(); it.Move() {
 			array.Append(it.Get())

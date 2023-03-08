@@ -65,26 +65,23 @@ func (list *List[T]) Set(index int, value T) {
 	*list.GetRef(index) = value
 }
 
-func (list *List[T]) Append(values ...T) {
-	for _, value := range values {
-		if list.size == 0 {
-			node := &Node[T]{
-				Value: value,
-			}
-
-			list.head = node
-			list.tail = node
-			list.size++
-		} else {
-			list.InsertAfterNode(list.tail, value)
+func (list *List[T]) Append(value T) {
+	if list.size == 0 {
+		node := &Node[T]{
+			Value: value,
 		}
+
+		list.head = node
+		list.tail = node
+		list.size++
+	} else {
+		list.InsertAfterNode(list.tail, value)
 	}
 }
 
-func (list *List[T]) Insert(index int, values ...T) {
-	for _, value := range values {
-		list.InsertBeforeNode(list.GetNode(index), value)
-	}
+func (list *List[T]) Insert(index int, value T) {
+	prevNode := list.GetNode(index)
+	list.InsertBeforeNode(prevNode, value)
 }
 
 func (list *List[T]) InsertBeforeNode(nextNode *Node[T], value T) {

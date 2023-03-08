@@ -46,18 +46,18 @@ func (wrapper *Wrapper[T]) Set(index int, value T) {
 	wrapper.collection.Set(index, value)
 }
 
-func (wrapper *Wrapper[T]) Append(values ...T) {
+func (wrapper *Wrapper[T]) Append(value T) {
 	wrapper.mutex.Lock()
 	defer wrapper.mutex.Unlock()
 
-	wrapper.collection.Append(values...)
+	wrapper.collection.Append(value)
 }
 
-func (wrapper *Wrapper[T]) Insert(index int, values ...T) {
+func (wrapper *Wrapper[T]) Insert(index int, value T) {
 	wrapper.mutex.Lock()
 	defer wrapper.mutex.Unlock()
 
-	wrapper.collection.Insert(index, values...)
+	wrapper.collection.Insert(index, value)
 }
 
 func (wrapper *Wrapper[T]) Remove(index int) {

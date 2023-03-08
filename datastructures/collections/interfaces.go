@@ -27,8 +27,8 @@ type Collection[T any] interface {
 	GetRef(index int) *T
 	Set(index int, value T)
 
-	Append(values ...T)
-	Insert(index int, values ...T)
+	Append(value T)
+	Insert(index int, value T)
 	Remove(index int)
 
 	Clear()
