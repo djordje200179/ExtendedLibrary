@@ -6,18 +6,14 @@ import (
 )
 
 func (list *List[T]) Sort(comparator functions.Comparator[T]) {
-	mergeSort(list, comparator)
-}
-
-func mergeSort[T any](list *List[T], comparator functions.Comparator[T]) {
 	if list == nil || list.head == nil || list.head.next == nil {
 		return
 	}
 
 	firstList, secondList := splitList(list)
 
-	mergeSort(firstList, comparator)
-	mergeSort(secondList, comparator)
+	firstList.Sort(comparator)
+	secondList.Sort(comparator)
 
 	sortedMerge(firstList, secondList, list, comparator)
 }
@@ -58,10 +54,6 @@ func sortedMerge[T any](firstList, secondList, resultList *List[T], comparator f
 }
 
 func splitList[T any](list *List[T]) (*List[T], *List[T]) {
-	if list == nil || list.Size() <= 1 {
-		return list, nil
-	}
-
 	middleIndex := list.Size() / 2
 	middleNode := list.GetNode(middleIndex - 1)
 
@@ -79,6 +71,8 @@ func splitList[T any](list *List[T]) (*List[T], *List[T]) {
 
 	middleNode.next.prev = nil
 	middleNode.next = nil
+
+	list.Clear()
 
 	return firstList, secondList
 }
