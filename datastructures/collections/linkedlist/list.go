@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
-	"github.com/djordje200179/extendedlibrary/misc/functions"
-	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
@@ -190,16 +188,6 @@ func (list *List[T]) SwapNodes(node1, node2 *Node[T]) {
 		node2.next.prev = node2
 	} else {
 		list.tail = node2
-	}
-}
-
-func (list *List[T]) Sort(comparator functions.Comparator[T]) {
-	for front := list.head; front.next != nil; front = front.next {
-		for back := front.next; back != nil; back = back.next {
-			if comparator(front.Value, back.Value) != comparison.FirstSmaller {
-				front.Value, back.Value = back.Value, front.Value
-			}
-		}
 	}
 }
 
