@@ -29,16 +29,16 @@ func (it *Iterator[T]) Set(value T) {
 }
 
 func (it *Iterator[T]) InsertBefore(value T) {
-	it.list.insertBefore(it.curr, value)
+	it.list.InsertBeforeNode(it.curr, value)
 	it.index++
 }
 
 func (it *Iterator[T]) InsertAfter(value T) {
-	it.list.insertAfter(it.curr, value)
+	it.list.InsertAfterNode(it.curr, value)
 }
 
 func (it *Iterator[T]) Remove() {
-	it.list.removeNode(it.curr)
+	it.list.RemoveNode(it.curr)
 }
 
 func (it *Iterator[T]) Index() int {
