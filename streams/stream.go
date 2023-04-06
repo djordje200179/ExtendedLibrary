@@ -1,10 +1,12 @@
 package streams
 
 import (
+	"bufio"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/misc/optional"
 	"github.com/djordje200179/extendedlibrary/streams/suppliers"
+	"io"
 )
 
 type Stream[T any] struct {
@@ -58,5 +60,11 @@ func FromFiniteGenerator[T any](generator functions.EmptyGenerator[optional.Opti
 func FromInfiniteGenerator[T any](generator functions.EmptyGenerator[T]) Stream[T] {
 	return Stream[T]{
 		Supplier: suppliers.Infinite(generator),
+	}
+}
+
+func FromReader(reader io.Reader, splitFunction bufio.SplitFunc) Stream[string] {
+	return Stream[string]{
+		Supplier: suppliers.Reader(reader, splitFunction),
 	}
 }
