@@ -6,6 +6,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/streams"
+	"unsafe"
 )
 
 type Map[K comparable, V any] map[K]V
@@ -40,7 +41,14 @@ func (hashmap Map[K, V]) Get(key K) V {
 }
 
 func (hashmap Map[K, V]) GetRef(key K) *V {
-	panic("Getting reference to value from hash map is not supported")
+	mt, mv := mapTypeAndValue(hashmap)
+	ptr, ok := internalMapGet(mt, mv, unsafe.Pointer(&key))
+
+	if !ok {
+		panic(fmt.Sprintf("Key %v not found", key))
+	}
+
+	return (*V)(ptr)
 }
 
 func (hashmap Map[K, V]) Set(key K, value V) {
@@ -114,7 +122,8 @@ func (hashmap Map[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
 }
 
 func (hashmap Map[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] {
-	panic("Getting reference to value from hash map is not supported")
+	supplier := maps.RefsSupplier[K, V]{hashmap.ModifyingIterator()}
+	return streams.Stream[misc.Pair[K, *V]]{supplier}
 }
 
 func (hashmap Map[K, V]) Map() map[K]V {
