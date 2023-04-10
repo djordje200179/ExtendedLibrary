@@ -6,6 +6,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/streams"
+	stdmaps "golang.org/x/exp/maps"
 	"unsafe"
 )
 
@@ -56,15 +57,7 @@ func (hashmap Map[K, V]) Set(key K, value V) {
 }
 
 func (hashmap Map[K, V]) Keys() []K {
-	keys := make([]K, len(hashmap))
-
-	i := 0
-	for k := range hashmap {
-		keys[i] = k
-		i++
-	}
-
-	return keys
+	return stdmaps.Keys(hashmap)
 }
 
 func (hashmap Map[K, V]) Remove(key K) {
