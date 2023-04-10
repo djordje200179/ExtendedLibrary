@@ -18,3 +18,6 @@ func mapTypeAndValue(m interface{}) (*maptype, *hmap) {
 
 //go:linkname internalMapGet runtime.mapaccess2
 func internalMapGet(t *maptype, h *hmap, key unsafe.Pointer) (unsafe.Pointer, bool)
+
+//go:linkname internalMapClear runtime.mapclear
+func internalMapClear(t *maptype, h *hmap)
