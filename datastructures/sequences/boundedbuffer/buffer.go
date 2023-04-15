@@ -15,8 +15,8 @@ func FromChannel[T any](channel chan T) Buffer[T] {
 	return channel
 }
 
-func Collector[T any]() streams.Collector[T, sequences.Queue[T]] {
-	return sequences.Collector[T, sequences.Queue[T]]{New[T]()}
+func Collector[T any](size int) streams.Collector[T, sequences.Queue[T]] {
+	return sequences.Collector[T, sequences.Queue[T]]{New[T](size)}
 }
 
 func (buffer Buffer[T]) Empty() bool {
