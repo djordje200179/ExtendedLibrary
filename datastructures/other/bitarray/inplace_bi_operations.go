@@ -4,7 +4,7 @@ type bitwiseOperation func(a, b uint8) uint8
 
 func (array *Array) applyBiOperation(other *Array, operation bitwiseOperation) {
 	if array.Size() != other.Size() {
-		panic("Arrays must have the same size")
+		panic("Array sizes don't match")
 	}
 
 	sliceSize := array.array.Size()

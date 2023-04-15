@@ -1,7 +1,7 @@
 package bitarray
 
 import (
-	"fmt"
+	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/collections/array"
 	"strings"
 )
@@ -58,7 +58,7 @@ func (array *Array) getRealIndex(index int) int {
 	size := array.Size()
 
 	if index >= size || index < -size {
-		panic(fmt.Sprintf("Index out of bounds: %d", index))
+		collections.PanicOnIndexOutOfBounds(index, size)
 	}
 
 	if index < 0 {
@@ -229,7 +229,7 @@ func (array *Array) Clear() {
 }
 
 func (array *Array) Reverse() {
-	panic("FlipAll implemented")
+	panic("not implemented")
 }
 
 func (array *Array) Swap(index1, index2 int) {

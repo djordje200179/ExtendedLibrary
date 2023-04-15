@@ -83,7 +83,7 @@ func (tree *Tree[K, V]) TryGet(key K) (V, bool) {
 func (tree *Tree[K, V]) GetRef(key K) *V {
 	node := tree.GetNode(key)
 	if node == nil {
-		panic(fmt.Sprintf("Key %v not found", key))
+		maps.PanicOnMissingKey(key)
 	}
 
 	return &node.Value

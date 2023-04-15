@@ -1,7 +1,6 @@
 package linkedlist
 
 import (
-	"fmt"
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/streams"
@@ -26,7 +25,7 @@ func (list *List[T]) Size() int {
 
 func (list *List[T]) GetNode(index int) *Node[T] {
 	if index >= list.size || index < -list.size {
-		panic(fmt.Sprintf("Index out of bounds: %d", index))
+		collections.PanicOnIndexOutOfBounds(index, list.size)
 	}
 
 	var curr *Node[T]

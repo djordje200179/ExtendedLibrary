@@ -29,7 +29,7 @@ func From[T any](values [][]T) *Matrix[T] {
 
 	for _, row := range values {
 		if len(row) != columns {
-			panic("Matrix rows have different length")
+			panic("Matrix rows have different lengths")
 		}
 	}
 

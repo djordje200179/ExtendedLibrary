@@ -1,7 +1,6 @@
 package array
 
 import (
-	"fmt"
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
@@ -40,7 +39,7 @@ func (array *Array[T]) getRealIndex(index int) int {
 	size := array.Size()
 
 	if index >= size || index < -size {
-		panic(fmt.Sprintf("Index out of bounds: %d", index))
+		collections.PanicOnIndexOutOfBounds(index, size)
 	}
 
 	if index < 0 {

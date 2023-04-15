@@ -69,7 +69,7 @@ func (m *Map[K, V]) TryGet(key K) (V, bool) {
 func (m *Map[K, V]) GetRef(key K) *V {
 	it := m.find(key)
 	if it == nil {
-		panic(fmt.Sprintf("Key %v not found", key))
+		maps.PanicOnMissingKey(key)
 	}
 
 	return &it.GetRef().Second

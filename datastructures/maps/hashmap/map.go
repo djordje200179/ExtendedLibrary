@@ -35,7 +35,7 @@ func (hashmap Map[K, V]) Size() int {
 func (hashmap Map[K, V]) Get(key K) V {
 	value, ok := hashmap[key]
 	if !ok {
-		panic(fmt.Sprintf("Key %v not found", key))
+		maps.PanicOnMissingKey(key)
 	}
 
 	return value
@@ -63,7 +63,7 @@ func (hashmap Map[K, V]) GetRef(key K) *V {
 	ptr, ok := internalMapGet(mt, mv, unsafe.Pointer(&key))
 
 	if !ok {
-		panic(fmt.Sprintf("Key %v not found", key))
+		maps.PanicOnMissingKey(key)
 	}
 
 	return (*V)(ptr)
