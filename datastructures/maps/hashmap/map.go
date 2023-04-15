@@ -17,10 +17,10 @@ func New[K comparable, V any]() Map[K, V] {
 }
 
 func NewWithCapacity[K comparable, V any](capacity int) Map[K, V] {
-	return From(make(map[K]V, capacity))
+	return FromMap(make(map[K]V, capacity))
 }
 
-func From[K comparable, V any](m map[K]V) Map[K, V] {
+func FromMap[K comparable, V any](m map[K]V) Map[K, V] {
 	return m
 }
 

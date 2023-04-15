@@ -19,7 +19,7 @@ func New[T any](size Size) *Matrix[T] {
 	return matrix
 }
 
-func From[T any](values [][]T) *Matrix[T] {
+func FromSlices[T any](values [][]T) *Matrix[T] {
 	if len(values) == 0 {
 		return New[T](Size{})
 	}

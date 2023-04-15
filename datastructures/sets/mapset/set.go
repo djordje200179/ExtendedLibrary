@@ -16,10 +16,10 @@ type mapBasedSet[T comparable] struct {
 }
 
 func NewHashSet[T comparable]() sets.Set[T] {
-	return From[T](hashmap.New[T, empty]())
+	return FromMap[T](hashmap.New[T, empty]())
 }
 
-func From[T comparable](m maps.Map[T, empty]) sets.Set[T] {
+func FromMap[T comparable](m maps.Map[T, empty]) sets.Set[T] {
 	return mapBasedSet[T]{m}
 }
 
@@ -34,7 +34,7 @@ func (set mapBasedSet[T]) Add(value T) {
 }
 
 func (set mapBasedSet[T]) Clone() sets.Set[T] {
-	return From[T](set.Map.Clone())
+	return FromMap[T](set.Map.Clone())
 }
 
 func (set mapBasedSet[T]) Iterator() iterable.Iterator[T] {

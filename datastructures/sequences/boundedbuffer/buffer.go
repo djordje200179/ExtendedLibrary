@@ -11,7 +11,7 @@ func New[T any](size int) Buffer[T] {
 	return make(chan T, size)
 }
 
-func From[T any](channel chan T) Buffer[T] {
+func FromChannel[T any](channel chan T) Buffer[T] {
 	return channel
 }
 
