@@ -3,6 +3,7 @@ package bitarray
 import (
 	"fmt"
 	"github.com/djordje200179/extendedlibrary/datastructures/collections/array"
+	"strings"
 )
 
 type Array struct {
@@ -93,6 +94,41 @@ func (array *Array) Set(index int, value bool) {
 	}
 
 	array.array.Set(elemIndex, elem)
+}
+
+func (array *Array) SetAll(value bool) {
+	var elem uint8
+	if value {
+		elem = 0xFF
+	}
+
+	sliceSize := array.array.Size()
+	for i := 0; i < sliceSize; i++ {
+		array.array.Set(i, elem)
+	}
+}
+
+func (array *Array) Flip(index int) {
+	index = array.getRealIndex(index)
+
+	elemIndex := index / 8
+	elemOff := index % 8
+	elem := array.array.Get(elemIndex)
+
+	mask := uint8(1) << elemOff
+	elem ^= mask
+
+	array.array.Set(elemIndex, elem)
+}
+
+func (array *Array) FlipAll() {
+	sliceSize := array.array.Size()
+	for i := 0; i < sliceSize; i++ {
+		elem := array.array.Get(i)
+
+		resElem := ^elem
+		array.array.Set(i, resElem)
+	}
 }
 
 func (array *Array) Append(value bool) {
@@ -193,7 +229,7 @@ func (array *Array) Clear() {
 }
 
 func (array *Array) Reverse() {
-	panic("Not implemented")
+	panic("FlipAll implemented")
 }
 
 func (array *Array) Swap(index1, index2 int) {
@@ -223,4 +259,23 @@ func (array *Array) Clone() *Array {
 	copy(cloned.array, array.array)
 
 	return cloned
+}
+
+func (array *Array) String() string {
+	var sb strings.Builder
+
+	for i := 0; i < array.Size(); i++ {
+		val := array.Get(i)
+
+		var char byte
+		if val {
+			char = '1'
+		} else {
+			char = '0'
+		}
+
+		sb.WriteByte(char)
+	}
+
+	return sb.String()
 }
