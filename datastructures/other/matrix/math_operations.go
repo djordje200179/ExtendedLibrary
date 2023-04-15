@@ -95,3 +95,7 @@ func DotMultiply[T Number](matrices ...*Matrix[T]) *Matrix[T] {
 
 	return result
 }
+
+func Negate[T Number](matrix *Matrix[T]) *Matrix[T] {
+	return ScalarMultiply[T](matrix, -1)
+}
