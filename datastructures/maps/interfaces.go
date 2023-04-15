@@ -21,6 +21,9 @@ type Map[K comparable, V any] interface {
 	Size() int
 
 	Get(key K) V
+	GetOrDefault(key K) V
+	GetOrElse(key K, value V) V
+	TryGet(key K) (V, bool)
 	GetRef(key K) *V
 	Set(key K, value V)
 

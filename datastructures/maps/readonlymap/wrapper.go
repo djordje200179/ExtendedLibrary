@@ -23,6 +23,10 @@ func (wrapper Wrapper[K, V]) Get(key K) V {
 	return wrapper.m.Get(key)
 }
 
+func (wrapper Wrapper[K, V]) TryGet(key K) (V, bool) {
+	return wrapper.m.TryGet(key)
+}
+
 func (wrapper Wrapper[K, V]) Keys() []K {
 	return wrapper.m.Keys()
 }

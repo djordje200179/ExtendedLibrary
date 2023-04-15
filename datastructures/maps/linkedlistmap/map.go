@@ -39,6 +39,33 @@ func (m *Map[K, V]) find(key K) collections.Iterator[misc.Pair[K, V]] {
 	return nil
 }
 
+func (m *Map[K, V]) Get(key K) V {
+	return *m.GetRef(key)
+}
+
+func (m *Map[K, V]) GetOrDefault(key K) V {
+	return m.GetOrElse(key, misc.Zero[V]())
+}
+
+func (m *Map[K, V]) GetOrElse(key K, value V) V {
+	it := m.find(key)
+	if it == nil {
+		return value
+	}
+
+	return it.Get().Second
+}
+
+func (m *Map[K, V]) TryGet(key K) (V, bool) {
+	it := m.find(key)
+	if it == nil {
+		var zero V
+		return zero, false
+	}
+
+	return it.Get().Second, true
+}
+
 func (m *Map[K, V]) GetRef(key K) *V {
 	it := m.find(key)
 	if it == nil {
@@ -46,10 +73,6 @@ func (m *Map[K, V]) GetRef(key K) *V {
 	}
 
 	return &it.GetRef().Second
-}
-
-func (m *Map[K, V]) Get(key K) V {
-	return *m.GetRef(key)
 }
 
 func (m *Map[K, V]) Set(key K, value V) {

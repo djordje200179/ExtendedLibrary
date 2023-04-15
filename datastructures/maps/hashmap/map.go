@@ -41,6 +41,23 @@ func (hashmap Map[K, V]) Get(key K) V {
 	return value
 }
 
+func (hashmap Map[K, V]) GetOrDefault(key K) V {
+	return hashmap[key]
+}
+
+func (hashmap Map[K, V]) GetOrElse(key K, value V) V {
+	if mapValue, ok := hashmap[key]; ok {
+		return mapValue
+	} else {
+		return value
+	}
+}
+
+func (hashmap Map[K, V]) TryGet(key K) (V, bool) {
+	value, ok := hashmap[key]
+	return value, ok
+}
+
 func (hashmap Map[K, V]) GetRef(key K) *V {
 	mt, mv := mapTypeAndValue(hashmap)
 	ptr, ok := internalMapGet(mt, mv, unsafe.Pointer(&key))

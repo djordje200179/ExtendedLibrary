@@ -53,6 +53,33 @@ func (tree *Tree[K, V]) GetNode(key K) *Node[K, V] {
 	return nil
 }
 
+func (tree *Tree[K, V]) Get(key K) V {
+	return *tree.GetRef(key)
+}
+
+func (tree *Tree[K, V]) GetOrDefault(key K) V {
+	return tree.GetOrElse(key, misc.Zero[V]())
+}
+
+func (tree *Tree[K, V]) GetOrElse(key K, value V) V {
+	node := tree.GetNode(key)
+	if node == nil {
+		return value
+	}
+
+	return node.Value
+}
+
+func (tree *Tree[K, V]) TryGet(key K) (V, bool) {
+	node := tree.GetNode(key)
+	if node == nil {
+		var zero V
+		return zero, false
+	}
+
+	return node.Value, true
+}
+
 func (tree *Tree[K, V]) GetRef(key K) *V {
 	node := tree.GetNode(key)
 	if node == nil {
@@ -60,10 +87,6 @@ func (tree *Tree[K, V]) GetRef(key K) *V {
 	}
 
 	return &node.Value
-}
-
-func (tree *Tree[K, V]) Get(key K) V {
-	return *tree.GetRef(key)
 }
 
 func (tree *Tree[K, V]) Set(key K, value V) {
