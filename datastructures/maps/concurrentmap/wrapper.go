@@ -9,7 +9,8 @@ import (
 )
 
 type Wrapper[K comparable, V any] struct {
-	m     maps.Map[K, V]
+	m maps.Map[K, V]
+
 	mutex sync.RWMutex
 }
 
@@ -64,6 +65,24 @@ func (wrapper *Wrapper[K, V]) Set(key K, value V) {
 	defer wrapper.mutex.Unlock()
 
 	wrapper.m.Set(key, value)
+}
+
+func (wrapper *Wrapper[K, V]) Update(key K, updateFunction func(oldValue V) V) {
+	wrapper.mutex.Lock()
+	defer wrapper.mutex.Unlock()
+
+	oldValue := wrapper.m.Get(key)
+	newValue := updateFunction(oldValue)
+
+	wrapper.m.Set(key, newValue)
+}
+
+func (wrapper *Wrapper[K, V]) UpdateRef(key K, updateFunction func(oldValue *V)) {
+	wrapper.mutex.Lock()
+	defer wrapper.mutex.Unlock()
+
+	oldValue := wrapper.m.GetRef(key)
+	updateFunction(oldValue)
 }
 
 func (wrapper *Wrapper[K, V]) Keys() []K {
@@ -123,4 +142,8 @@ func (wrapper *Wrapper[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
 
 func (wrapper *Wrapper[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] {
 	return wrapper.m.RefStream()
+}
+
+func (wrapper *Wrapper[K, V]) Mutex() *sync.RWMutex {
+	return &wrapper.mutex
 }

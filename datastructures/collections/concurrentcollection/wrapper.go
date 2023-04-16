@@ -46,6 +46,23 @@ func (wrapper *Wrapper[T]) Set(index int, value T) {
 	wrapper.collection.Set(index, value)
 }
 
+func (wrapper *Wrapper[T]) Update(index int, updateFunction func(value T) T) {
+	wrapper.mutex.Lock()
+	defer wrapper.mutex.Unlock()
+
+	oldValue := wrapper.collection.Get(index)
+	newValue := updateFunction(oldValue)
+	wrapper.collection.Set(index, newValue)
+}
+
+func (wrapper *Wrapper[T]) UpdateRef(index int, updateFunction func(value *T)) {
+	wrapper.mutex.Lock()
+	defer wrapper.mutex.Unlock()
+
+	oldValue := wrapper.collection.GetRef(index)
+	updateFunction(oldValue)
+}
+
 func (wrapper *Wrapper[T]) Append(value T) {
 	wrapper.mutex.Lock()
 	defer wrapper.mutex.Unlock()
@@ -124,4 +141,8 @@ func (wrapper *Wrapper[T]) Stream() streams.Stream[T] {
 
 func (wrapper *Wrapper[T]) RefStream() streams.Stream[*T] {
 	return wrapper.collection.RefStream()
+}
+
+func (wrapper *Wrapper[T]) Mutex() *sync.RWMutex {
+	return &wrapper.mutex
 }
