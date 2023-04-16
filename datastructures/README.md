@@ -1,6 +1,8 @@
 # datastructures
 
-This package give you many generic types:
+Java-like object-oriented data structures for Go.
+
+This package give you many generic data structures:
 - Collections
    - Array
    - Linked list
