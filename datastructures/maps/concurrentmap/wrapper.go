@@ -144,6 +144,9 @@ func (wrapper *Wrapper[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] {
 	return wrapper.m.RefStream()
 }
 
-func (wrapper *Wrapper[K, V]) Mutex() *sync.RWMutex {
-	return &wrapper.mutex
+func (wrapper *Wrapper[K, V]) Transaction(updateFunction func(m maps.Map[K, V])) {
+	wrapper.mutex.Lock()
+	defer wrapper.mutex.Unlock()
+
+	updateFunction(wrapper.m)
 }

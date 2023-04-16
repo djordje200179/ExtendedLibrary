@@ -143,6 +143,9 @@ func (wrapper *Wrapper[T]) RefStream() streams.Stream[*T] {
 	return wrapper.collection.RefStream()
 }
 
-func (wrapper *Wrapper[T]) Mutex() *sync.RWMutex {
-	return &wrapper.mutex
+func (wrapper *Wrapper[T]) Transaction(updateFunction func(collection collections.Collection[T])) {
+	wrapper.mutex.Lock()
+	defer wrapper.mutex.Unlock()
+
+	updateFunction(wrapper.collection)
 }
