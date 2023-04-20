@@ -57,7 +57,6 @@ func Collect[T, R any](stream Stream[T], collector Collector[T, R]) R {
 
 func (stream Stream[T]) Count() int {
 	count := 0
-
 	for elem := stream.Supplier.Supply(); elem.Valid; elem = stream.Supplier.Supply() {
 		count++
 	}
@@ -104,13 +103,7 @@ func (stream Stream[T]) First() optional.Optional[T] {
 }
 
 func (stream Stream[T]) Find(predictor functions.Predictor[T]) optional.Optional[T] {
-	for elem := stream.Supplier.Supply(); elem.Valid; elem = stream.Supplier.Supply() {
-		if predictor(elem.Value) {
-			return optional.FromValue(elem.Value)
-		}
-	}
-
-	return optional.Empty[T]()
+	return stream.Filter(predictor).First()
 }
 
 func (stream Stream[T]) Channel() <-chan T {
