@@ -53,11 +53,11 @@ func NewProcess[K comparable, V any](
 }
 
 func NewDefaultProcess[K constraints.Ordered, V any](
-	reducer Reducer[K, V],
+	reducer Reducer[K, V], finalizer Finalizer[K, V],
 	output io.Writer,
 	dataSources ...Mapper[K, V],
 ) *Process[K, V] {
-	return NewProcess[K, V](comparison.Ascending[K], reducer, nil, output, dataSources...)
+	return NewProcess[K, V](comparison.Ascending[K], reducer, finalizer, output, dataSources...)
 }
 
 func (process *Process[K, V]) Run() {
@@ -78,12 +78,12 @@ func (process *Process[K, V]) WaitToFinish() {
 }
 
 func (process *Process[K, V]) sortData() {
-	keysComparator := func(i, j int) bool {
+	comparator := func(i, j int) bool {
 		return process.keyComparator(process.mappedDataKeys[i], process.mappedDataKeys[j]) == comparison.FirstSmaller
 	}
 
-	sort.SliceStable(process.mappedDataKeys, keysComparator)
-	sort.SliceStable(process.mappedDataValues, keysComparator)
+	sort.SliceStable(process.mappedDataKeys, comparator)
+	sort.SliceStable(process.mappedDataValues, comparator)
 }
 
 func (process *Process[K, V]) finalizeData() {

@@ -1,23 +1,42 @@
 package mapreduce
 
-import "sync"
-
-func (process *Process[K, V]) appendData(key K, value V) {
-	process.mutex.Lock()
-	defer process.mutex.Unlock()
-
-	process.mappedDataKeys = append(process.mappedDataKeys, key)
-	process.mappedDataValues = append(process.mappedDataValues, value)
-}
+import (
+	"runtime"
+	"sync"
+)
 
 func (process *Process[K, V]) mapData() {
 	var barrier sync.WaitGroup
-	barrier.Add(len(process.dataSources))
 
-	for _, dataSource := range process.dataSources {
-		dataSource := dataSource
+	threadsCount := runtime.NumCPU()
+	sourcesPerThread := len(process.dataSources) / threadsCount
+
+	threadProcesses := make([]threadProcess[K, V], threadsCount)
+	for i := 0; i < threadsCount; i++ {
+		firstSourceIndex := i * sourcesPerThread
+		lastSourceIndex := (i + 1) * sourcesPerThread
+		sources := process.dataSources[firstSourceIndex:lastSourceIndex]
+
+		threadProcesses[i] = threadProcess[K, V]{
+			dataSources:   sources,
+			keyComparator: process.keyComparator,
+			combiner:      process.reducer,
+		}
+
+		currProcess := &threadProcesses[i]
+
+		barrier.Add(1)
+
 		go func() {
-			dataSource.Map(process.appendData)
+			currProcess.mapData()
+			currProcess.sortData()
+			currProcess.combineData()
+
+			process.mutex.Lock()
+			process.mappedDataKeys = append(process.mappedDataKeys, currProcess.mappedDataKeys...)
+			process.mappedDataValues = append(process.mappedDataValues, currProcess.mappedDataValues...)
+			process.mutex.Unlock()
+
 			barrier.Done()
 		}()
 	}
