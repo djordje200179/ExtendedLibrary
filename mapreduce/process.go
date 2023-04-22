@@ -11,40 +11,40 @@ import (
 	"sync"
 )
 
-type Process[K comparable, V any] struct {
-	mutex sync.Mutex
+type Process[KeyIn any, ValueIn any, KeyOut comparable, ValueOut any] struct {
+	keyComparator functions.Comparator[KeyOut]
 
-	dataSources []Mapper[K, V]
+	mapper    Mapper[KeyIn, ValueIn, KeyOut, ValueOut]
+	reducer   Reducer[KeyOut, ValueOut]
+	finalizer Finalizer[KeyOut, ValueOut]
 
-	mappedDataKeys   []K
-	mappedDataValues []V
-	keyComparator    functions.Comparator[K]
+	dataSource Source[KeyIn, ValueIn]
 
-	reducer     Reducer[K, V]
-	reducedData map[K]V
+	dataCollectionMutex sync.Mutex
 
-	finalizer    Finalizer[K, V]
+	mappedDataKeys   []KeyOut
+	mappedDataValues []ValueOut
+
+	reducedData map[KeyOut]ValueOut
+
 	dataWriter   io.Writer
 	finishSignal sync.WaitGroup
 }
 
-func NewProcess[K comparable, V any](
-	keyComparator functions.Comparator[K],
-	reducer Reducer[K, V], finalizer Finalizer[K, V],
+func NewProcess[KeyIn any, ValueIn any, KeyOut comparable, ValueOut any](
+	keyComparator functions.Comparator[KeyOut],
+	mapper Mapper[KeyIn, ValueIn, KeyOut, ValueOut], reducer Reducer[KeyOut, ValueOut], finalizer Finalizer[KeyOut, ValueOut],
 	output io.Writer,
-	dataSources ...Mapper[K, V],
-) *Process[K, V] {
-	process := &Process[K, V]{
-		dataSources: dataSources,
+	dataSource Source[KeyIn, ValueIn],
+) *Process[KeyIn, ValueIn, KeyOut, ValueOut] {
+	process := &Process[KeyIn, ValueIn, KeyOut, ValueOut]{
+		keyComparator: keyComparator,
 
-		mappedDataKeys:   make([]K, 0),
-		mappedDataValues: make([]V, 0),
-		keyComparator:    keyComparator,
-
-		reducer:     reducer,
-		reducedData: make(map[K]V),
-
+		mapper:    mapper,
+		reducer:   reducer,
 		finalizer: finalizer,
+
+		dataSource: dataSource,
 
 		dataWriter: output,
 	}
@@ -52,15 +52,15 @@ func NewProcess[K comparable, V any](
 	return process
 }
 
-func NewDefaultProcess[K constraints.Ordered, V any](
-	reducer Reducer[K, V], finalizer Finalizer[K, V],
+func NewProcessWithOrderedKeys[KeyIn any, ValueIn any, KeyOut constraints.Ordered, ValueOut any](
+	mapper Mapper[KeyIn, ValueIn, KeyOut, ValueOut], reducer Reducer[KeyOut, ValueOut], finalizer Finalizer[KeyOut, ValueOut],
 	output io.Writer,
-	dataSources ...Mapper[K, V],
-) *Process[K, V] {
-	return NewProcess[K, V](comparison.Ascending[K], reducer, finalizer, output, dataSources...)
+	dataSource Source[KeyIn, ValueIn],
+) *Process[KeyIn, ValueIn, KeyOut, ValueOut] {
+	return NewProcess(comparison.Ascending[KeyOut], mapper, reducer, finalizer, output, dataSource)
 }
 
-func (process *Process[K, V]) Run() {
+func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) Run() {
 	process.mapData()
 	process.sortData()
 	process.reduceData()
@@ -72,12 +72,12 @@ func (process *Process[K, V]) Run() {
 	process.finishSignal.Done()
 }
 
-func (process *Process[K, V]) WaitToFinish() {
+func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) WaitToFinish() {
 	process.finishSignal.Add(1)
 	process.finishSignal.Wait()
 }
 
-func (process *Process[K, V]) sortData() {
+func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) sortData() {
 	comparator := func(i, j int) bool {
 		return process.keyComparator(process.mappedDataKeys[i], process.mappedDataKeys[j]) == comparison.FirstSmaller
 	}
@@ -86,14 +86,14 @@ func (process *Process[K, V]) sortData() {
 	sort.SliceStable(process.mappedDataValues, comparator)
 }
 
-func (process *Process[K, V]) finalizeData() {
+func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) finalizeData() {
 	for key, value := range process.reducedData {
 		finalizedValue := process.finalizer(key, value)
 		process.reducedData[key] = finalizedValue
 	}
 }
 
-func (process *Process[K, V]) outputData() {
+func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) outputData() {
 	for key, value := range process.reducedData {
 		_, err := fmt.Fprintf(process.dataWriter, "%v: %v\n", key, value)
 		if err != nil {

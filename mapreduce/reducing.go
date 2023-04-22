@@ -5,7 +5,9 @@ import (
 	"sync"
 )
 
-func (process *Process[K, V]) reduceData() {
+func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) reduceData() {
+	process.reducedData = make(map[KeyOut]ValueOut, len(process.mappedDataKeys))
+
 	var barrier sync.WaitGroup
 
 	lastIndex := -1
@@ -29,9 +31,9 @@ func (process *Process[K, V]) reduceData() {
 		go func() {
 			reducedValue := process.reducer(lastKey, validValues)
 
-			process.mutex.Lock()
+			process.dataCollectionMutex.Lock()
 			process.reducedData[lastKey] = reducedValue
-			process.mutex.Unlock()
+			process.dataCollectionMutex.Unlock()
 
 			barrier.Done()
 		}()

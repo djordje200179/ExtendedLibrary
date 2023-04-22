@@ -1,10 +1,9 @@
 package mapreduce
 
-type Emitter[K comparable, V any] func(key K, value V)
+import "github.com/djordje200179/extendedlibrary/misc"
 
-type Mapper[K comparable, V any] interface {
-	Map(emit Emitter[K, V])
-}
-
-type Reducer[K comparable, V any] func(key K, values []V) V
-type Finalizer[K comparable, V any] func(key K, value V) V
+type Source[KeyIn any, ValueIn any] <-chan misc.Pair[KeyIn, ValueIn]
+type Emitter[KeyOut comparable, ValueOut any] func(key KeyOut, value ValueOut)
+type Mapper[KeyIn any, ValueIn any, KeyOut comparable, ValueOut any] func(key KeyIn, value ValueIn, emit Emitter[KeyOut, ValueOut])
+type Reducer[KeyOut comparable, ValueOut any] func(key KeyOut, values []ValueOut) ValueOut
+type Finalizer[KeyOut comparable, ValueOut any] func(key KeyOut, value ValueOut) ValueOut
