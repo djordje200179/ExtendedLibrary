@@ -1,12 +1,10 @@
 package mapreduce
 
 import (
-	"fmt"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 	"golang.org/x/exp/constraints"
 	"io"
-	"log"
 	"sort"
 	"sync"
 )
@@ -20,12 +18,10 @@ type Process[KeyIn any, ValueIn any, KeyOut comparable, ValueOut any] struct {
 
 	dataSource Source[KeyIn, ValueIn]
 
-	dataCollectionMutex sync.Mutex
+	mutex sync.Mutex
 
 	mappedDataKeys   []KeyOut
 	mappedDataValues []ValueOut
-
-	reducedData map[KeyOut]ValueOut
 
 	dataWriter   io.Writer
 	finishSignal sync.WaitGroup
@@ -64,10 +60,6 @@ func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) Run() {
 	process.mapData()
 	process.sortData()
 	process.reduceData()
-	if process.finalizer != nil {
-		process.finalizeData()
-	}
-	process.outputData()
 
 	process.finishSignal.Done()
 }
@@ -84,20 +76,4 @@ func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) sortData() {
 
 	sort.SliceStable(process.mappedDataKeys, comparator)
 	sort.SliceStable(process.mappedDataValues, comparator)
-}
-
-func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) finalizeData() {
-	for key, value := range process.reducedData {
-		finalizedValue := process.finalizer(key, value)
-		process.reducedData[key] = finalizedValue
-	}
-}
-
-func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) outputData() {
-	for key, value := range process.reducedData {
-		_, err := fmt.Fprintf(process.dataWriter, "%v: %v\n", key, value)
-		if err != nil {
-			log.Panic(err)
-		}
-	}
 }

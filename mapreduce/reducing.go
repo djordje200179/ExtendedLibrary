@@ -1,13 +1,13 @@
 package mapreduce
 
 import (
+	"fmt"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
+	"log"
 	"sync"
 )
 
 func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) reduceData() {
-	process.reducedData = make(map[KeyOut]ValueOut, len(process.mappedDataKeys))
-
 	var barrier sync.WaitGroup
 
 	lastIndex := -1
@@ -30,10 +30,16 @@ func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) reduceData() {
 
 		go func() {
 			reducedValue := process.reducer(lastKey, validValues)
+			if process.finalizer != nil {
+				reducedValue = process.finalizer(lastKey, reducedValue)
+			}
 
-			process.dataCollectionMutex.Lock()
-			process.reducedData[lastKey] = reducedValue
-			process.dataCollectionMutex.Unlock()
+			process.mutex.Lock()
+			_, err := fmt.Fprintf(process.dataWriter, "%v: %v\n", lastKey, reducedValue)
+			if err != nil {
+				log.Panic(err)
+			}
+			process.mutex.Unlock()
 
 			barrier.Done()
 		}()

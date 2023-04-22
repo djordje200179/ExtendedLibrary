@@ -26,10 +26,10 @@ func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) mapData() {
 			currProcess.sortData()
 			currProcess.combineData()
 
-			process.dataCollectionMutex.Lock()
+			process.mutex.Lock()
 			process.mappedDataKeys = append(process.mappedDataKeys, currProcess.mappedDataKeys...)
 			process.mappedDataValues = append(process.mappedDataValues, currProcess.mappedDataValues...)
-			process.dataCollectionMutex.Unlock()
+			process.mutex.Unlock()
 
 			barrier.Done()
 		}()
