@@ -7,7 +7,7 @@ import (
 	"sort"
 )
 
-type threadMappingProcess[KeyIn any, ValueIn any, KeyOut comparable, ValueOut any] struct {
+type threadMappingProcess[KeyIn, ValueIn, KeyOut, ValueOut any] struct {
 	keyComparator functions.Comparator[KeyOut]
 
 	mapper   Mapper[KeyIn, ValueIn, KeyOut, ValueOut]

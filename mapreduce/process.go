@@ -10,7 +10,7 @@ import (
 	"sync"
 )
 
-type Process[KeyIn any, ValueIn any, KeyOut comparable, ValueOut any] struct {
+type Process[KeyIn, ValueIn, KeyOut, ValueOut any] struct {
 	keyComparator functions.Comparator[KeyOut]
 
 	mapper    Mapper[KeyIn, ValueIn, KeyOut, ValueOut]
@@ -28,7 +28,7 @@ type Process[KeyIn any, ValueIn any, KeyOut comparable, ValueOut any] struct {
 	finishSignal sync.WaitGroup
 }
 
-func NewProcess[KeyIn any, ValueIn any, KeyOut comparable, ValueOut any](
+func NewProcess[KeyIn, ValueIn, KeyOut, ValueOut any](
 	keyComparator functions.Comparator[KeyOut],
 	mapper Mapper[KeyIn, ValueIn, KeyOut, ValueOut], reducer Reducer[KeyOut, ValueOut], finalizer Finalizer[KeyOut, ValueOut],
 	output io.Writer,
@@ -51,7 +51,7 @@ func NewProcess[KeyIn any, ValueIn any, KeyOut comparable, ValueOut any](
 	return process
 }
 
-func NewProcessWithOrderedKeys[KeyIn any, ValueIn any, KeyOut constraints.Ordered, ValueOut any](
+func NewProcessWithOrderedKeys[KeyIn, ValueIn any, KeyOut constraints.Ordered, ValueOut any](
 	mapper Mapper[KeyIn, ValueIn, KeyOut, ValueOut], reducer Reducer[KeyOut, ValueOut], finalizer Finalizer[KeyOut, ValueOut],
 	output io.Writer,
 	dataSource Source[KeyIn, ValueIn],
