@@ -1,6 +1,7 @@
 package mapreduce
 
 import (
+	"bufio"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 	"golang.org/x/exp/constraints"
@@ -33,6 +34,8 @@ func NewProcess[KeyIn any, ValueIn any, KeyOut comparable, ValueOut any](
 	output io.Writer,
 	dataSource Source[KeyIn, ValueIn],
 ) *Process[KeyIn, ValueIn, KeyOut, ValueOut] {
+	output = bufio.NewWriter(output)
+
 	process := &Process[KeyIn, ValueIn, KeyOut, ValueOut]{
 		keyComparator: keyComparator,
 
