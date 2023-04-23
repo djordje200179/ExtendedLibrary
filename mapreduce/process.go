@@ -76,6 +76,6 @@ func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) sortData() {
 		return process.keyComparator(process.mappedDataKeys[i], process.mappedDataKeys[j]) == comparison.FirstSmaller
 	}
 
-	sort.SliceStable(process.mappedDataKeys, comparator)
-	sort.SliceStable(process.mappedDataValues, comparator)
+	sort.Slice(process.mappedDataKeys, comparator)
+	sort.Slice(process.mappedDataValues, comparator)
 }
