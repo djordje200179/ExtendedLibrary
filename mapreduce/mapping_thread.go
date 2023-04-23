@@ -37,8 +37,8 @@ func mapData[KeyIn, ValueIn, KeyOut, ValueOut any](
 		return keyComparator(mappedDataKeys[i], mappedDataKeys[j]) == comparison.FirstSmaller
 	}
 
-	sort.Slice(mappedDataKeys, comparator)
 	sort.Slice(mappedDataValues, comparator)
+	sort.Slice(mappedDataKeys, comparator)
 
 	var uniqueKeys []KeyOut
 	var combinedValues []ValueOut
