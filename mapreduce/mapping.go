@@ -11,29 +11,21 @@ func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) mapData() {
 	var barrier sync.WaitGroup
 	barrier.Add(threadsCount)
 
-	threadProcesses := make([]threadMappingProcess[KeyIn, ValueIn, KeyOut, ValueOut], threadsCount)
-	for i := range threadProcesses {
-		threadProcesses[i] = threadMappingProcess[KeyIn, ValueIn, KeyOut, ValueOut]{
-			keyComparator: process.keyComparator,
-			mapper:        process.mapper,
-			combiner:      process.reducer,
-		}
-
-		currProcess := &threadProcesses[i]
-
-		go func() {
-			currProcess.mapData(process.dataSource)
-			currProcess.sortData()
-			currProcess.combineData()
-
-			process.mutex.Lock()
-			process.mappedDataKeys = append(process.mappedDataKeys, currProcess.mappedDataKeys...)
-			process.mappedDataValues = append(process.mappedDataValues, currProcess.mappedDataValues...)
-			process.mutex.Unlock()
-
-			barrier.Done()
-		}()
+	for i := 0; i < threadsCount; i++ {
+		go mapData(
+			process.keyComparator,
+			process.mapper, process.reducer,
+			process.dataSource,
+			process.appendData, &barrier,
+		)
 	}
 
 	barrier.Wait()
+}
+
+func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) appendData(keys []KeyOut, values []ValueOut) {
+	process.mutex.Lock()
+	process.mappedDataKeys = append(process.mappedDataKeys, keys...)
+	process.mappedDataValues = append(process.mappedDataValues, values...)
+	process.mutex.Unlock()
 }

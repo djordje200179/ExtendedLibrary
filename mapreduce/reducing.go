@@ -28,22 +28,21 @@ func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) reduceData() {
 		validValues := process.mappedDataValues[firstIndex : lastIndex+1]
 		barrier.Add(1)
 
-		go func() {
-			reducedValue := process.reducer(lastKey, validValues)
-			if process.finalizer != nil {
-				reducedValue = process.finalizer(lastKey, reducedValue)
-			}
-
-			process.mutex.Lock()
-			_, err := fmt.Fprintf(process.dataWriter, "%v: %v\n", lastKey, reducedValue)
-			if err != nil {
-				log.Panic(err)
-			}
-			process.mutex.Unlock()
-
-			barrier.Done()
-		}()
+		go reduceData(
+			process.reducer, process.finalizer,
+			process.writeData, &barrier,
+			lastKey, validValues,
+		)
 	}
 
 	barrier.Wait()
+}
+
+func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) writeData(key KeyOut, value ValueOut) {
+	process.mutex.Lock()
+	_, err := fmt.Fprintf(process.dataWriter, "%v: %v\n", key, value)
+	if err != nil {
+		log.Panic(err)
+	}
+	process.mutex.Unlock()
 }
