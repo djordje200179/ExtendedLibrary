@@ -34,8 +34,8 @@ func (data *mappedData[KeyOut, ValueOut]) Reduce(reducer Reducer[KeyOut, ValueOu
 		return nil, nil
 	}
 
-	var uniqueKeys []KeyOut
-	var combinedValues []ValueOut
+	uniqueKeys := make([]KeyOut, 0, data.Len())
+	combinedValues := make([]ValueOut, 0, data.Len())
 
 	lastIndex := -1
 	for i := 1; i <= data.Len(); i++ {
