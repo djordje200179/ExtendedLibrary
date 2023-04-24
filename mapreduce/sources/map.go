@@ -6,7 +6,7 @@ import (
 )
 
 func NewMapSource[K comparable, V any](m map[K]V) mapreduce.Source[K, V] {
-	source := make(chan misc.Pair[K, V], 1)
+	source := make(chan misc.Pair[K, V], 100)
 
 	go func() {
 		for key, value := range m {

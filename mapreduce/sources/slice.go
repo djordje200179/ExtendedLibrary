@@ -6,7 +6,7 @@ import (
 )
 
 func NewSliceSource[T any](slice []T) mapreduce.Source[int, T] {
-	source := make(chan misc.Pair[int, T], 1)
+	source := make(chan misc.Pair[int, T], 100)
 
 	go func() {
 		for index, element := range slice {

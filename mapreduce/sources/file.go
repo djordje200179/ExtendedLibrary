@@ -17,7 +17,7 @@ func NewFileSource(path string) mapreduce.Source[int, string] {
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanLines)
 
-	source := make(chan misc.Pair[int, string], 1)
+	source := make(chan misc.Pair[int, string], 100)
 
 	go func() {
 		lineIndex := 0
