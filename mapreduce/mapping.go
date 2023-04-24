@@ -25,7 +25,7 @@ func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) mapData() {
 
 func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) appendData(keys []KeyOut, values []ValueOut) {
 	process.mutex.Lock()
-	process.mappedDataKeys = append(process.mappedDataKeys, keys...)
-	process.mappedDataValues = append(process.mappedDataValues, values...)
+	process.mappedData.keys = append(process.mappedData.keys, keys...)
+	process.mappedData.values = append(process.mappedData.values, values...)
 	process.mutex.Unlock()
 }

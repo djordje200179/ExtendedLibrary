@@ -14,12 +14,8 @@ func mapData[KeyIn, ValueIn, KeyOut, ValueOut any](
 	dataSource Source[KeyIn, ValueIn],
 	appendData func(keys []KeyOut, values []ValueOut), finishSignal *sync.WaitGroup,
 ) {
-	var mappedDataKeys []KeyOut
-	var mappedDataValues []ValueOut
-
-	mappedDataAppender := func(key KeyOut, value ValueOut) {
-		mappedDataKeys = append(mappedDataKeys, key)
-		mappedDataValues = append(mappedDataValues, value)
+	mappedData := mappedData[KeyOut, ValueOut]{
+		keyComparator: keyComparator,
 	}
 
 	for {
@@ -30,25 +26,20 @@ func mapData[KeyIn, ValueIn, KeyOut, ValueOut any](
 			break
 		}
 
-		mapper(entry.First, entry.Second, mappedDataAppender)
+		mapper(entry.First, entry.Second, mappedData.Append)
 	}
 
-	comparator := func(i, j int) bool {
-		return keyComparator(mappedDataKeys[i], mappedDataKeys[j]) == comparison.FirstSmaller
-	}
-
-	sort.Slice(mappedDataValues, comparator)
-	sort.Slice(mappedDataKeys, comparator)
+	sort.Sort(&mappedData)
 
 	var uniqueKeys []KeyOut
 	var combinedValues []ValueOut
 
 	lastIndex := -1
-	for i := 1; i <= len(mappedDataKeys); i++ {
-		lastKey := mappedDataKeys[i-1]
+	for i := 1; i <= mappedData.Len(); i++ {
+		lastKey := mappedData.keys[i-1]
 
-		if i != len(mappedDataKeys) {
-			currentKey := mappedDataKeys[i]
+		if i != mappedData.Len() {
+			currentKey := mappedData.keys[i]
 
 			if keyComparator(lastKey, currentKey) == comparison.Equal {
 				continue
@@ -58,7 +49,7 @@ func mapData[KeyIn, ValueIn, KeyOut, ValueOut any](
 		firstIndex := lastIndex + 1
 		lastIndex = i - 1
 
-		validValues := mappedDataValues[firstIndex : lastIndex+1]
+		validValues := mappedData.values[firstIndex : lastIndex+1]
 		reducedValue := combiner(lastKey, validValues)
 
 		uniqueKeys = append(uniqueKeys, lastKey)

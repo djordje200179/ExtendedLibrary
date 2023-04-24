@@ -20,8 +20,7 @@ type Process[KeyIn, ValueIn, KeyOut, ValueOut any] struct {
 
 	mutex sync.Mutex
 
-	mappedDataKeys   []KeyOut
-	mappedDataValues []ValueOut
+	mappedData mappedData[KeyOut, ValueOut]
 
 	dataWriter   io.Writer
 	finishSignal sync.WaitGroup
@@ -44,6 +43,10 @@ func NewProcess[KeyIn, ValueIn, KeyOut, ValueOut any](
 
 		dataSource: dataSource,
 
+		mappedData: mappedData[KeyOut, ValueOut]{
+			keyComparator: keyComparator,
+		},
+
 		dataWriter: output,
 	}
 
@@ -60,7 +63,7 @@ func NewProcessWithOrderedKeys[KeyIn, ValueIn any, KeyOut constraints.Ordered, V
 
 func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) Run() {
 	process.mapData()
-	process.sortData()
+	sort.Sort(&process.mappedData)
 	process.reduceData()
 
 	process.finishSignal.Done()
@@ -69,13 +72,4 @@ func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) Run() {
 func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) WaitToFinish() {
 	process.finishSignal.Add(1)
 	process.finishSignal.Wait()
-}
-
-func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) sortData() {
-	comparator := func(i, j int) bool {
-		return process.keyComparator(process.mappedDataKeys[i], process.mappedDataKeys[j]) == comparison.FirstSmaller
-	}
-
-	sort.Slice(process.mappedDataValues, comparator)
-	sort.Slice(process.mappedDataKeys, comparator)
 }
