@@ -5,5 +5,4 @@ use (
 	./datastructures
 	./misc
 	./streams
-	./mapreduce
 )
