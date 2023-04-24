@@ -28,3 +28,44 @@ func (data *mappedData[KeyOut, ValueOut]) Swap(i, j int) {
 	data.keys[i], data.keys[j] = data.keys[j], data.keys[i]
 	data.values[i], data.values[j] = data.values[j], data.values[i]
 }
+
+func (data *mappedData[KeyOut, ValueOut]) Reduce(reducer Reducer[KeyOut, ValueOut]) ([]KeyOut, []ValueOut) {
+	if len(data.keys) == 0 {
+		return nil, nil
+	}
+
+	var uniqueKeys []KeyOut
+	var combinedValues []ValueOut
+
+	lastIndex := -1
+	for i := 1; i <= data.Len(); i++ {
+		lastKey := data.keys[i-1]
+
+		if i != data.Len() {
+			currentKey := data.keys[i]
+
+			if data.keyComparator(lastKey, currentKey) == comparison.Equal {
+				continue
+			}
+		}
+
+		firstIndex := lastIndex + 1
+		lastIndex = i - 1
+
+		if firstIndex == lastIndex {
+			value := data.values[firstIndex]
+			uniqueKeys = append(uniqueKeys, lastKey)
+			combinedValues = append(combinedValues, value)
+
+			continue
+		}
+
+		validValues := data.values[firstIndex : lastIndex+1]
+		reducedValue := reducer(lastKey, validValues)
+
+		uniqueKeys = append(uniqueKeys, lastKey)
+		combinedValues = append(combinedValues, reducedValue)
+	}
+
+	return uniqueKeys, combinedValues
+}

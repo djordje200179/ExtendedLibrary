@@ -25,9 +25,16 @@ func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) reduceData() {
 		firstIndex := lastIndex + 1
 		lastIndex = i - 1
 
-		validValues := process.mappedData.values[firstIndex : lastIndex+1]
 		barrier.Add(1)
 
+		if firstIndex == lastIndex {
+			value := process.mappedData.values[firstIndex]
+			go writeOnlyData(process.writeData, &barrier, lastKey, value)
+
+			continue
+		}
+
+		validValues := process.mappedData.values[firstIndex : lastIndex+1]
 		go reduceData(
 			process.reducer, process.finalizer,
 			process.writeData, &barrier,

@@ -14,7 +14,14 @@ func reduceData[KeyOut, ValueOut any](
 		reducedValue = finalizer(key, reducedValue)
 	}
 
-	write(key, reducedValue)
+	writeOnlyData(write, finishSignal, key, reducedValue)
+}
+
+func writeOnlyData[KeyOut, ValueOut any](
+	write func(key KeyOut, value ValueOut), finishSignal *sync.WaitGroup,
+	key KeyOut, value ValueOut,
+) {
+	write(key, value)
 
 	finishSignal.Done()
 }
