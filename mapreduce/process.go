@@ -5,7 +5,6 @@ import (
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 	"golang.org/x/exp/constraints"
 	"io"
-	"sort"
 	"sync"
 )
 
@@ -20,7 +19,8 @@ type Process[KeyIn, ValueIn, KeyOut, ValueOut any] struct {
 
 	mutex sync.Mutex
 
-	mappedData mappedData[KeyOut, ValueOut]
+	mappedKeys   []KeyOut
+	mappedValues []ValueOut
 
 	dataWriter   io.Writer
 	finishSignal sync.WaitGroup
@@ -43,10 +43,6 @@ func NewProcess[KeyIn, ValueIn, KeyOut, ValueOut any](
 
 		dataSource: dataSource,
 
-		mappedData: mappedData[KeyOut, ValueOut]{
-			keyComparator: keyComparator,
-		},
-
 		dataWriter: output,
 	}
 
@@ -63,7 +59,6 @@ func NewProcessWithOrderedKeys[KeyIn, ValueIn any, KeyOut constraints.Ordered, V
 
 func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) Run() {
 	process.mapData()
-	sort.Sort(&process.mappedData)
 	process.reduceData()
 
 	process.finishSignal.Done()

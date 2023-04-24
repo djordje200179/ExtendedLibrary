@@ -11,11 +11,11 @@ func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) reduceData() {
 	var barrier sync.WaitGroup
 
 	lastIndex := -1
-	for i := 1; i <= process.mappedData.Len(); i++ {
-		lastKey := process.mappedData.keys[i-1]
+	for i := 1; i <= len(process.mappedKeys); i++ {
+		lastKey := process.mappedKeys[i-1]
 
-		if i != process.mappedData.Len() {
-			currentKey := process.mappedData.keys[i]
+		if i != len(process.mappedKeys) {
+			currentKey := process.mappedKeys[i]
 
 			if process.keyComparator(lastKey, currentKey) == comparison.Equal {
 				continue
@@ -28,13 +28,13 @@ func (process *Process[KeyIn, ValueIn, KeyOut, ValueOut]) reduceData() {
 		barrier.Add(1)
 
 		if firstIndex == lastIndex {
-			value := process.mappedData.values[firstIndex]
+			value := process.mappedValues[firstIndex]
 			go writeOnlyData(process.writeData, &barrier, lastKey, value)
 
 			continue
 		}
 
-		validValues := process.mappedData.values[firstIndex : lastIndex+1]
+		validValues := process.mappedValues[firstIndex : lastIndex+1]
 		go reduceData(
 			process.reducer, process.finalizer,
 			process.writeData, &barrier,
