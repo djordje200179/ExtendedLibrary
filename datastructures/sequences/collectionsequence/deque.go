@@ -24,8 +24,12 @@ func From[T any](sequence collections.Collection[T]) Deque[T] {
 	return Deque[T]{sequence}
 }
 
-func Collector[T any]() streams.Collector[T, sequences.Queue[T]] {
+func ArrayCollector[T any]() streams.Collector[T, sequences.Queue[T]] {
 	return sequences.Collector[T, sequences.Queue[T]]{NewArrayDeque[T]()}
+}
+
+func LinkedListCollector[T any]() streams.Collector[T, sequences.Queue[T]] {
+	return sequences.Collector[T, sequences.Queue[T]]{NewLinkedListDeque[T]()}
 }
 
 func (deque Deque[T]) Empty() bool {
