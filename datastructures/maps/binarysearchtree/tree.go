@@ -219,10 +219,10 @@ func (tree *Tree[K, V]) Clone() maps.Map[K, V] {
 
 	cloned.root = tree.root.Clone()
 
-	nodesInOriginal := collectionsequence.NewDeque[*Node[K, V]]()
+	nodesInOriginal := collectionsequence.NewArrayDeque[*Node[K, V]]()
 	nodesInOriginal.PushBack(tree.root)
 
-	nodesInCloned := collectionsequence.NewDeque[*Node[K, V]]()
+	nodesInCloned := collectionsequence.NewArrayDeque[*Node[K, V]]()
 	nodesInCloned.PushBack(cloned.root)
 
 	for !nodesInOriginal.Empty() {

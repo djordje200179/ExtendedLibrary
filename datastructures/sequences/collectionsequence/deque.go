@@ -3,6 +3,7 @@ package collectionsequence
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/collections/array"
+	"github.com/djordje200179/extendedlibrary/datastructures/collections/linkedlist"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
@@ -11,8 +12,12 @@ type Deque[T any] struct {
 	collection collections.Collection[T]
 }
 
-func NewDeque[T any]() Deque[T] {
+func NewArrayDeque[T any]() Deque[T] {
 	return Deque[T]{array.New[T]()}
+}
+
+func NewLinkedListDeque[T any]() Deque[T] {
+	return Deque[T]{linkedlist.New[T]()}
 }
 
 func From[T any](sequence collections.Collection[T]) Deque[T] {
@@ -20,7 +25,7 @@ func From[T any](sequence collections.Collection[T]) Deque[T] {
 }
 
 func Collector[T any]() streams.Collector[T, sequences.Queue[T]] {
-	return sequences.Collector[T, sequences.Queue[T]]{NewDeque[T]()}
+	return sequences.Collector[T, sequences.Queue[T]]{NewArrayDeque[T]()}
 }
 
 func (deque Deque[T]) Empty() bool {
