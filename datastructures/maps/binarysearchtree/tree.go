@@ -28,7 +28,7 @@ func New[K comparable, V any](comparator functions.Comparator[K]) *Tree[K, V] {
 }
 
 func NewWithOrderedKeys[K constraints.Ordered, V any]() *Tree[K, V] {
-	return New[K, V](comparison.Ascending[K])
+	return New[K, V](comparison.Compare[K])
 }
 
 func Collector[K comparable, V any](comparator functions.Comparator[K]) streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {

@@ -2,7 +2,7 @@ package comparison
 
 import "golang.org/x/exp/constraints"
 
-func Ascending[T constraints.Ordered](a, b T) Result {
+func Compare[T constraints.Ordered](a, b T) Result {
 	switch {
 	case a < b:
 		return FirstSmaller
@@ -13,7 +13,7 @@ func Ascending[T constraints.Ordered](a, b T) Result {
 	}
 }
 
-func Descending[T constraints.Ordered](a, b T) Result {
+func ReverseCompare[T constraints.Ordered](a, b T) Result {
 	switch {
 	case a < b:
 		return FirstBigger
