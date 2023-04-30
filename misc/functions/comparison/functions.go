@@ -23,3 +23,11 @@ func ReverseCompare[T constraints.Ordered](a, b T) Result {
 		return Equal
 	}
 }
+
+func Ascending[T constraints.Ordered](a, b T) Result {
+	return Compare(a, b)
+}
+
+func Descending[T constraints.Ordered](a, b T) Result {
+	return ReverseCompare(a, b)
+}
