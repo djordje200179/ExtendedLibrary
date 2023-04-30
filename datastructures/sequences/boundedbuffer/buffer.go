@@ -30,7 +30,3 @@ func (buffer Buffer[T]) PushBack(value T) {
 func (buffer Buffer[T]) PopFront() T {
 	return <-buffer
 }
-
-func (buffer Buffer[T]) PeekFront() T {
-	panic("Peeking value from bounded buffer is not supported")
-}
