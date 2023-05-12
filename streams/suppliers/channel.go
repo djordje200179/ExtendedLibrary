@@ -2,15 +2,16 @@ package suppliers
 
 import (
 	"github.com/djordje200179/extendedlibrary/misc/optional"
+	"github.com/djordje200179/extendedlibrary/streams"
 )
 
-type Channel[T any] <-chan T
+func Channel[T any](channel <-chan T) streams.Supplier[T] {
+	return func() optional.Optional[T] {
+		data, ok := <-channel
 
-func (supplier Channel[T]) Supply() optional.Optional[T] {
-	data, ok := <-supplier
-
-	return optional.Optional[T]{
-		Value: data,
-		Valid: ok,
+		return optional.Optional[T]{
+			Value: data,
+			Valid: ok,
+		}
 	}
 }

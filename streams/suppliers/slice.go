@@ -2,14 +2,25 @@ package suppliers
 
 import (
 	"github.com/djordje200179/extendedlibrary/misc/optional"
+	"github.com/djordje200179/extendedlibrary/streams"
 )
 
-type sliceSupplier[T any] struct {
+type sliceIterator[T any] struct {
 	slice []T
 	index int
 }
 
-func (supplier *sliceSupplier[T]) NextValue() optional.Optional[T] {
+func SliceValues[T any](slice []T) streams.Supplier[T] {
+	iterator := sliceIterator[T]{slice, 0}
+	return iterator.nextValue
+}
+
+func SliceRefs[T any](slice []T) streams.Supplier[*T] {
+	iterator := sliceIterator[T]{slice, 0}
+	return iterator.nextRef
+}
+
+func (supplier *sliceIterator[T]) nextValue() optional.Optional[T] {
 	if supplier.index >= len(supplier.slice) {
 		return optional.Empty[T]()
 	}
@@ -19,7 +30,7 @@ func (supplier *sliceSupplier[T]) NextValue() optional.Optional[T] {
 	return optional.FromValue(curr)
 }
 
-func (supplier *sliceSupplier[T]) NextRef() optional.Optional[*T] {
+func (supplier *sliceIterator[T]) nextRef() optional.Optional[*T] {
 	if supplier.index >= len(supplier.slice) {
 		return optional.Empty[*T]()
 	}
@@ -27,14 +38,4 @@ func (supplier *sliceSupplier[T]) NextRef() optional.Optional[*T] {
 	curr := &supplier.slice[supplier.index]
 	supplier.index++
 	return optional.FromValue(curr)
-}
-
-func Slice[T any](slice []T) Supplier[T] {
-	supplier := sliceSupplier[T]{slice, 0}
-	return FunctionSupplier[T](supplier.NextValue)
-}
-
-func SliceRefs[T any](slice []T) Supplier[*T] {
-	supplier := sliceSupplier[T]{slice, 0}
-	return FunctionSupplier[*T](supplier.NextRef)
 }

@@ -2,28 +2,22 @@ package suppliers
 
 import (
 	"github.com/djordje200179/extendedlibrary/misc/optional"
+	"github.com/djordje200179/extendedlibrary/streams"
 )
 
-type FunctionSupplier[T any] func() optional.Optional[T]
-
-func (supplier FunctionSupplier[T]) Supply() optional.Optional[T] {
-	return supplier()
+func Infinite[T any](generator func() T) streams.Supplier[T] {
+	return func() optional.Optional[T] {
+		return optional.FromValue(generator())
+	}
 }
 
-func Infinite[T any](generator func() T) Supplier[T] {
-	return FunctionSupplier[T](func() optional.Optional[T] {
-		return optional.FromValue[T](generator())
-	})
-}
-
-func Range(lower, upper int) Supplier[int] {
-	return FunctionSupplier[int](func() optional.Optional[int] {
+func Range(lower, upper int) streams.Supplier[int] {
+	return func() optional.Optional[int] {
 		if lower < upper {
-			curr := lower
 			lower++
-			return optional.FromValue(curr)
-		} else {
-			return optional.Empty[int]()
+			return optional.FromValue(lower - 1)
 		}
-	})
+
+		return optional.Empty[int]()
+	}
 }

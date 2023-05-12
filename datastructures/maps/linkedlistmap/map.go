@@ -7,6 +7,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/misc"
+	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
@@ -140,13 +141,11 @@ func (m *Map[K, V]) ModifyingIterator() maps.Iterator[K, V] {
 }
 
 func (m *Map[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
-	supplier := iterable.IteratorSupplier[misc.Pair[K, V]]{m.Iterator()}
-	return streams.Stream[misc.Pair[K, V]]{supplier}
+	return iterable.IteratorStream(m.Iterator())
 }
 
 func (m *Map[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] {
-	supplier := maps.RefsSupplier[K, V]{m.ModifyingIterator()}
-	return streams.Stream[misc.Pair[K, *V]]{supplier}
+	return maps.RefsStream[K, V](m)
 }
 
 func (m *Map[K, V]) List() *linkedlist.List[misc.Pair[K, V]] {

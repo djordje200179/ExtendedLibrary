@@ -6,6 +6,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/streams"
+	"github.com/djordje200179/extendedlibrary/streams/suppliers"
 	stdmaps "golang.org/x/exp/maps"
 	"unsafe"
 )
@@ -127,12 +128,12 @@ func (hashmap Map[K, V]) ModifyingIterator() maps.Iterator[K, V] {
 }
 
 func (hashmap Map[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
-	return streams.FromMap[K, V](hashmap)
+	supplier := suppliers.Map(hashmap)
+	return streams.New(supplier)
 }
 
 func (hashmap Map[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] {
-	supplier := maps.RefsSupplier[K, V]{hashmap.ModifyingIterator()}
-	return streams.Stream[misc.Pair[K, *V]]{supplier}
+	return maps.RefsStream[K, V](hashmap)
 }
 
 func (hashmap Map[K, V]) Map() map[K]V {

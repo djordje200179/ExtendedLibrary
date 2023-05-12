@@ -5,6 +5,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 	"github.com/djordje200179/extendedlibrary/streams"
+	"github.com/djordje200179/extendedlibrary/streams/suppliers"
 	"sort"
 )
 
@@ -161,11 +162,13 @@ func (array *Array[T]) ModifyingIterator() collections.Iterator[T] {
 }
 
 func (array *Array[T]) Stream() streams.Stream[T] {
-	return streams.FromSlice(array.Slice())
+	supplier := suppliers.SliceValues(array.Slice())
+	return streams.New(supplier)
 }
 
 func (array *Array[T]) RefStream() streams.Stream[*T] {
-	return streams.FromSliceRefs(array.Slice())
+	supplier := suppliers.SliceRefs(array.Slice())
+	return streams.New(supplier)
 }
 
 func (array *Array[T]) Slice() []T {

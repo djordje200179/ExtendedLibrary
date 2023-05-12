@@ -6,6 +6,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences/collectionsequence"
 	"github.com/djordje200179/extendedlibrary/misc"
+	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 	"github.com/djordje200179/extendedlibrary/streams"
 	"golang.org/x/exp/constraints"
@@ -251,13 +252,11 @@ func (tree *Tree[K, V]) ModifyingIterator() maps.Iterator[K, V] {
 }
 
 func (tree *Tree[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
-	supplier := iterable.IteratorSupplier[misc.Pair[K, V]]{tree.Iterator()}
-	return streams.Stream[misc.Pair[K, V]]{supplier}
+	return iterable.IteratorStream(tree.Iterator())
 }
 
 func (tree *Tree[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] {
-	supplier := maps.RefsSupplier[K, V]{tree.ModifyingIterator()}
-	return streams.Stream[misc.Pair[K, *V]]{supplier}
+	return maps.RefsStream[K, V](tree)
 }
 
 func (tree *Tree[K, V]) Root() *Node[K, V] {

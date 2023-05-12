@@ -229,13 +229,11 @@ func (list *List[T]) ModifyingIterator() collections.Iterator[T] {
 }
 
 func (list *List[T]) Stream() streams.Stream[T] {
-	supplier := iterable.IteratorSupplier[T]{list.Iterator()}
-	return streams.Stream[T]{supplier}
+	return iterable.IteratorStream(list.Iterator())
 }
 
 func (list *List[T]) RefStream() streams.Stream[*T] {
-	supplier := collections.RefsSupplier[T]{list.ModifyingIterator()}
-	return streams.Stream[*T]{supplier}
+	return collections.RefsStream(list.ModifyingIterator())
 }
 
 func (list *List[T]) Head() *Node[T] {
