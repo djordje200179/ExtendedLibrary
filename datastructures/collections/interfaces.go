@@ -42,5 +42,5 @@ type Collection[T any] interface {
 	iterable.Iterable[T]
 	ModifyingIterator() Iterator[T]
 	streams.Streamer[T]
-	RefStream() streams.Stream[*T]
+	RefsStream() streams.Stream[*T]
 }

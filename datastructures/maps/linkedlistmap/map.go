@@ -144,7 +144,7 @@ func (m *Map[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
 	return iterable.IteratorStream(m.Iterator())
 }
 
-func (m *Map[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] {
+func (m *Map[K, V]) RefsStream() streams.Stream[misc.Pair[K, *V]] {
 	return maps.RefsStream[K, V](m)
 }
 

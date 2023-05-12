@@ -255,7 +255,7 @@ func (tree *Tree[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
 	return iterable.IteratorStream(tree.Iterator())
 }
 
-func (tree *Tree[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] {
+func (tree *Tree[K, V]) RefsStream() streams.Stream[misc.Pair[K, *V]] {
 	return maps.RefsStream[K, V](tree)
 }
 

@@ -140,8 +140,8 @@ func (wrapper *Wrapper[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
 	return wrapper.m.Stream()
 }
 
-func (wrapper *Wrapper[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] {
-	return wrapper.m.RefStream()
+func (wrapper *Wrapper[K, V]) RefsStream() streams.Stream[misc.Pair[K, *V]] {
+	return wrapper.m.RefsStream()
 }
 
 func (wrapper *Wrapper[K, V]) Transaction(updateFunction func(m maps.Map[K, V])) {

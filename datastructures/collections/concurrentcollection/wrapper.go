@@ -139,8 +139,8 @@ func (wrapper *Wrapper[T]) Stream() streams.Stream[T] {
 	return wrapper.collection.Stream()
 }
 
-func (wrapper *Wrapper[T]) RefStream() streams.Stream[*T] {
-	return wrapper.collection.RefStream()
+func (wrapper *Wrapper[T]) RefsStream() streams.Stream[*T] {
+	return wrapper.collection.RefsStream()
 }
 
 func (wrapper *Wrapper[T]) Transaction(updateFunction func(collection collections.Collection[T])) {

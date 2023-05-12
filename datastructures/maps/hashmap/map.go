@@ -132,7 +132,7 @@ func (hashmap Map[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
 	return streams.New(supplier)
 }
 
-func (hashmap Map[K, V]) RefStream() streams.Stream[misc.Pair[K, *V]] {
+func (hashmap Map[K, V]) RefsStream() streams.Stream[misc.Pair[K, *V]] {
 	return maps.RefsStream[K, V](hashmap)
 }
 

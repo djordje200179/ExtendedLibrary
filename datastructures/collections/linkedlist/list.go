@@ -232,7 +232,7 @@ func (list *List[T]) Stream() streams.Stream[T] {
 	return iterable.IteratorStream(list.Iterator())
 }
 
-func (list *List[T]) RefStream() streams.Stream[*T] {
+func (list *List[T]) RefsStream() streams.Stream[*T] {
 	return collections.RefsStream(list.ModifyingIterator())
 }
 

@@ -166,7 +166,7 @@ func (array *Array[T]) Stream() streams.Stream[T] {
 	return streams.New(supplier)
 }
 
-func (array *Array[T]) RefStream() streams.Stream[*T] {
+func (array *Array[T]) RefsStream() streams.Stream[*T] {
 	supplier := suppliers.SliceRefs(array.Slice())
 	return streams.New(supplier)
 }
