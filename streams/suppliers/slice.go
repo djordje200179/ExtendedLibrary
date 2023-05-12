@@ -31,10 +31,10 @@ func (supplier *sliceSupplier[T]) NextRef() optional.Optional[*T] {
 
 func Slice[T any](slice []T) Supplier[T] {
 	supplier := sliceSupplier[T]{slice, 0}
-	return Function[T](supplier.NextValue)
+	return FunctionSupplier[T](supplier.NextValue)
 }
 
 func SliceRefs[T any](slice []T) Supplier[*T] {
 	supplier := sliceSupplier[T]{slice, 0}
-	return Function[*T](supplier.NextRef)
+	return FunctionSupplier[*T](supplier.NextRef)
 }

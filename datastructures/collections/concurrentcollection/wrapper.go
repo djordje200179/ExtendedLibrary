@@ -3,7 +3,7 @@ package concurrentcollection
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
-	"github.com/djordje200179/extendedlibrary/misc/functions"
+	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 	"github.com/djordje200179/extendedlibrary/streams"
 	"sync"
 )
@@ -105,7 +105,7 @@ func (wrapper *Wrapper[T]) Swap(index1, index2 int) {
 	wrapper.collection.Swap(index1, index2)
 }
 
-func (wrapper *Wrapper[T]) Sort(comparator functions.Comparator[T]) {
+func (wrapper *Wrapper[T]) Sort(comparator comparison.Comparator[T]) {
 	wrapper.mutex.Lock()
 	defer wrapper.mutex.Unlock()
 

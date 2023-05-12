@@ -1,6 +1,8 @@
-package functions
+package predication
 
-type Predictor[T any] Mapper[T, bool]
+import "github.com/djordje200179/extendedlibrary/misc/functions"
+
+type Predictor[T any] functions.Mapper[T, bool]
 
 func (p Predictor[T]) And(other Predictor[T]) Predictor[T] {
 	return func(value T) bool {

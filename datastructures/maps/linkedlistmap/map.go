@@ -44,7 +44,7 @@ func (m *Map[K, V]) Get(key K) V {
 }
 
 func (m *Map[K, V]) GetOrDefault(key K) V {
-	return m.GetOrElse(key, misc.Zero[V]())
+	return m.GetOrElse(key, functions.Zero[V]())
 }
 
 func (m *Map[K, V]) GetOrElse(key K, value V) V {

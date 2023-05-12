@@ -3,6 +3,7 @@ package streams
 import (
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
+	"github.com/djordje200179/extendedlibrary/misc/functions/predication"
 	"github.com/djordje200179/extendedlibrary/misc/optional"
 	"github.com/djordje200179/extendedlibrary/streams/suppliers"
 	"sort"
@@ -20,7 +21,7 @@ func Map[T, U any](stream Stream[T], mapper functions.Mapper[T, U]) Stream[U] {
 	return FromFiniteGenerator(generator)
 }
 
-func (stream Stream[T]) Filter(predictor functions.Predictor[T]) Stream[T] {
+func (stream Stream[T]) Filter(predictor predication.Predictor[T]) Stream[T] {
 	generator := func() optional.Optional[T] {
 		for elem := stream.Supplier.Supply(); elem.Valid; elem = stream.Supplier.Supply() {
 			if predictor(elem.Value) {
@@ -59,7 +60,7 @@ func (stream Stream[T]) Seek(count int) Stream[T] {
 	return FromFiniteGenerator(generator)
 }
 
-func (stream Stream[T]) Sort(comparator functions.Comparator[T]) Stream[T] {
+func (stream Stream[T]) Sort(comparator comparison.Comparator[T]) Stream[T] {
 	var sortedSlice []T
 	var sortedSupplier suppliers.Supplier[T]
 

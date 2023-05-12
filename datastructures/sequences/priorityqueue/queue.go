@@ -2,7 +2,6 @@ package priorityqueue
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences"
-	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
@@ -10,10 +9,10 @@ import (
 type Queue[T any] struct {
 	slice []T
 
-	comparator functions.Comparator[T]
+	comparator comparison.Comparator[T]
 }
 
-func New[T any](comparator functions.Comparator[T]) *Queue[T] {
+func New[T any](comparator comparison.Comparator[T]) *Queue[T] {
 	pq := &Queue[T]{
 		slice: make([]T, 0),
 
@@ -23,7 +22,7 @@ func New[T any](comparator functions.Comparator[T]) *Queue[T] {
 	return pq
 }
 
-func Collector[T any](comparator functions.Comparator[T]) streams.Collector[T, *Queue[T]] {
+func Collector[T any](comparator comparison.Comparator[T]) streams.Collector[T, *Queue[T]] {
 	return sequences.Collector[T, *Queue[T]]{New[T](comparator)}
 }
 

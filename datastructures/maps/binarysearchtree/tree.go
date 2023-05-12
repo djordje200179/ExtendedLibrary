@@ -6,7 +6,6 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/datastructures/sequences/collectionsequence"
 	"github.com/djordje200179/extendedlibrary/misc"
-	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 	"github.com/djordje200179/extendedlibrary/streams"
 	"golang.org/x/exp/constraints"
@@ -16,10 +15,10 @@ type Tree[K comparable, V any] struct {
 	root  *Node[K, V]
 	nodes int
 
-	comparator functions.Comparator[K]
+	comparator comparison.Comparator[K]
 }
 
-func New[K comparable, V any](comparator functions.Comparator[K]) *Tree[K, V] {
+func New[K comparable, V any](comparator comparison.Comparator[K]) *Tree[K, V] {
 	tree := &Tree[K, V]{
 		comparator: comparator,
 	}
@@ -31,7 +30,7 @@ func NewWithOrderedKeys[K constraints.Ordered, V any]() *Tree[K, V] {
 	return New[K, V](comparison.Ascending[K])
 }
 
-func Collector[K comparable, V any](comparator functions.Comparator[K]) streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
+func Collector[K comparable, V any](comparator comparison.Comparator[K]) streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
 	return maps.Collector[K, V]{New[K, V](comparator)}
 }
 
@@ -63,7 +62,7 @@ func (tree *Tree[K, V]) Get(key K) V {
 }
 
 func (tree *Tree[K, V]) GetOrDefault(key K) V {
-	return tree.GetOrElse(key, misc.Zero[V]())
+	return tree.GetOrElse(key, functions.Zero[V]())
 }
 
 func (tree *Tree[K, V]) GetOrElse(key K, value V) V {

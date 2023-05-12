@@ -13,17 +13,9 @@ checking for `nil` value, but that approach increases number of
 memory indirections and risks null pointer dereference.
 
 ## Functions
-This package provides a set of common function types.
+This package provides a set of common function and function types.
 Some of them were created just for my own needs, but most of them
 are needed for "every day" programming (predictors, comparators, etc).
 
-### Comparison
-Package needed for my other packages, but it may be useful for you too.
-It provides support for comparing two values of the same type (those 
-that don't implement built-in `orderable` interface).
-
 ## Pair
 Simple generic type that holds two values of any type.
-
-## Zero
-Simple generic function that returns zero value of any type.

@@ -1,34 +1,35 @@
 package comparison
 
-type Result uint8
-
-const (
-	FirstBigger Result = 1 << iota
-	Equal
-	SecondBigger
-
-	FirstSmaller  = SecondBigger
-	SecondSmaller = FirstBigger
+import (
+	"golang.org/x/exp/constraints"
 )
 
-func FromInt(result int) Result {
+func Compare[T constraints.Ordered](a, b T) Result {
 	switch {
-	case result > 0:
-		return SecondBigger
-	case result < 0:
-		return FirstBigger
+	case a < b:
+		return FirstSmaller
+	case a > b:
+		return SecondSmaller
 	default:
 		return Equal
 	}
 }
 
-func (r Result) Int() int {
-	switch r {
-	case FirstBigger:
-		return -1
-	case SecondBigger:
-		return 1
+func ReverseCompare[T constraints.Ordered](a, b T) Result {
+	switch {
+	case a < b:
+		return FirstBigger
+	case a > b:
+		return SecondBigger
 	default:
-		return 0
+		return Equal
 	}
+}
+
+func Ascending[T constraints.Ordered](a, b T) Result {
+	return Compare(a, b)
+}
+
+func Descending[T constraints.Ordered](a, b T) Result {
+	return ReverseCompare(a, b)
 }

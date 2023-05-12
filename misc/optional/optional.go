@@ -1,6 +1,9 @@
 package optional
 
-import "github.com/djordje200179/extendedlibrary/misc/functions"
+import (
+	"github.com/djordje200179/extendedlibrary/misc/functions"
+	"github.com/djordje200179/extendedlibrary/misc/functions/predication"
+)
 
 type Optional[T any] struct {
 	Value T
@@ -46,7 +49,7 @@ func Map[T any, P any](o Optional[T], mapper functions.Mapper[T, P]) Optional[P]
 	}
 }
 
-func (o Optional[T]) Filter(predicate functions.Predictor[T]) Optional[T] {
+func (o Optional[T]) Filter(predicate predication.Predictor[T]) Optional[T] {
 	if o.Valid && predicate(o.Value) {
 		return o
 	} else {

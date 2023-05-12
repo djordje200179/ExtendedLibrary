@@ -1,11 +1,10 @@
 package linkedlist
 
 import (
-	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 )
 
-func (list *List[T]) Sort(comparator functions.Comparator[T]) {
+func (list *List[T]) Sort(comparator comparison.Comparator[T]) {
 	if list == nil || list.head == nil || list.head.next == nil {
 		return
 	}
@@ -18,7 +17,7 @@ func (list *List[T]) Sort(comparator functions.Comparator[T]) {
 	sortedMerge(firstList, secondList, list, comparator)
 }
 
-func sortedMerge[T any](firstList, secondList, resultList *List[T], comparator functions.Comparator[T]) {
+func sortedMerge[T any](firstList, secondList, resultList *List[T], comparator comparison.Comparator[T]) {
 	if firstList == nil {
 		*resultList = *secondList
 	}
@@ -33,7 +32,7 @@ func sortedMerge[T any](firstList, secondList, resultList *List[T], comparator f
 	secondListCurr := secondList.head
 
 	for firstListCurr != nil && secondListCurr != nil {
-		if comparator(firstListCurr.Value, secondListCurr.Value) == comparison.FirstSmaller {
+		if comparator(firstListCurr.Value, secondListCurr.Value) == comparator.FirstSmaller {
 			resultList.Append(firstListCurr.Value)
 			firstListCurr = firstListCurr.next
 		} else {

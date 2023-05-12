@@ -3,8 +3,6 @@ package streams
 import (
 	"bufio"
 	"github.com/djordje200179/extendedlibrary/misc"
-	"github.com/djordje200179/extendedlibrary/misc/functions"
-	"github.com/djordje200179/extendedlibrary/misc/optional"
 	"github.com/djordje200179/extendedlibrary/streams/suppliers"
 	"io"
 )
@@ -51,13 +49,13 @@ func FromMap[K comparable, V any](m map[K]V) Stream[misc.Pair[K, V]] {
 	}
 }
 
-func FromFiniteGenerator[T any](generator functions.EmptyGenerator[optional.Optional[T]]) Stream[T] {
+func FromFiniteGenerator[T any](generator suppliers.FunctionSupplier[T]) Stream[T] {
 	return Stream[T]{
-		Supplier: suppliers.Function[T](generator),
+		Supplier: generator,
 	}
 }
 
-func FromInfiniteGenerator[T any](generator functions.EmptyGenerator[T]) Stream[T] {
+func FromInfiniteGenerator[T any](generator func() T) Stream[T] {
 	return Stream[T]{
 		Supplier: suppliers.Infinite(generator),
 	}

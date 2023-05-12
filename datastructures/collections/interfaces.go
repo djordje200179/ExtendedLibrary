@@ -3,7 +3,7 @@ package collections
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/misc"
-	"github.com/djordje200179/extendedlibrary/misc/functions"
+	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
@@ -34,7 +34,7 @@ type Collection[T any] interface {
 	Clear()
 	Reverse()
 	Swap(index1, index2 int)
-	Sort(comparator functions.Comparator[T])
+	Sort(comparator comparison.Comparator[T])
 	Join(other Collection[T])
 
 	misc.Cloner[Collection[T]]

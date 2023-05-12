@@ -3,7 +3,6 @@ package array
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
-	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 	"github.com/djordje200179/extendedlibrary/streams"
 	"sort"
@@ -127,7 +126,7 @@ func (array *Array[T]) Swap(index1, index2 int) {
 	array.Slice()[index1], array.Slice()[index2] = array.Slice()[index2], array.Slice()[index1]
 }
 
-func (array *Array[T]) Sort(comparator functions.Comparator[T]) {
+func (array *Array[T]) Sort(comparator comparison.Comparator[T]) {
 	sort.SliceStable(array.Slice(), func(i, j int) bool {
 		return comparator(array.Slice()[i], array.Slice()[j]) == comparison.FirstSmaller
 	})
