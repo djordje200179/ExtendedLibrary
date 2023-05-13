@@ -85,3 +85,42 @@ func (stream Stream[T]) Sort(comparator comparison.Comparator[T]) Stream[T] {
 
 	return Stream[T]{generator}
 }
+
+func Window[T any](stream Stream[T], width int) Stream[[]T] {
+	var window []T
+
+	generator := func() optional.Optional[[]T] {
+		if window == nil {
+			window = make([]T, width)
+			i := 0
+			for ; i < width; i++ {
+				elem := stream.supplier()
+				if !elem.Valid {
+					break
+				}
+
+				window[i] = elem.Value
+			}
+
+			if i == width {
+				return optional.FromValue(window)
+			} else {
+				return optional.Empty[[]T]()
+			}
+		} else {
+			for i := 0; i < width-1; i++ {
+				window[i] = window[i+1]
+			}
+
+			if elem := stream.supplier(); elem.Valid {
+				window[width-1] = elem.Value
+				return optional.FromValue(window)
+			} else {
+				return optional.Empty[[]T]()
+			}
+
+		}
+	}
+
+	return Stream[[]T]{generator}
+}

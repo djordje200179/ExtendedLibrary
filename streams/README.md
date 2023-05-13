@@ -26,6 +26,7 @@ There are methods that you can use to transform the stream:
 - `Limit(count int) Stream[T]`
 - `Seek(count int) Stream[T]`
 - `Sort(comparator functions.Comparator[T]) Stream[T]`
+- `Window(width int) Stream[[]T]`
 
 ## Terminals
 After you have transformed the stream, you can use terminal methods
@@ -59,3 +60,6 @@ stream.Map(mapFunc)
 //You should use
 streams.Map(stream, mapFunc)
 ```
+
+Also, because of cyclic generic instantiations, some methods (like `Window`)
+are also functions that accept the stream as first argument.
