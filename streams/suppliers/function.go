@@ -3,6 +3,7 @@ package suppliers
 import (
 	"github.com/djordje200179/extendedlibrary/misc/optional"
 	"github.com/djordje200179/extendedlibrary/streams"
+	"golang.org/x/exp/constraints"
 )
 
 func Infinite[T any](generator func() T) streams.Supplier[T] {
@@ -11,13 +12,18 @@ func Infinite[T any](generator func() T) streams.Supplier[T] {
 	}
 }
 
-func Range(lower, upper int) streams.Supplier[int] {
-	return func() optional.Optional[int] {
+func Range[T constraints.Integer | constraints.Float](lower, upper T) streams.Supplier[T] {
+	return RangeWithIncrement(lower, upper, 1)
+}
+
+func RangeWithIncrement[T constraints.Integer | constraints.Float](lower, upper, increment T) streams.Supplier[T] {
+	return func() optional.Optional[T] {
 		if lower < upper {
-			lower++
-			return optional.FromValue(lower - 1)
+			old := lower
+			lower += increment
+			return optional.FromValue(old)
 		}
 
-		return optional.Empty[int]()
+		return optional.Empty[T]()
 	}
 }
