@@ -25,9 +25,9 @@ func Reduce[T, P any](stream Stream[T], accumulator P, reducer Reducer[T, P]) P 
 	return acc
 }
 
-func (stream Stream[T]) Any(predictor predication.Predictor[T]) bool {
+func (stream Stream[T]) Any(predicate predication.Predicate[T]) bool {
 	for elem := stream.supplier(); elem.Valid; elem = stream.supplier() {
-		if predictor(elem.Value) {
+		if predicate(elem.Value) {
 			return true
 		}
 	}
@@ -35,9 +35,9 @@ func (stream Stream[T]) Any(predictor predication.Predictor[T]) bool {
 	return false
 }
 
-func (stream Stream[T]) All(predictor predication.Predictor[T]) bool {
+func (stream Stream[T]) All(predicate predication.Predicate[T]) bool {
 	for elem := stream.supplier(); elem.Valid; elem = stream.supplier() {
-		if !predictor(elem.Value) {
+		if !predicate(elem.Value) {
 			return false
 		}
 	}
@@ -105,8 +105,8 @@ func (stream Stream[T]) First() optional.Optional[T] {
 	return stream.supplier()
 }
 
-func (stream Stream[T]) Find(predictor predication.Predictor[T]) optional.Optional[T] {
-	return stream.Filter(predictor).First()
+func (stream Stream[T]) Find(predicate predication.Predicate[T]) optional.Optional[T] {
+	return stream.Filter(predicate).First()
 }
 
 func (stream Stream[T]) Channel() <-chan T {

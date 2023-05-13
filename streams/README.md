@@ -22,7 +22,7 @@ You can create a stream in multiple ways:
 ## Intermediates
 There are methods that you can use to transform the stream:
 - `Map(mapper functions.Mapper[T, U]) Stream[U]`
-- `Filter(predictor functions.Predictor[T]) Stream[T]`
+- `Filter(predicate functions.predicate[T]) Stream[T]`
 - `Limit(count int) Stream[T]`
 - `Seek(count int) Stream[T]`
 - `Sort(comparator functions.Comparator[T]) Stream[T]`
@@ -33,14 +33,14 @@ After you have transformed the stream, you can use terminal methods
 to process values in the stream and get the result that you wanted:
 - `ForEach(function functions.ParamCallback[T])`
 - `Reduce(accumulator P, reducer functions.Reducer[T, P]) P`
-- `Any(predictor functions.Predictor[T]) bool`
-- `All(predictor functions.Predictor[T]) bool`
+- `Any(predicate functions.predicate[T]) bool`
+- `All(predicate functions.predicate[T]) bool`
 - `Collect[T, R any](collector Collector[T, R]) R`
 - `Count() int`
 - `Max(comparator functions.Comparator[T]) optional.Optional[T]`
 - `Min(comparator functions.Comparator[T]) optional.Optional[T]`
 - `First() optional.Optional[T]`
-- `Find(predictor functions.Predictor[T]) optional.Optional[T]`
+- `Find(predicate functions.predicate[T]) optional.Optional[T]`
 
 Because streams are very similar to built-in channels, there is
 a method for converting the stream into a channel:

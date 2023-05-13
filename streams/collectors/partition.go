@@ -9,15 +9,15 @@ import (
 type partitionCollector[T any] struct {
 	falseElements, trueElements []T
 
-	predictor predication.Predictor[T]
+	predicate predication.Predicate[T]
 }
 
-func Partition[T any](predictor predication.Predictor[T]) streams.Collector[T, misc.Pair[[]T, []T]] {
-	return partitionCollector[T]{predictor: predictor}
+func Partition[T any](predicate predication.Predicate[T]) streams.Collector[T, misc.Pair[[]T, []T]] {
+	return partitionCollector[T]{predicate: predicate}
 }
 
 func (collector partitionCollector[T]) Supply(value T) {
-	if collector.predictor(value) {
+	if collector.predicate(value) {
 		collector.trueElements = append(collector.trueElements, value)
 	} else {
 		collector.falseElements = append(collector.falseElements, value)

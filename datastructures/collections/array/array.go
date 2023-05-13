@@ -173,8 +173,8 @@ func (array *Array[T]) RefsStream() streams.Stream[*T] {
 	return streams.New(supplier)
 }
 
-func (array *Array[T]) FindIndex(predictor predication.Predictor[T]) (int, bool) {
-	index := slices.IndexFunc(array.Slice(), predictor)
+func (array *Array[T]) FindIndex(predicate predication.Predicate[T]) (int, bool) {
+	index := slices.IndexFunc(array.Slice(), predicate)
 	if index == -1 {
 		return 0, false
 	}

@@ -237,9 +237,9 @@ func (list *List[T]) RefsStream() streams.Stream[*T] {
 	return collections.RefsStream(list.ModifyingIterator())
 }
 
-func (list *List[T]) FindIndex(predictor predication.Predictor[T]) (int, bool) {
+func (list *List[T]) FindIndex(predicate predication.Predicate[T]) (int, bool) {
 	for curr, i := list.head, 0; curr != nil; curr, i = curr.next, i+1 {
-		if predictor(curr.Value) {
+		if predicate(curr.Value) {
 			return i, true
 		}
 	}
@@ -247,9 +247,9 @@ func (list *List[T]) FindIndex(predictor predication.Predictor[T]) (int, bool) {
 	return -1, false
 }
 
-func (list *List[T]) FindNode(predictor predication.Predictor[T]) (*Node[T], bool) {
+func (list *List[T]) FindNode(predicate predication.Predicate[T]) (*Node[T], bool) {
 	for curr := list.head; curr != nil; curr = curr.next {
-		if predictor(curr.Value) {
+		if predicate(curr.Value) {
 			return curr, true
 		}
 	}

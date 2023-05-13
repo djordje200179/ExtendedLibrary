@@ -20,10 +20,10 @@ func Map[T, U any](stream Stream[T], mapper functions.Mapper[T, U]) Stream[U] {
 	return Stream[U]{generator}
 }
 
-func (stream Stream[T]) Filter(predictor predication.Predictor[T]) Stream[T] {
+func (stream Stream[T]) Filter(predicate predication.Predicate[T]) Stream[T] {
 	generator := func() optional.Optional[T] {
 		for elem := stream.supplier(); elem.Valid; elem = stream.supplier() {
-			if predictor(elem.Value) {
+			if predicate(elem.Value) {
 				return optional.FromValue(elem.Value)
 			}
 		}

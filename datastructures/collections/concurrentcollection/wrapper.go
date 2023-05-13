@@ -144,7 +144,7 @@ func (wrapper *Wrapper[T]) RefsStream() streams.Stream[*T] {
 	return wrapper.collection.RefsStream()
 }
 
-func (wrapper *Wrapper[T]) FindIndex(predicate predication.Predictor[T]) (int, bool) {
+func (wrapper *Wrapper[T]) FindIndex(predicate predication.Predicate[T]) (int, bool) {
 	wrapper.mutex.RLock()
 	defer wrapper.mutex.RUnlock()
 

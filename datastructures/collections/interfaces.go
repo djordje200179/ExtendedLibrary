@@ -45,6 +45,6 @@ type Collection[T any] interface {
 	streams.Streamer[T]
 	RefsStream() streams.Stream[*T]
 
-	FindIndex(predictor predication.Predictor[T]) (int, bool)
+	FindIndex(predicate predication.Predicate[T]) (int, bool)
 	//FindValue(value T) (int, bool)
 }

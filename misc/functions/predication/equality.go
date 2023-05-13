@@ -1,24 +1,24 @@
 package predication
 
-func Equals[T comparable](param T) Predictor[T] {
+func Equals[T comparable](param T) Predicate[T] {
 	return func(value T) bool {
 		return value == param
 	}
 }
 
-func NotEquals[T comparable](param T) Predictor[T] {
+func NotEquals[T comparable](param T) Predicate[T] {
 	return func(value T) bool {
 		return value != param
 	}
 }
 
-func IsNil[T any]() Predictor[*T] {
+func IsNil[T any]() Predicate[*T] {
 	return func(value *T) bool {
 		return value == nil
 	}
 }
 
-func IsNotNil[T any]() Predictor[*T] {
+func IsNotNil[T any]() Predicate[*T] {
 	return func(value *T) bool {
 		return value != nil
 	}

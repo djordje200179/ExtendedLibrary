@@ -36,6 +36,6 @@ func (wrapper Wrapper[T]) Stream() streams.Stream[T] {
 	return wrapper.collection.Stream()
 }
 
-func (wrapper *Wrapper[T]) Find(predicate predication.Predictor[T]) (int, bool) {
+func (wrapper *Wrapper[T]) Find(predicate predication.Predicate[T]) (int, bool) {
 	return wrapper.collection.FindIndex(predicate)
 }

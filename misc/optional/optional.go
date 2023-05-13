@@ -54,7 +54,7 @@ func Map[T any, P any](optional Optional[T], mapper functions.Mapper[T, P]) Opti
 	}
 }
 
-func (optional Optional[T]) Filter(predicate predication.Predictor[T]) Optional[T] {
+func (optional Optional[T]) Filter(predicate predication.Predicate[T]) Optional[T] {
 	if optional.Valid && predicate(optional.Value) {
 		return optional
 	} else {
