@@ -4,6 +4,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
+	"github.com/djordje200179/extendedlibrary/misc/functions/predication"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
@@ -43,4 +44,7 @@ type Collection[T any] interface {
 	ModifyingIterator() Iterator[T]
 	streams.Streamer[T]
 	RefsStream() streams.Stream[*T]
+
+	FindIndex(predictor predication.Predictor[T]) (int, bool)
+	//FindValue(value T) (int, bool)
 }

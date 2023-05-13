@@ -4,6 +4,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
+	"github.com/djordje200179/extendedlibrary/misc/functions/predication"
 	"github.com/djordje200179/extendedlibrary/streams"
 	"sync"
 )
@@ -141,6 +142,13 @@ func (wrapper *Wrapper[T]) Stream() streams.Stream[T] {
 
 func (wrapper *Wrapper[T]) RefsStream() streams.Stream[*T] {
 	return wrapper.collection.RefsStream()
+}
+
+func (wrapper *Wrapper[T]) FindIndex(predicate predication.Predictor[T]) (int, bool) {
+	wrapper.mutex.RLock()
+	defer wrapper.mutex.RUnlock()
+
+	return wrapper.collection.FindIndex(predicate)
 }
 
 func (wrapper *Wrapper[T]) Transaction(updateFunction func(collection collections.Collection[T])) {

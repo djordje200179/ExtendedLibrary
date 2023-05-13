@@ -3,6 +3,7 @@ package readonlycollection
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
+	"github.com/djordje200179/extendedlibrary/misc/functions/predication"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
@@ -33,4 +34,8 @@ func (wrapper Wrapper[T]) Iterator() iterable.Iterator[T] {
 
 func (wrapper Wrapper[T]) Stream() streams.Stream[T] {
 	return wrapper.collection.Stream()
+}
+
+func (wrapper *Wrapper[T]) Find(predicate predication.Predictor[T]) (int, bool) {
+	return wrapper.collection.FindIndex(predicate)
 }

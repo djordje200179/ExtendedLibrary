@@ -3,6 +3,7 @@ package linkedlist
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
+	"github.com/djordje200179/extendedlibrary/misc/functions/predication"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
@@ -234,6 +235,26 @@ func (list *List[T]) Stream() streams.Stream[T] {
 
 func (list *List[T]) RefsStream() streams.Stream[*T] {
 	return collections.RefsStream(list.ModifyingIterator())
+}
+
+func (list *List[T]) FindIndex(predictor predication.Predictor[T]) (int, bool) {
+	for curr, i := list.head, 0; curr != nil; curr, i = curr.next, i+1 {
+		if predictor(curr.Value) {
+			return i, true
+		}
+	}
+
+	return -1, false
+}
+
+func (list *List[T]) FindNode(predictor predication.Predictor[T]) (*Node[T], bool) {
+	for curr := list.head; curr != nil; curr = curr.next {
+		if predictor(curr.Value) {
+			return curr, true
+		}
+	}
+
+	return nil, false
 }
 
 func (list *List[T]) Head() *Node[T] {

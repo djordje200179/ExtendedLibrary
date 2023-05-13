@@ -4,8 +4,10 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
+	"github.com/djordje200179/extendedlibrary/misc/functions/predication"
 	"github.com/djordje200179/extendedlibrary/streams"
 	"github.com/djordje200179/extendedlibrary/streams/suppliers"
+	"golang.org/x/exp/slices"
 	"sort"
 )
 
@@ -171,6 +173,22 @@ func (array *Array[T]) RefsStream() streams.Stream[*T] {
 	return streams.New(supplier)
 }
 
+func (array *Array[T]) FindIndex(predictor predication.Predictor[T]) (int, bool) {
+	index := slices.IndexFunc(array.Slice(), predictor)
+	if index == -1 {
+		return 0, false
+	}
+
+	return index, true
+}
+
 func (array *Array[T]) Slice() []T {
 	return *array
+}
+
+func (array *Array[T]) SliceRange(from, to int) []T {
+	from = array.getRealIndex(from)
+	to = array.getRealIndex(to)
+
+	return array.Slice()[from:to]
 }
