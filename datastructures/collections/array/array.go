@@ -37,6 +37,10 @@ func (array *Array[T]) Size() int {
 	return len(array.Slice())
 }
 
+func (array *Array[T]) Capacity() int {
+	return cap(array.Slice())
+}
+
 func (array *Array[T]) getRealIndex(index int) int {
 	size := array.Size()
 
