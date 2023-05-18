@@ -186,6 +186,15 @@ func (array *Array[T]) FindIndex(predicate predication.Predicate[T]) (int, bool)
 	return index, true
 }
 
+func (array *Array[T]) FindRef(predicate predication.Predicate[T]) (*T, bool) {
+	index, ok := array.FindIndex(predicate)
+	if !ok {
+		return nil, false
+	}
+
+	return array.GetRef(index), true
+}
+
 func (array *Array[T]) Slice() []T {
 	return *array
 }

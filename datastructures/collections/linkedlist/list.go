@@ -247,6 +247,15 @@ func (list *List[T]) FindIndex(predicate predication.Predicate[T]) (int, bool) {
 	return -1, false
 }
 
+func (list *List[T]) FindRef(predicate predication.Predicate[T]) (*T, bool) {
+	node, ok := list.FindNode(predicate)
+	if !ok {
+		return nil, false
+	}
+
+	return &node.Value, true
+}
+
 func (list *List[T]) FindNode(predicate predication.Predicate[T]) (*Node[T], bool) {
 	for curr := list.head; curr != nil; curr = curr.next {
 		if predicate(curr.Value) {

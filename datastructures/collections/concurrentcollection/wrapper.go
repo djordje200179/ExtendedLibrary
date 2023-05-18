@@ -151,6 +151,13 @@ func (wrapper *Wrapper[T]) FindIndex(predicate predication.Predicate[T]) (int, b
 	return wrapper.collection.FindIndex(predicate)
 }
 
+func (wrapper *Wrapper[T]) FindRef(predicate predication.Predicate[T]) (*T, bool) {
+	wrapper.mutex.RLock()
+	defer wrapper.mutex.RUnlock()
+
+	return wrapper.collection.FindRef(predicate)
+}
+
 func (wrapper *Wrapper[T]) Transaction(updateFunction func(collection collections.Collection[T])) {
 	wrapper.mutex.Lock()
 	defer wrapper.mutex.Unlock()
