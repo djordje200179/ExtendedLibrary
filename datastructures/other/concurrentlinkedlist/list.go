@@ -20,6 +20,26 @@ func (list *List[T]) Prepend(value T) {
 	node.next = list.head.Swap(node)
 }
 
+func (list *List[T]) Clear() {
+	list.head.Store(nil)
+}
+
+func (list *List[T]) Reverse() {
+	var prev *Node[T]
+
+	curr := list.head.Load()
+	for curr != nil {
+		next := curr.next
+
+		curr.next = prev
+
+		prev = curr
+		curr = next
+	}
+
+	list.head.Store(prev)
+}
+
 func (list *List[T]) Iterator() iterable.Iterator[T] {
 	return &Iterator[T]{curr: list.head.Load()}
 }
