@@ -115,6 +115,17 @@ func (array *Array[T]) Remove(index int) {
 	}
 }
 
+func (array *Array[T]) Reserve(capacity int) {
+	if capacity <= array.Capacity() {
+		return
+	}
+
+	newArray := make([]T, array.Size(), capacity)
+	copy(newArray, array.Slice())
+
+	*array = newArray
+}
+
 func (array *Array[T]) Clear() {
 	*array = make([]T, 0)
 }

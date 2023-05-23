@@ -137,7 +137,7 @@ func (m *Map[K, V]) Iterator() iterable.Iterator[misc.Pair[K, V]] {
 }
 
 func (m *Map[K, V]) ModifyingIterator() maps.Iterator[K, V] {
-	return iterator[K, V]{m.List().ModifyingIterator()}
+	return Iterator[K, V]{m.List().ModifyingIterator()}
 }
 
 func (m *Map[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {

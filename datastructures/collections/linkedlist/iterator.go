@@ -41,6 +41,10 @@ func (it *Iterator[T]) Remove() {
 	it.list.RemoveNode(it.curr)
 }
 
+func (it *Iterator[T]) Node() *Node[T] {
+	return it.curr
+}
+
 func (it *Iterator[T]) Index() int {
 	return it.index
 }

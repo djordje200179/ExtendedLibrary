@@ -5,48 +5,48 @@ import (
 	"sync"
 )
 
-type iterator[T any] struct {
+type Iterator[T any] struct {
 	collections.Iterator[T]
 
 	mutex *sync.RWMutex
 }
 
-func (it iterator[T]) GetRef() *T {
+func (it Iterator[T]) GetRef() *T {
 	it.mutex.RLock()
 	defer it.mutex.RUnlock()
 
 	return it.Iterator.GetRef()
 }
 
-func (it iterator[T]) Get() T {
+func (it Iterator[T]) Get() T {
 	it.mutex.RLock()
 	defer it.mutex.RUnlock()
 
 	return it.Iterator.Get()
 }
 
-func (it iterator[T]) Set(value T) {
+func (it Iterator[T]) Set(value T) {
 	it.mutex.Lock()
 	defer it.mutex.Unlock()
 
 	it.Iterator.Set(value)
 }
 
-func (it iterator[T]) InsertBefore(value T) {
+func (it Iterator[T]) InsertBefore(value T) {
 	it.mutex.Lock()
 	defer it.mutex.Unlock()
 
 	it.Iterator.InsertBefore(value)
 }
 
-func (it iterator[T]) InsertAfter(value T) {
+func (it Iterator[T]) InsertAfter(value T) {
 	it.mutex.Lock()
 	defer it.mutex.Unlock()
 
 	it.Iterator.InsertAfter(value)
 }
 
-func (it iterator[T]) Remove() {
+func (it Iterator[T]) Remove() {
 	it.mutex.Lock()
 	defer it.mutex.Unlock()
 

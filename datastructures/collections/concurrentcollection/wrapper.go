@@ -133,7 +133,7 @@ func (wrapper *Wrapper[T]) Iterator() iterable.Iterator[T] {
 }
 
 func (wrapper *Wrapper[T]) ModifyingIterator() collections.Iterator[T] {
-	return iterator[T]{wrapper.collection.ModifyingIterator(), &wrapper.mutex}
+	return Iterator[T]{wrapper.collection.ModifyingIterator(), &wrapper.mutex}
 }
 
 func (wrapper *Wrapper[T]) Stream() streams.Stream[T] {

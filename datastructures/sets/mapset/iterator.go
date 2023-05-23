@@ -4,10 +4,10 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 )
 
-type iterator[T comparable] struct {
+type Iterator[T comparable] struct {
 	maps.Iterator[T, empty]
 }
 
-func (it iterator[T]) Get() T {
+func (it Iterator[T]) Get() T {
 	return it.Iterator.Key()
 }

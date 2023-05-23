@@ -2,40 +2,44 @@ package binarysearchtree
 
 import "github.com/djordje200179/extendedlibrary/misc"
 
-type iterator[K comparable, V any] struct {
+type Iterator[K comparable, V any] struct {
 	tree *Tree[K, V]
 
 	curr *Node[K, V]
 }
 
-func (it *iterator[K, V]) Valid() bool {
+func (it *Iterator[K, V]) Valid() bool {
 	return it.curr != nil
 }
 
-func (it *iterator[K, V]) Move() {
+func (it *Iterator[K, V]) Move() {
 	it.curr = it.curr.Next()
 }
 
-func (it *iterator[K, V]) Get() misc.Pair[K, V] {
+func (it *Iterator[K, V]) Get() misc.Pair[K, V] {
 	return misc.Pair[K, V]{it.Key(), it.Value()}
 }
 
-func (it *iterator[K, V]) Key() K {
+func (it *Iterator[K, V]) Key() K {
 	return it.curr.key
 }
 
-func (it *iterator[K, V]) Value() V {
+func (it *Iterator[K, V]) Value() V {
 	return *it.ValueRef()
 }
 
-func (it *iterator[K, V]) ValueRef() *V {
+func (it *Iterator[K, V]) ValueRef() *V {
 	return &it.curr.Value
 }
 
-func (it *iterator[K, V]) SetValue(value V) {
+func (it *Iterator[K, V]) SetValue(value V) {
 	*it.ValueRef() = value
 }
 
-func (it *iterator[K, V]) Remove() {
+func (it *Iterator[K, V]) Remove() {
 	it.tree.removeNode(it.curr)
+}
+
+func (it *Iterator[K, V]) Node() *Node[K, V] {
+	return it.curr
 }

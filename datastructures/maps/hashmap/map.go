@@ -120,7 +120,7 @@ func (hashmap Map[K, V]) Iterator() iterable.Iterator[misc.Pair[K, V]] {
 }
 
 func (hashmap Map[K, V]) ModifyingIterator() maps.Iterator[K, V] {
-	return &iterator[K, V]{
+	return &Iterator[K, V]{
 		m:     hashmap,
 		keys:  hashmap.Keys(),
 		index: 0,

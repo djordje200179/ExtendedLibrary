@@ -248,7 +248,7 @@ func (tree *Tree[K, V]) Iterator() iterable.Iterator[misc.Pair[K, V]] {
 }
 
 func (tree *Tree[K, V]) ModifyingIterator() maps.Iterator[K, V] {
-	return &iterator[K, V]{tree, tree.root.Min()}
+	return &Iterator[K, V]{tree, tree.root.Min()}
 }
 
 func (tree *Tree[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {

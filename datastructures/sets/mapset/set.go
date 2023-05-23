@@ -11,7 +11,7 @@ import (
 
 type empty struct{}
 
-type mapBasedSet[T comparable] struct {
+type MapBasedSet[T comparable] struct {
 	maps.Map[T, empty]
 }
 
@@ -20,32 +20,32 @@ func NewHashSet[T comparable]() sets.Set[T] {
 }
 
 func FromMap[T comparable](m maps.Map[T, empty]) sets.Set[T] {
-	return mapBasedSet[T]{m}
+	return MapBasedSet[T]{m}
 }
 
 func HashSetCollector[T comparable]() streams.Collector[T, sets.Set[T]] {
 	return sets.Collector[T]{NewHashSet[T]()}
 }
 
-func (set mapBasedSet[T]) Add(value T) {
+func (set MapBasedSet[T]) Add(value T) {
 	if !set.Contains(value) {
 		set.Map.Set(value, empty{})
 	}
 }
 
-func (set mapBasedSet[T]) Clone() sets.Set[T] {
+func (set MapBasedSet[T]) Clone() sets.Set[T] {
 	return FromMap[T](set.Map.Clone())
 }
 
-func (set mapBasedSet[T]) Iterator() iterable.Iterator[T] {
+func (set MapBasedSet[T]) Iterator() iterable.Iterator[T] {
 	return set.ModifyingIterator()
 }
 
-func (set mapBasedSet[T]) ModifyingIterator() sets.Iterator[T] {
-	return iterator[T]{set.Map.ModifyingIterator()}
+func (set MapBasedSet[T]) ModifyingIterator() sets.Iterator[T] {
+	return Iterator[T]{set.Map.ModifyingIterator()}
 }
 
-func (set mapBasedSet[T]) Stream() streams.Stream[T] {
+func (set MapBasedSet[T]) Stream() streams.Stream[T] {
 	return streams.Map(set.Map.Stream(), func(pair misc.Pair[T, empty]) T {
 		return pair.First
 	})

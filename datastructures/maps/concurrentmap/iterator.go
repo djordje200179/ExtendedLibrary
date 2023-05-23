@@ -6,12 +6,13 @@ import (
 	"sync"
 )
 
-type iterator[K comparable, V any] struct {
+type Iterator[K comparable, V any] struct {
 	maps.Iterator[K, V]
+	
 	mutex *sync.RWMutex
 }
 
-func (it iterator[K, V]) Get() misc.Pair[K, V] {
+func (it Iterator[K, V]) Get() misc.Pair[K, V] {
 	it.mutex.RLock()
 	defer it.mutex.RUnlock()
 
@@ -21,35 +22,35 @@ func (it iterator[K, V]) Get() misc.Pair[K, V] {
 	}
 }
 
-func (it iterator[K, V]) Key() K {
+func (it Iterator[K, V]) Key() K {
 	it.mutex.RLock()
 	defer it.mutex.RUnlock()
 
 	return it.Iterator.Key()
 }
 
-func (it iterator[K, V]) Value() V {
+func (it Iterator[K, V]) Value() V {
 	it.mutex.RLock()
 	defer it.mutex.RUnlock()
 
 	return it.Iterator.Value()
 }
 
-func (it iterator[K, V]) ValueRef() *V {
+func (it Iterator[K, V]) ValueRef() *V {
 	it.mutex.RLock()
 	defer it.mutex.RUnlock()
 
 	return it.Iterator.ValueRef()
 }
 
-func (it iterator[K, V]) SetValue(value V) {
+func (it Iterator[K, V]) SetValue(value V) {
 	it.mutex.Lock()
 	defer it.mutex.Unlock()
 
 	it.Iterator.SetValue(value)
 }
 
-func (it iterator[K, V]) Remove() {
+func (it Iterator[K, V]) Remove() {
 	it.mutex.Lock()
 	defer it.mutex.Unlock()
 
