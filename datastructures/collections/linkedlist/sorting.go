@@ -32,7 +32,7 @@ func sortedMerge[T any](firstList, secondList, resultList *List[T], comparator c
 	secondListCurr := secondList.head
 
 	for firstListCurr != nil && secondListCurr != nil {
-		if comparator(firstListCurr.Value, secondListCurr.Value) == comparator.FirstSmaller {
+		if comparator(firstListCurr.Value, secondListCurr.Value) == comparison.FirstSmaller {
 			resultList.Append(firstListCurr.Value)
 			firstListCurr = firstListCurr.next
 		} else {

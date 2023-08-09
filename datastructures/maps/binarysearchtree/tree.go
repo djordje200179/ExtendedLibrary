@@ -1,6 +1,7 @@
 package binarysearchtree
 
 import (
+	"cmp"
 	"fmt"
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
@@ -9,7 +10,6 @@ import (
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 	"github.com/djordje200179/extendedlibrary/streams"
-	"golang.org/x/exp/constraints"
 )
 
 type Tree[K comparable, V any] struct {
@@ -27,8 +27,8 @@ func New[K comparable, V any](comparator comparison.Comparator[K]) *Tree[K, V] {
 	return tree
 }
 
-func NewWithOrderedKeys[K constraints.Ordered, V any]() *Tree[K, V] {
-	return New[K, V](comparison.Ascending[K])
+func NewWithOrderedKeys[K cmp.Ordered, V any]() *Tree[K, V] {
+	return New[K, V](cmp.Compare[K])
 }
 
 func Collector[K comparable, V any](comparator comparison.Comparator[K]) streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {

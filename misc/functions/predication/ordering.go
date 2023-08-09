@@ -1,28 +1,28 @@
 package predication
 
 import (
-	"golang.org/x/exp/constraints"
+	"cmp"
 )
 
-func LessThan[T constraints.Ordered](param T) Predicate[T] {
+func LessThan[T cmp.Ordered](param T) Predicate[T] {
 	return func(value T) bool {
 		return value < param
 	}
 }
 
-func LessThanOrEqual[T constraints.Ordered](param T) Predicate[T] {
+func LessThanOrEqual[T cmp.Ordered](param T) Predicate[T] {
 	return func(value T) bool {
 		return value <= param
 	}
 }
 
-func GreaterThan[T constraints.Ordered](param T) Predicate[T] {
+func GreaterThan[T cmp.Ordered](param T) Predicate[T] {
 	return func(value T) bool {
 		return value > param
 	}
 }
 
-func GreaterThanOrEqual[T constraints.Ordered](param T) Predicate[T] {
+func GreaterThanOrEqual[T cmp.Ordered](param T) Predicate[T] {
 	return func(value T) bool {
 		return value >= param
 	}

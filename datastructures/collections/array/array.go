@@ -7,8 +7,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/misc/functions/predication"
 	"github.com/djordje200179/extendedlibrary/streams"
 	"github.com/djordje200179/extendedlibrary/streams/suppliers"
-	"golang.org/x/exp/slices"
-	"sort"
+	"slices"
 )
 
 type Array[T any] []T
@@ -145,9 +144,7 @@ func (array *Array[T]) Swap(index1, index2 int) {
 }
 
 func (array *Array[T]) Sort(comparator comparison.Comparator[T]) {
-	sort.SliceStable(array.Slice(), func(i, j int) bool {
-		return comparator(array.Slice()[i], array.Slice()[j]) == comparison.FirstSmaller
-	})
+	slices.SortStableFunc(array.Slice(), comparator)
 }
 
 func (array *Array[T]) Join(other collections.Collection[T]) {
