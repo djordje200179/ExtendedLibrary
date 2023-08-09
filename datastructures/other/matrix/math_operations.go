@@ -1,9 +1,7 @@
 package matrix
 
-import "golang.org/x/exp/constraints"
-
 type Number interface {
-	constraints.Complex | constraints.Float | constraints.Integer
+	~int | ~uint | ~float32 | ~float64
 }
 
 func Add[T Number](matrices ...*Matrix[T]) *Matrix[T] {
