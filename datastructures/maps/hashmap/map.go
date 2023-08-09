@@ -95,8 +95,7 @@ func (hashmap Map[K, V]) Contains(key K) bool {
 }
 
 func (hashmap Map[K, V]) Clear() {
-	mt, mv := mapTypeAndValue(hashmap)
-	internalMapClear(mt, mv)
+	clear(hashmap)
 }
 
 func (hashmap Map[K, V]) Swap(key1, key2 K) {
