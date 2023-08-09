@@ -68,35 +68,35 @@ func (stream Stream[T]) Count() int {
 }
 
 func (stream Stream[T]) Max(comparator comparison.Comparator[T]) optional.Optional[T] {
-	var max T
+	var currMax T
 	set := false
 
 	for elem := stream.supplier(); elem.Valid; elem = stream.supplier() {
-		if !set || comparator(elem.Value, max) == comparison.FirstBigger {
-			max = elem.Value
+		if !set || comparator(elem.Value, currMax) == comparison.FirstBigger {
+			currMax = elem.Value
 			set = true
 		}
 	}
 
 	return optional.Optional[T]{
-		Value: max,
+		Value: currMax,
 		Valid: set,
 	}
 }
 
 func (stream Stream[T]) Min(comparator comparison.Comparator[T]) optional.Optional[T] {
-	var min T
+	var currMin T
 	set := false
 
 	for elem := stream.supplier(); elem.Valid; elem = stream.supplier() {
-		if !set || comparator(elem.Value, min) == comparison.FirstSmaller {
-			min = elem.Value
+		if !set || comparator(elem.Value, currMin) == comparison.FirstSmaller {
+			currMin = elem.Value
 			set = true
 		}
 	}
 
 	return optional.Optional[T]{
-		Value: min,
+		Value: currMin,
 		Valid: set,
 	}
 }
