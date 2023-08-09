@@ -20,6 +20,10 @@ func Map[T, U any](stream Stream[T], mapper functions.Mapper[T, U]) Stream[U] {
 	return Stream[U]{generator}
 }
 
+func (stream Stream[T]) Map(mapper functions.Mapper[T, T]) Stream[T] {
+	return Map(stream, mapper)
+}
+
 func (stream Stream[T]) Filter(predicate predication.Predicate[T]) Stream[T] {
 	generator := func() optional.Optional[T] {
 		for elem := stream.supplier(); elem.Valid; elem = stream.supplier() {

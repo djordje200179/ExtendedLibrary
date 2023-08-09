@@ -25,6 +25,10 @@ func Reduce[T, P any](stream Stream[T], accumulator P, reducer Reducer[T, P]) P 
 	return acc
 }
 
+func (stream Stream[T]) Reduce(accumulator T, reducer Reducer[T, T]) T {
+	return Reduce(stream, accumulator, reducer)
+}
+
 func (stream Stream[T]) Any(predicate predication.Predicate[T]) bool {
 	for elem := stream.supplier(); elem.Valid; elem = stream.supplier() {
 		if predicate(elem.Value) {
@@ -56,6 +60,10 @@ func Collect[T, R any](stream Stream[T], collector Collector[T, R]) R {
 	})
 
 	return collector.Finish()
+}
+
+func (stream Stream[T]) Collect(collector Collector[T, T]) T {
+	return Collect(stream, collector)
 }
 
 func (stream Stream[T]) Count() int {

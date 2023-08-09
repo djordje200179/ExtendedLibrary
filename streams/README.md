@@ -48,10 +48,9 @@ a method for converting the stream into a channel:
 
 ## Limitations
 Due to lack of generic methods in Go, some methods (like `Map` and `Reduce`) 
-are currently functions that accept the stream as first argument. 
-
-Hopefully in future versions of Go there will be generic methods,
-and this package will be updated to fix these issues.
+currently only support returning same type like stream values are.
+If your transformations return some other type, then you should consider 
+functions with the same name that accept the stream as the first argument.
 
 ```go
 //Instead of
