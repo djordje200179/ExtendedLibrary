@@ -1,10 +1,8 @@
 package matrix
 
-type Number interface {
-	~int | ~uint | ~float32 | ~float64
-}
+import "github.com/djordje200179/extendedlibrary/misc/math"
 
-func Add[T Number](matrices ...*Matrix[T]) *Matrix[T] {
+func Add[T math.Real](matrices ...*Matrix[T]) *Matrix[T] {
 	for i := 1; i < len(matrices); i++ {
 		if matrices[i].Size() != matrices[i-1].Size() {
 			panic("Matrix sizes don't match")
@@ -23,7 +21,7 @@ func Add[T Number](matrices ...*Matrix[T]) *Matrix[T] {
 	return result
 }
 
-func Subtract[T Number](first, second *Matrix[T]) *Matrix[T] {
+func Subtract[T math.Real](first, second *Matrix[T]) *Matrix[T] {
 	if first.Size() != second.Size() {
 		panic("Matrix sizes don't match")
 	}
@@ -39,7 +37,7 @@ func Subtract[T Number](first, second *Matrix[T]) *Matrix[T] {
 	return result
 }
 
-func ScalarMultiply[T Number](matrix *Matrix[T], scalar T) *Matrix[T] {
+func ScalarMultiply[T math.Real](matrix *Matrix[T], scalar T) *Matrix[T] {
 	result := New[T](matrix.Size())
 
 	for i := 0; i < result.Size().Elements(); i++ {
@@ -49,7 +47,7 @@ func ScalarMultiply[T Number](matrix *Matrix[T], scalar T) *Matrix[T] {
 	return result
 }
 
-func Multiply[T Number](first, second *Matrix[T]) *Matrix[T] {
+func Multiply[T math.Real](first, second *Matrix[T]) *Matrix[T] {
 	if first.Size().Width != second.Size().Height {
 		panic("Matrix sizes don't match")
 	}
@@ -74,7 +72,7 @@ func Multiply[T Number](first, second *Matrix[T]) *Matrix[T] {
 	return result
 }
 
-func DotMultiply[T Number](matrices ...*Matrix[T]) *Matrix[T] {
+func DotMultiply[T math.Real](matrices ...*Matrix[T]) *Matrix[T] {
 	for i := 1; i < len(matrices); i++ {
 		if matrices[i].Size() != matrices[i-1].Size() {
 			panic("Matrix sizes don't match")
@@ -94,6 +92,6 @@ func DotMultiply[T Number](matrices ...*Matrix[T]) *Matrix[T] {
 	return result
 }
 
-func Negate[T Number](matrix *Matrix[T]) *Matrix[T] {
+func Negate[T math.Real](matrix *Matrix[T]) *Matrix[T] {
 	return ScalarMultiply[T](matrix, -1)
 }
