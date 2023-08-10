@@ -91,13 +91,7 @@ func (array *Array[T]) Insert(index int, value T) {
 func (array *Array[T]) InsertMany(index int, values ...T) {
 	index = array.getRealIndex(index)
 
-	newArray := make([]T, array.Size()+len(values))
-
-	copy(newArray, array.Slice()[:index])
-	copy(newArray[index:], values)
-	copy(newArray[index+len(values):], array.Slice()[index:])
-
-	*array = newArray
+	*array = slices.Insert(array.Slice(), index, values...)
 }
 
 func (array *Array[T]) Remove(index int) {
@@ -130,10 +124,7 @@ func (array *Array[T]) Clear() {
 }
 
 func (array *Array[T]) Reverse() {
-	n := len(array.Slice())
-	for i := 0; i < n/2; i++ {
-		array.Slice()[i], array.Slice()[n-1-i] = array.Slice()[n-1-i], array.Slice()[i]
-	}
+	slices.Reverse(array.Slice())
 }
 
 func (array *Array[T]) Swap(index1, index2 int) {
@@ -161,10 +152,9 @@ func (array *Array[T]) Join(other collections.Collection[T]) {
 }
 
 func (array *Array[T]) Clone() collections.Collection[T] {
-	cloned := NewWithSize[T](array.Size())
-	copy(cloned.Slice(), array.Slice())
-
-	return cloned
+	newArray := new(Array[T])
+	*newArray = slices.Clone(*array)
+	return newArray
 }
 
 func (array *Array[T]) Iterator() iterable.Iterator[T] {
