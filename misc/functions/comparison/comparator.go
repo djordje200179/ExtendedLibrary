@@ -3,12 +3,12 @@ package comparison
 type Comparator[T any] func(first, second T) int
 
 const (
-	FirstBigger  int = -1
-	Equal            = 0
-	SecondBigger     = 1
+	FirstSmaller  int = -1
+	Equal             = 0
+	SecondSmaller     = 1
 
-	FirstSmaller  = SecondBigger
-	SecondSmaller = FirstBigger
+	FirstBigger  = SecondSmaller
+	SecondBigger = FirstSmaller
 )
 
 func (comparator Comparator[T]) Reverse() Comparator[T] {
