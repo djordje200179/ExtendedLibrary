@@ -10,6 +10,7 @@ This package implements many generic data structures:
   - Linked list
   - Read-only wrapper 
   - Concurrent wrapper
+  - Copy-on-write array
 - Maps
   - Binary search tree 
   - Hashmap 

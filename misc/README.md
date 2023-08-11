@@ -15,7 +15,10 @@ memory indirections and risks null pointer dereference.
 ## Functions
 This package provides a set of common function and function types.
 Some of them were created just for my own needs, but most of them
-are needed for "every day" programming (predicates, comparators, etc).
+are needed for "every day" programming (predicates, comparators, etc.).
 
 ## Pair
 Simple generic type that holds two values of any type.
+
+## Math
+Currently, contains only number type constraints.
