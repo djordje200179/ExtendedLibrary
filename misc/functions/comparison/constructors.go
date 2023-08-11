@@ -5,7 +5,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 )
 
-func NewFieldComparator[T any, P cmp.Ordered](getter functions.Mapper[T, P]) Comparator[T] {
+func NewByField[T any, P cmp.Ordered](getter functions.Mapper[T, P]) Comparator[T] {
 	return func(first, second T) int {
 		firstValue := getter(first)
 		secondValue := getter(second)
