@@ -4,6 +4,7 @@ This project tries to extend the standard library of Go with some useful functio
 It is composed of multiple packages, each of them with a different purpose.
 
 Currently, I don't have plans to extend it further, but any suggestions are welcome.
+But I promise to regularly update it with the new features that Go adds to new versions.
 
 ## [Data structures](datastructures/README.md)
 The initial idea was to organize commonly used data structures in one place which would
@@ -23,5 +24,7 @@ All functions are usable, but they aren't readable as in Java.
 (I hope that Go will support generic method in the future)
 
 ## [Misc](misc/README.md)
-In the meanwhile, a package with commonly used types and function was created.
-Things that don't belong to any other package, but you probably need in every project.
+During development, I have noticed that many types and functions repeat. 
+Therefore, I have decided to create a package with commonly used types and functions.
+It includes things that don't belong to any other package, but you probably 
+need in every project.

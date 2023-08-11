@@ -10,14 +10,14 @@ You can create a stream in multiple ways:
 1. Manually (by creating and setting supplier)
 2. Streaming object (by calling `Stream` method on an object that implements `Streamer` interface)
 3. Constructor (by calling one of the provided constructor functions):
-   - `FromChannel(channel <-chan T) Stream[T]`
-   - `FromValues(values ...T) Stream[T]`
-   - `FromRange(lower, upper int) Stream[int]`
-   - `FromSlice(slice []T) Stream[T]`
-   - `FromSliceRefs(slice []T) Stream[*T]`
-   - `FromMap(m map[K]V) Stream[misc.Pair[K, V]]`
-   - `FromFiniteGenerator(generator functions.EmptyGenerator[optional.Optional[T]]) Stream[T]`
-   - `FromInfiniteGenerator(generator functions.EmptyGenerator[T]) Stream[T]`
+	- `FromChannel(channel <-chan T) Stream[T]`
+	- `FromValues(values ...T) Stream[T]`
+	- `FromRange(lower, upper int) Stream[int]`
+	- `FromSlice(slice []T) Stream[T]`
+	- `FromSliceRefs(slice []T) Stream[*T]`
+	- `FromMap(m map[K]V) Stream[misc.Pair[K, V]]`
+	- `FromFiniteGenerator(generator functions.EmptyGenerator[optional.Optional[T]]) Stream[T]`
+	- `FromInfiniteGenerator(generator functions.EmptyGenerator[T]) Stream[T]`
 
 ## Intermediates
 There are methods that you can use to transform the stream:
