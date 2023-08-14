@@ -1,7 +1,11 @@
 package executors
 
-type Task func()
+type Task interface {
+	Function() func()
 
-type Tasker interface {
-	Task() Task
+	IsStarted() bool
+	IsDone() bool
+
+	MarkStarted()
+	MarkDone()
 }

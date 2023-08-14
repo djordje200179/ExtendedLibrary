@@ -4,6 +4,6 @@ import "runtime"
 
 var DefaultExecutor = NewExecutor(runtime.NumCPU())
 
-func Submit(tasker Tasker) {
-	DefaultExecutor.Submit(tasker)
+func Submit(task Task) {
+	DefaultExecutor.Submit(task)
 }

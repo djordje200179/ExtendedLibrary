@@ -24,9 +24,8 @@ func NewExecutor(goroutinesCount int) *Executor {
 	return executor
 }
 
-func (executor *Executor) Submit(tasker Tasker) {
-	task := tasker.Task()
-	executor.tasks <- task
+func (executor *Executor) Submit(tasker Task) {
+	executor.tasks <- tasker
 }
 
 func (executor *Executor) Close() {
@@ -36,7 +35,12 @@ func (executor *Executor) Close() {
 
 func (executor *Executor) routine() {
 	for task := range executor.tasks {
-		task()
+		function := task.Function()
+
+		task.MarkStarted()
+		function()
+		task.MarkDone()
+
 	}
 	executor.wg.Done()
 }

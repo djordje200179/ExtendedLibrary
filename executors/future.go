@@ -4,11 +4,12 @@ import "sync"
 
 type Future[T any] struct {
 	getter func() (T, error)
-
 	result T
 	err    error
 
-	wg sync.WaitGroup
+	wg      sync.WaitGroup
+	started bool
+	done    bool
 }
 
 func NewFuture[T any](getter func() (T, error)) *Future[T] {
@@ -43,9 +44,25 @@ func (future *Future[T]) Get() T {
 	return future.result
 }
 
-func (future *Future[T]) Task() Task {
+func (future *Future[T]) Function() func() {
 	return func() {
 		future.result, future.err = future.getter()
-		future.wg.Done()
 	}
+}
+
+func (future *Future[T]) IsStarted() bool {
+	return future.started
+}
+
+func (future *Future[T]) IsDone() bool {
+	return future.done
+}
+
+func (future *Future[T]) MarkStarted() {
+	future.started = true
+}
+
+func (future *Future[T]) MarkDone() {
+	future.done = true
+	future.wg.Done()
 }
