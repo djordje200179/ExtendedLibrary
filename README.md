@@ -18,13 +18,22 @@ They can be used completely independently of the rest of the project, but my dat
 structures are also compatible with them.
 
 Unfortunately, I wasn't able to implement the stream in a way that I wanted to.
-The problem was that Go doesn't support generic methods, so methods like `Map` or `Reduce`
-needed to remain as generic functions.
+The problem was that Go doesn't support generic methods, so methods like `Map` 
+or `Reduce` needed to remain generic functions.
 All functions are usable, but they aren't readable as in Java.
-(I hope that Go will support generic method in the future)
+(I hope that Go will somehow support generic methods in the future)
+
+## [Executors](executors/README.md)
+After learning more about concurrent programming, I have realised that asynchronous
+execution is a very useful feature. Java has the Future class, JavaScript has Promises,
+so I have decided to implement something similar in Go.
+
+There exists default executor (which is basically a thread pool), but you can also
+implement your own executor for specific number of goroutines.
 
 ## [Misc](misc/README.md)
 During development, I have noticed that many types and functions repeat. 
 Therefore, I have decided to create a package with commonly used types and functions.
 It includes things that don't belong to any other package, but you probably 
 need in every project.
+
