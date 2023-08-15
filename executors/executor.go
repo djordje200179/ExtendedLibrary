@@ -10,9 +10,9 @@ type Executor struct {
 	wg sync.WaitGroup
 }
 
-func NewExecutor(goroutinesCount int) *Executor {
+func NewExecutor(goroutinesCount int, queueSize int) *Executor {
 	executor := &Executor{
-		tasks: make(chan Task, goroutinesCount),
+		tasks: make(chan Task, queueSize),
 	}
 
 	for i := 0; i < goroutinesCount; i++ {
