@@ -35,8 +35,8 @@ Collection, maps and sets support iterations through common `Iterable` interface
 that fits well into `for` loop.
 
 ```go
-for it := collection.Iterator(); it.Valid(); it.Next() {
-value := it.Get();
+for it := list.Iterator(); it.Valid(); it.Next() {
+	value := it.Get();
 }
 ```
 Be aware that this kind of iterator supports only reading elements, not modifying them.
@@ -87,9 +87,9 @@ You can also collect every finite stream into a suitable collection.
 ```go
 list := streams.Collect(streams.FromRange(0, 100), linkedlist.Collector[int]())
 hmap := streams.Collect(streams.Map(
-streams.FromRange(0, 100),
-func(i int) misc.Pair[int, int] {
-return misc.Pair[int, int]{i, i * i}
-},
+	streams.FromRange(0, 100),
+	func(i int) misc.Pair[int, int] {
+		return misc.Pair[int, int]{i, i * i}
+	},
 ), hashmap.Collector[int, int]())
 ```
