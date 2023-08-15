@@ -35,12 +35,23 @@ func (executor *Executor) Close() {
 
 func (executor *Executor) routine() {
 	for task := range executor.tasks {
-		function := task.Function()
-
-		task.MarkStarted()
-		function()
-		task.MarkDone()
-
+		runTask(task)
 	}
+
 	executor.wg.Done()
+}
+
+func runTask(task Task) {
+	defer func() {
+		if r := recover(); r != nil {
+			task.MarkFailed(r)
+		}
+	}()
+
+	function := task.Function()
+	context := task.Context()
+
+	task.MarkStarted()
+	function(context)
+	task.MarkFinished()
 }

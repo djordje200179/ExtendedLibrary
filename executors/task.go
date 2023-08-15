@@ -1,11 +1,20 @@
 package executors
 
+import "context"
+
 type Task interface {
-	Function() func()
+	Function() func(ctx context.Context)
+	Context() context.Context
 
 	IsStarted() bool
-	IsDone() bool
+	IsFailed() bool
+	IsCancelled() bool
+	IsFinished() bool
+
+	Wait()
+	Cancel()
 
 	MarkStarted()
-	MarkDone()
+	MarkFailed(reason any)
+	MarkFinished()
 }

@@ -1,20 +1,26 @@
 package executors
 
-type Action struct {
-	function func()
+import "context"
 
-	*taskWaiter
+type Action struct {
+	function func(context.Context)
+
+	*taskStatus
 }
 
-func NewAction(function func()) *Action {
+func NewAction(function func(context.Context), ctx context.Context) *Action {
 	action := &Action{
 		function:   function,
-		taskWaiter: newTaskWaiter(),
+		taskStatus: newTaskStatus(ctx),
 	}
 
 	return action
 }
 
-func (action *Action) Function() func() {
+func NewDefaultAction(function func(context.Context)) *Action {
+	return NewAction(function, context.Background())
+}
+
+func (action *Action) Function() func(context.Context) {
 	return action.function
 }
