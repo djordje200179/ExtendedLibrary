@@ -4,7 +4,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/misc"
 )
 
-type Collector[K comparable, V any] struct {
+type Collector[K, V any] struct {
 	Map Map[K, V]
 }
 

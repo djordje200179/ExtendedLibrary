@@ -6,7 +6,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
-type Iterator[K comparable, V any] interface {
+type Iterator[K, V any] interface {
 	iterable.Iterator[misc.Pair[K, V]]
 
 	Key() K
@@ -17,7 +17,7 @@ type Iterator[K comparable, V any] interface {
 	Remove()
 }
 
-type Map[K comparable, V any] interface {
+type Map[K, V any] interface {
 	Size() int
 
 	Get(key K) V

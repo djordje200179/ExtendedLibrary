@@ -6,7 +6,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
-func RefsStream[K comparable, V any](m Map[K, V]) streams.Stream[misc.Pair[K, *V]] {
+func RefsStream[K, V any](m Map[K, V]) streams.Stream[misc.Pair[K, *V]] {
 	iterator := m.ModifyingIterator()
 	supplier := func() optional.Optional[misc.Pair[K, *V]] {
 		if !iterator.Valid() {
