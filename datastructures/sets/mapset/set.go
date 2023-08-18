@@ -1,9 +1,11 @@
 package mapset
 
 import (
+	"cmp"
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps/hashmap"
+	"github.com/djordje200179/extendedlibrary/datastructures/maps/redblacktree"
 	"github.com/djordje200179/extendedlibrary/datastructures/sets"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/streams"
@@ -19,12 +21,20 @@ func NewHashSet[T comparable]() sets.Set[T] {
 	return FromMap[T](hashmap.New[T, empty]())
 }
 
+func NewTreeSet[T cmp.Ordered]() sets.Set[T] {
+	return FromMap[T](redblacktree.NewForOrderedKeys[T, empty]())
+}
+
 func FromMap[T comparable](m maps.Map[T, empty]) sets.Set[T] {
 	return MapBasedSet[T]{m}
 }
 
 func HashSetCollector[T comparable]() streams.Collector[T, sets.Set[T]] {
 	return sets.Collector[T]{NewHashSet[T]()}
+}
+
+func TreeSetCollector[T cmp.Ordered]() streams.Collector[T, sets.Set[T]] {
+	return sets.Collector[T]{NewTreeSet[T]()}
 }
 
 func (set MapBasedSet[T]) Add(value T) {
