@@ -147,15 +147,67 @@ func (tree *Tree[K, V]) Keys() []K {
 	return keys
 }
 
-func (tree *Tree[K, V]) Remove(key K) {
-	node := tree.GetNode(key)
-	if node == nil {
+func (tree *Tree[K, V]) removeNode(node *Node[K, V]) {
+	if node.left != nil && node.right != nil {
+		next := node.Next()
+
+		next.key = node.key
+		next.Value = node.Value
+
+		tree.removeNode(next)
+
 		return
 	}
 
 	tree.nodes--
 
-	panic("implement me")
+	var child *Node[K, V]
+	if node.left != nil {
+		child = node.left
+	} else {
+		child = node.right
+	}
+
+	var locationInParent **Node[K, V]
+	if node.parent == nil {
+		locationInParent = &tree.root
+	} else if node.parent.left == node {
+		locationInParent = &node.parent.left
+	} else {
+		locationInParent = &node.parent.right
+	}
+
+	if child != nil {
+		child.parent = node.parent
+		*locationInParent = child
+
+		if node.color == black {
+			tree.fixRemove(child)
+		}
+	} else if node.parent == nil {
+		*locationInParent = nil
+	} else {
+		if node.color == black {
+			tree.fixRemove(node)
+		}
+
+		if node.parent != nil {
+			if node.parent.left == node {
+				node.parent.left = nil
+			} else {
+				node.parent.right = nil
+			}
+
+			node.parent = nil
+		}
+	}
+}
+
+func (tree *Tree[K, V]) Remove(key K) {
+	node := tree.GetNode(key)
+	if node != nil {
+		tree.removeNode(node)
+	}
 }
 
 func (tree *Tree[K, V]) Contains(key K) bool {

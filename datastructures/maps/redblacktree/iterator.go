@@ -37,8 +37,9 @@ func (it *Iterator[K, V]) SetValue(value V) {
 }
 
 func (it *Iterator[K, V]) Remove() {
-	//TODO implement me
-	panic("implement me")
+	next := it.curr.Next()
+	it.tree.removeNode(it.curr)
+	it.curr = next
 }
 
 func (it *Iterator[K, V]) Node() *Node[K, V] {

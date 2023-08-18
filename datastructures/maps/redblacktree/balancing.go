@@ -10,7 +10,7 @@ func (tree *Tree[K, V]) fixInsert(node *Node[K, V]) {
 	}
 
 	uncle := node.parent.Sibling()
-	if uncle != nil && uncle.color == red {
+	if nodeColor(uncle) == red {
 		node.parent.color = black
 		uncle.color = black
 		node.parent.parent.color = red
@@ -38,59 +38,103 @@ func (tree *Tree[K, V]) fixInsert(node *Node[K, V]) {
 	}
 }
 
-func (tree *Tree[K, V]) rotateLeft(node *Node[K, V]) {
-	leftNode := node
-	rightNode := node.right
-	middleNode := rightNode.left
+func (tree *Tree[K, V]) fixRemove(node *Node[K, V]) {
+	for node != tree.root && nodeColor(node) == black {
+		if node == node.parent.left {
+			sibling := node.parent.right
 
-	rightNode.left = leftNode
-	leftNode.right = middleNode
-	if middleNode != nil {
-		middleNode.parent = leftNode
-	}
+			if nodeColor(sibling) == red {
+				sibling.color = black
+				node.parent.color = red
+				tree.rotateLeft(node.parent)
+				sibling = node.parent.right
+			}
 
-	parent := leftNode.parent
+			if nodeColor(sibling.left) == black && nodeColor(sibling.right) == black {
+				sibling.color = red
+				node = node.parent
+			} else {
+				if nodeColor(sibling.right) == black {
+					sibling.left.color = black
+					sibling.color = red
+					tree.rotateRight(sibling)
+					sibling = node.parent.right
+				}
 
-	leftNode.parent = rightNode
-	rightNode.parent = parent
-
-	if parent != nil {
-		if parent.left == leftNode {
-			parent.left = rightNode
+				sibling.color = node.parent.color
+				node.parent.color = black
+				sibling.right.color = black
+				tree.rotateLeft(node.parent)
+				node = tree.root
+			}
 		} else {
-			parent.right = rightNode
+			sibling := node.parent.left
+
+			if nodeColor(sibling) == red {
+				sibling.color = black
+				node.parent.color = red
+				tree.rotateRight(node.parent)
+				sibling = node.parent.left
+			}
+
+			if nodeColor(sibling.left) == black && nodeColor(sibling.right) == black {
+				sibling.color = red
+				node = node.parent
+			} else {
+				if nodeColor(sibling.left) == black {
+					sibling.right.color = black
+					sibling.color = red
+					tree.rotateLeft(sibling)
+					sibling = node.parent.left
+				}
+
+				sibling.color = node.parent.color
+				node.parent.color = black
+				sibling.left.color = black
+				tree.rotateRight(node.parent)
+				node = tree.root
+			}
 		}
-	} else {
-		tree.root = rightNode
 	}
+
+	node.color = black
+}
+
+func (tree *Tree[K, V]) rotateLeft(node *Node[K, V]) {
+	rightNode := node.right
+	node.right = rightNode.left
+	if rightNode.left != nil {
+		rightNode.left.parent = node
+	}
+
+	rightNode.parent = node.parent
+	if node.parent == nil {
+		tree.root = rightNode
+	} else if node == node.parent.left {
+		node.parent.left = rightNode
+	} else {
+		node.parent.right = rightNode
+	}
+
+	rightNode.left = node
+	node.parent = rightNode
 }
 
 func (tree *Tree[K, V]) rotateRight(node *Node[K, V]) {
 	leftNode := node.left
-	rightNode := node
-	middleNode := leftNode.right
-
-	leftNode.right = rightNode
-	rightNode.left = middleNode
-
-	leftNode.parent = rightNode.parent
-	rightNode.parent = leftNode
-	if middleNode != nil {
-		middleNode.parent = rightNode
+	node.left = leftNode.right
+	if leftNode.right != nil {
+		leftNode.right.parent = node
 	}
 
-	parent := rightNode.parent
-
-	rightNode.parent = leftNode
-	leftNode.parent = parent
-
-	if parent != nil {
-		if parent.left == rightNode {
-			parent.left = leftNode
-		} else {
-			parent.right = leftNode
-		}
-	} else {
+	leftNode.parent = node.parent
+	if node.parent == nil {
 		tree.root = leftNode
+	} else if node == node.parent.right {
+		node.parent.right = leftNode
+	} else {
+		node.parent.left = leftNode
 	}
+	leftNode.right = node
+	node.parent = leftNode
 }

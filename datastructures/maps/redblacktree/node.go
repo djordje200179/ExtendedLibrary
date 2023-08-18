@@ -93,3 +93,11 @@ func (node *Node[K, V]) Max() *Node[K, V] {
 
 	return nil
 }
+
+func nodeColor[K, V any](node *Node[K, V]) color {
+	if node == nil {
+		return black
+	}
+
+	return node.color
+}
