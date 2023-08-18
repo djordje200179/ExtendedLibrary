@@ -12,7 +12,7 @@ This package implements many generic data structures:
 	- Concurrent wrapper
 	- Copy-on-write array
 - Maps
-	- Binary search tree
+	- Red-black tree (binary search tree)
 	- Hashmap
 	- Linked list map
 	- Read-only wrapper
