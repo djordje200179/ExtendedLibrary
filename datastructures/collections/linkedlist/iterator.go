@@ -38,7 +38,9 @@ func (it *Iterator[T]) InsertAfter(value T) {
 }
 
 func (it *Iterator[T]) Remove() {
+	next := it.curr.next
 	it.list.RemoveNode(it.curr)
+	it.curr = next
 }
 
 func (it *Iterator[T]) Node() *Node[T] {
