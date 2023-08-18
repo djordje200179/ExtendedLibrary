@@ -8,11 +8,11 @@ import (
 
 type Iterator[T any] interface {
 	iterable.Iterator[T]
-	
+
 	Remove()
 }
 
-type Set[T comparable] interface {
+type Set[T any] interface {
 	Size() int
 
 	Add(value T)

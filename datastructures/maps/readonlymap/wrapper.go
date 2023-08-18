@@ -7,11 +7,11 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
-type Wrapper[K comparable, V any] struct {
+type Wrapper[K, V any] struct {
 	m maps.Map[K, V]
 }
 
-func From[K comparable, V any](m maps.Map[K, V]) Wrapper[K, V] {
+func From[K, V any](m maps.Map[K, V]) Wrapper[K, V] {
 	return Wrapper[K, V]{m}
 }
 

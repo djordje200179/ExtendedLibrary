@@ -13,7 +13,7 @@ import (
 
 type empty struct{}
 
-type MapBasedSet[T comparable] struct {
+type MapBasedSet[T any] struct {
 	maps.Map[T, empty]
 }
 
@@ -22,10 +22,10 @@ func NewHashSet[T comparable]() sets.Set[T] {
 }
 
 func NewTreeSet[T cmp.Ordered]() sets.Set[T] {
-	return FromMap[T](redblacktree.NewForOrderedKeys[T, empty]())
+	return FromMap[T](redblacktree.New[T, empty]())
 }
 
-func FromMap[T comparable](m maps.Map[T, empty]) sets.Set[T] {
+func FromMap[T any](m maps.Map[T, empty]) sets.Set[T] {
 	return MapBasedSet[T]{m}
 }
 

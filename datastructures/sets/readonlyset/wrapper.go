@@ -6,11 +6,11 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
-type Wrapper[T comparable] struct {
+type Wrapper[T any] struct {
 	set sets.Set[T]
 }
 
-func From[T comparable](set sets.Set[T]) Wrapper[T] {
+func From[T any](set sets.Set[T]) Wrapper[T] {
 	return Wrapper[T]{set}
 }
 

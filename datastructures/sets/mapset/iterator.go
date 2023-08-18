@@ -4,7 +4,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 )
 
-type Iterator[T comparable] struct {
+type Iterator[T any] struct {
 	maps.Iterator[T, empty]
 }
 

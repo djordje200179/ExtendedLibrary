@@ -1,6 +1,6 @@
 package sets
 
-type Collector[T comparable] struct {
+type Collector[T any] struct {
 	Set Set[T]
 }
 

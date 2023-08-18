@@ -6,9 +6,9 @@ import (
 	"sync"
 )
 
-type Iterator[K comparable, V any] struct {
+type Iterator[K, V any] struct {
 	maps.Iterator[K, V]
-	
+
 	mutex *sync.RWMutex
 }
 

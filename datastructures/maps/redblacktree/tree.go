@@ -17,22 +17,22 @@ type Tree[K, V any] struct {
 	comparator comparison.Comparator[K]
 }
 
-func New[K, V any](comparator comparison.Comparator[K]) *Tree[K, V] {
+func NewWithComparator[K, V any](comparator comparison.Comparator[K]) *Tree[K, V] {
 	return &Tree[K, V]{
 		comparator: comparator,
 	}
 }
 
-func NewForOrderedKeys[K cmp.Ordered, V any]() *Tree[K, V] {
-	return New[K, V](cmp.Compare[K])
+func New[K cmp.Ordered, V any]() *Tree[K, V] {
+	return NewWithComparator[K, V](cmp.Compare[K])
 }
 
-func Collector[K, V any](comparator comparison.Comparator[K]) streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
-	return maps.Collector[K, V]{New[K, V](comparator)}
+func CollectorWithComparator[K, V any](comparator comparison.Comparator[K]) streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
+	return maps.Collector[K, V]{NewWithComparator[K, V](comparator)}
 }
 
-func CollectorForOrderedKeys[K cmp.Ordered, V any]() streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
-	return maps.Collector[K, V]{NewForOrderedKeys[K, V]()}
+func Collector[K cmp.Ordered, V any]() streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
+	return maps.Collector[K, V]{New[K, V]()}
 }
 
 func (tree *Tree[K, V]) Size() int {

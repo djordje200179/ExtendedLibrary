@@ -8,13 +8,13 @@ import (
 	"sync"
 )
 
-type Wrapper[K comparable, V any] struct {
+type Wrapper[K, V any] struct {
 	m maps.Map[K, V]
 
 	mutex sync.RWMutex
 }
 
-func From[K comparable, V any](m maps.Map[K, V]) maps.Map[K, V] {
+func From[K, V any](m maps.Map[K, V]) maps.Map[K, V] {
 	return &Wrapper[K, V]{m, sync.RWMutex{}}
 }
 
