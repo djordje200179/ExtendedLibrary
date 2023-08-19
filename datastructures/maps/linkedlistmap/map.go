@@ -5,7 +5,6 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/misc"
-	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
@@ -43,19 +42,6 @@ func (m *Map[K, V]) GetNode(key K) *linkedlist.Node[misc.Pair[K, V]] {
 
 func (m *Map[K, V]) Get(key K) V {
 	return *m.GetRef(key)
-}
-
-func (m *Map[K, V]) GetOrDefault(key K) V {
-	return m.GetOrElse(key, functions.Zero[V]())
-}
-
-func (m *Map[K, V]) GetOrElse(key K, value V) V {
-	node := m.GetNode(key)
-	if node == nil {
-		return value
-	}
-
-	return node.Value.Second
 }
 
 func (m *Map[K, V]) TryGet(key K) (V, bool) {

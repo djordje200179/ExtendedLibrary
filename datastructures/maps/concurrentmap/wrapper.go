@@ -32,20 +32,6 @@ func (wrapper *Wrapper[K, V]) Get(key K) V {
 	return wrapper.m.Get(key)
 }
 
-func (wrapper *Wrapper[K, V]) GetOrDefault(key K) V {
-	wrapper.mutex.RLock()
-	defer wrapper.mutex.RUnlock()
-
-	return wrapper.m.GetOrDefault(key)
-}
-
-func (wrapper *Wrapper[K, V]) GetOrElse(key K, value V) V {
-	wrapper.mutex.RLock()
-	defer wrapper.mutex.RUnlock()
-
-	return wrapper.m.GetOrElse(key, value)
-}
-
 func (wrapper *Wrapper[K, V]) TryGet(key K) (V, bool) {
 	wrapper.mutex.RLock()
 	defer wrapper.mutex.RUnlock()

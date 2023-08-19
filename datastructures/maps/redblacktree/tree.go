@@ -5,7 +5,6 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/misc"
-	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
@@ -56,19 +55,6 @@ func (tree *Tree[K, V]) GetNode(key K) *Node[K, V] {
 
 func (tree *Tree[K, V]) Get(key K) V {
 	return *tree.GetRef(key)
-}
-
-func (tree *Tree[K, V]) GetOrDefault(key K) V {
-	return tree.GetOrElse(key, functions.Zero[V]())
-}
-
-func (tree *Tree[K, V]) GetOrElse(key K, value V) V {
-	node := tree.GetNode(key)
-	if node == nil {
-		return value
-	}
-
-	return node.Value
 }
 
 func (tree *Tree[K, V]) TryGet(key K) (V, bool) {
