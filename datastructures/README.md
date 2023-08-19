@@ -76,7 +76,7 @@ hmap := hashmap.NewWithCapacity[T](capacity)
 
 ### Casts
 Some types use others as their internal representation (slices, built-in maps, etc.).
-Therefore, those types have constructors that allow you to create them from underyling types.
+Therefore, those types have constructors that allow you to create them from underlying types.
 
 ```go
 arr := array.FromSlice[T](slice)

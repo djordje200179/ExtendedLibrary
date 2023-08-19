@@ -7,7 +7,7 @@ Every task can be cancelled, and every panic is recovered and returned.
 You can check status of the task whenever you want. And you can also
 wait for the task to finish.
 
-By default, there exists a global executor that has as much goroutines
+By default, there exists a global executor that has as many goroutines
 as there are CPU cores. But, you can also create your own executors with
 custom number of goroutines.
 
