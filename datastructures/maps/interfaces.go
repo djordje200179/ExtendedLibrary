@@ -33,7 +33,6 @@ type Map[K, V any] interface {
 	Contains(key K) bool
 
 	Clear()
-	Swap(key1, key2 K)
 
 	misc.Cloner[Map[K, V]]
 

@@ -99,13 +99,6 @@ func (wrapper *Wrapper[T]) Reverse() {
 	wrapper.collection.Reverse()
 }
 
-func (wrapper *Wrapper[T]) Swap(index1, index2 int) {
-	wrapper.mutex.Lock()
-	defer wrapper.mutex.Unlock()
-
-	wrapper.collection.Swap(index1, index2)
-}
-
 func (wrapper *Wrapper[T]) Sort(comparator comparison.Comparator[T]) {
 	wrapper.mutex.Lock()
 	defer wrapper.mutex.Unlock()

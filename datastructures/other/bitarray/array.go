@@ -232,14 +232,6 @@ func (array *Array) Reverse() {
 	panic("not implemented")
 }
 
-func (array *Array) Swap(index1, index2 int) {
-	elem1 := array.Get(index1)
-	elem2 := array.Get(index2)
-
-	array.Set(index1, elem2)
-	array.Set(index2, elem1)
-}
-
 func (array *Array) Join(other *Array) {
 	if array.lastElemOff == 0 {
 		array.array.AppendMany(other.array...)

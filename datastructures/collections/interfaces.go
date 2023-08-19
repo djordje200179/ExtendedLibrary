@@ -34,7 +34,6 @@ type Collection[T any] interface {
 
 	Clear()
 	Reverse()
-	Swap(index1, index2 int)
 	Sort(comparator comparison.Comparator[T])
 	Join(other Collection[T])
 

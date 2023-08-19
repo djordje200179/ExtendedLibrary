@@ -127,13 +127,6 @@ func (array *Array[T]) Reverse() {
 	slices.Reverse(array.Slice())
 }
 
-func (array *Array[T]) Swap(index1, index2 int) {
-	index1 = array.getRealIndex(index1)
-	index2 = array.getRealIndex(index2)
-
-	array.Slice()[index1], array.Slice()[index2] = array.Slice()[index2], array.Slice()[index1]
-}
-
 func (array *Array[T]) Sort(comparator comparison.Comparator[T]) {
 	slices.SortStableFunc(array.Slice(), comparator)
 }

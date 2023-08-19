@@ -43,9 +43,9 @@ func (tree *Tree[K, V]) GetNode(key K) *Node[K, V] {
 	for curr := tree.root; curr != nil; {
 		switch tree.comparator(key, curr.key) {
 		case comparison.FirstSmaller:
-			curr = curr.left
+			curr = curr.leftChild
 		case comparison.FirstBigger:
-			curr = curr.right
+			curr = curr.rightChild
 		case comparison.Equal:
 			return curr
 		}
@@ -108,9 +108,9 @@ func (tree *Tree[K, V]) Set(key K, value V) {
 		prev = curr
 		switch tree.comparator(key, curr.key) {
 		case comparison.FirstSmaller:
-			curr = curr.left
+			curr = curr.leftChild
 		case comparison.FirstBigger:
-			curr = curr.right
+			curr = curr.rightChild
 		case comparison.Equal:
 			curr.Value = value
 			return
@@ -125,9 +125,9 @@ func (tree *Tree[K, V]) Set(key K, value V) {
 	}
 
 	if tree.comparator(key, prev.key) == comparison.FirstSmaller {
-		prev.left = node
+		prev.leftChild = node
 	} else {
-		prev.right = node
+		prev.rightChild = node
 	}
 
 	tree.nodes++
@@ -148,7 +148,7 @@ func (tree *Tree[K, V]) Keys() []K {
 }
 
 func (tree *Tree[K, V]) removeNode(node *Node[K, V]) {
-	if node.left != nil && node.right != nil {
+	if node.leftChild != nil && node.rightChild != nil {
 		next := node.Next()
 
 		next.key = node.key
@@ -162,19 +162,19 @@ func (tree *Tree[K, V]) removeNode(node *Node[K, V]) {
 	tree.nodes--
 
 	var child *Node[K, V]
-	if node.left != nil {
-		child = node.left
+	if node.leftChild != nil {
+		child = node.leftChild
 	} else {
-		child = node.right
+		child = node.rightChild
 	}
 
 	var locationInParent **Node[K, V]
 	if node.parent == nil {
 		locationInParent = &tree.root
-	} else if node.parent.left == node {
-		locationInParent = &node.parent.left
+	} else if node.parent.leftChild == node {
+		locationInParent = &node.parent.leftChild
 	} else {
-		locationInParent = &node.parent.right
+		locationInParent = &node.parent.rightChild
 	}
 
 	if child != nil {
@@ -192,10 +192,10 @@ func (tree *Tree[K, V]) removeNode(node *Node[K, V]) {
 		}
 
 		if node.parent != nil {
-			if node.parent.left == node {
-				node.parent.left = nil
+			if node.parent.leftChild == node {
+				node.parent.leftChild = nil
 			} else {
-				node.parent.right = nil
+				node.parent.rightChild = nil
 			}
 
 			node.parent = nil
@@ -216,20 +216,6 @@ func (tree *Tree[K, V]) Contains(key K) bool {
 
 func (tree *Tree[K, V]) Clear() {
 	tree.root = nil
-}
-
-func (tree *Tree[K, V]) Swap(key1, key2 K) {
-	node1, node2 := tree.GetNode(key1), tree.GetNode(key2)
-
-	if node1 == nil {
-		maps.PanicOnMissingKey(key1)
-	}
-
-	if node2 == nil {
-		maps.PanicOnMissingKey(key2)
-	}
-
-	node1.Value, node2.Value = node2.Value, node1.Value
 }
 
 func (tree *Tree[K, V]) Clone() maps.Map[K, V] {

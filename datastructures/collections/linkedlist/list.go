@@ -143,13 +143,6 @@ func (list *List[T]) Reverse() {
 	list.head, list.tail = list.tail, list.head
 }
 
-func (list *List[T]) Swap(index1, index2 int) {
-	node1 := list.GetNode(index1)
-	node2 := list.GetNode(index2)
-
-	list.SwapNodes(node1, node2)
-}
-
 func (list *List[T]) SwapNodes(node1, node2 *Node[T]) {
 	if node1 == node2 {
 		return

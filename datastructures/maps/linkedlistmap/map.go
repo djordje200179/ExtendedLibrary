@@ -1,7 +1,6 @@
 package linkedlistmap
 
 import (
-	"fmt"
 	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/collections/linkedlist"
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
@@ -111,20 +110,6 @@ func (m *Map[K, V]) Contains(key K) bool {
 
 func (m *Map[K, V]) Clear() {
 	m.List().Clear()
-}
-
-func (m *Map[K, V]) Swap(key1, key2 K) {
-	it1 := m.find(key1)
-	if it1 == nil {
-		panic(fmt.Sprintf("Key %v not found", key1))
-	}
-
-	it2 := m.find(key2)
-	if it2 == nil {
-		panic(fmt.Sprintf("Key %v not found", key2))
-	}
-
-	it1.GetRef().First, it2.GetRef().First = it2.GetRef().First, it1.GetRef().First
 }
 
 func (m *Map[K, V]) Clone() maps.Map[K, V] {

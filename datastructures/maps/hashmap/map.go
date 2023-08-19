@@ -1,7 +1,6 @@
 package hashmap
 
 import (
-	"fmt"
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/misc"
@@ -96,20 +95,6 @@ func (hashmap Map[K, V]) Contains(key K) bool {
 
 func (hashmap Map[K, V]) Clear() {
 	clear(hashmap)
-}
-
-func (hashmap Map[K, V]) Swap(key1, key2 K) {
-	value1, ok1 := hashmap[key1]
-	if !ok1 {
-		panic(fmt.Sprintf("Key %v not found", key1))
-	}
-
-	value2, ok2 := hashmap[key2]
-	if !ok2 {
-		panic(fmt.Sprintf("Key %v not found", key2))
-	}
-
-	hashmap[key1], hashmap[key2] = value2, value1
 }
 
 func (hashmap Map[K, V]) Clone() maps.Map[K, V] {

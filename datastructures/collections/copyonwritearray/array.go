@@ -131,16 +131,6 @@ func (array *CopyOnWriteArray[T]) Reverse() {
 	array.rawArray = newArray
 }
 
-func (array *CopyOnWriteArray[T]) Swap(index1, index2 int) {
-	array.mutex.Lock()
-	defer array.mutex.Unlock()
-
-	newArray := array.rawArray.Clone().(*rawArray.Array[T])
-	newArray.Swap(index1, index2)
-
-	array.rawArray = newArray
-}
-
 func (array *CopyOnWriteArray[T]) Sort(comparator comparison.Comparator[T]) {
 	array.mutex.Lock()
 	defer array.mutex.Unlock()

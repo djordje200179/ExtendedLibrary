@@ -13,9 +13,9 @@ type Node[K, V any] struct {
 
 	color color
 
-	left   *Node[K, V]
-	right  *Node[K, V]
-	parent *Node[K, V]
+	leftChild  *Node[K, V]
+	rightChild *Node[K, V]
+	parent     *Node[K, V]
 }
 
 func (node *Node[K, V]) Key() K {
@@ -23,11 +23,11 @@ func (node *Node[K, V]) Key() K {
 }
 
 func (node *Node[K, V]) LeftChild() *Node[K, V] {
-	return node.left
+	return node.leftChild
 }
 
 func (node *Node[K, V]) RightChild() *Node[K, V] {
-	return node.right
+	return node.rightChild
 }
 
 func (node *Node[K, V]) Parent() *Node[K, V] {
@@ -39,20 +39,20 @@ func (node *Node[K, V]) Sibling() *Node[K, V] {
 		return nil
 	}
 
-	if node.parent.left == node {
-		return node.parent.right
+	if node.parent.leftChild == node {
+		return node.parent.rightChild
 	} else {
-		return node.parent.left
+		return node.parent.leftChild
 	}
 }
 
 func (node *Node[K, V]) Prev() *Node[K, V] {
-	if node.left != nil {
-		return node.left.Max()
+	if node.leftChild != nil {
+		return node.leftChild.Max()
 	}
 
-	for prev, curr := node.parent, node; prev != nil && curr == prev.left; curr, prev = prev, prev.parent {
-		if curr != prev.left {
+	for prev, curr := node.parent, node; prev != nil && curr == prev.leftChild; curr, prev = prev, prev.parent {
+		if curr != prev.leftChild {
 			return prev
 		}
 	}
@@ -61,12 +61,12 @@ func (node *Node[K, V]) Prev() *Node[K, V] {
 }
 
 func (node *Node[K, V]) Next() *Node[K, V] {
-	if node.right != nil {
-		return node.right.Min()
+	if node.rightChild != nil {
+		return node.rightChild.Min()
 	}
 
 	for prev, curr := node.parent, node; prev != nil; curr, prev = prev, prev.parent {
-		if curr != prev.right {
+		if curr != prev.rightChild {
 			return prev
 		}
 	}
@@ -75,8 +75,8 @@ func (node *Node[K, V]) Next() *Node[K, V] {
 }
 
 func (node *Node[K, V]) Min() *Node[K, V] {
-	for curr := node; curr != nil; curr = curr.left {
-		if curr.left == nil {
+	for curr := node; curr != nil; curr = curr.leftChild {
+		if curr.leftChild == nil {
 			return curr
 		}
 	}
@@ -85,8 +85,8 @@ func (node *Node[K, V]) Min() *Node[K, V] {
 }
 
 func (node *Node[K, V]) Max() *Node[K, V] {
-	for curr := node; curr != nil; curr = curr.right {
-		if curr.right == nil {
+	for curr := node; curr != nil; curr = curr.rightChild {
+		if curr.rightChild == nil {
 			return curr
 		}
 	}
