@@ -14,7 +14,7 @@ import (
 type empty struct{}
 
 type Set[T any] struct {
-	maps.Map[T, empty]
+	m maps.Map[T, empty]
 }
 
 func NewHashSet[T comparable]() Set[T] {
@@ -37,14 +37,30 @@ func TreeSetCollector[T cmp.Ordered]() streams.Collector[T, Set[T]] {
 	return sets.Collector[T, Set[T]]{NewTreeSet[T]()}
 }
 
+func (set Set[T]) Size() int {
+	return set.m.Size()
+}
+
 func (set Set[T]) Add(value T) {
-	if !set.Contains(value) {
-		set.Map.Set(value, empty{})
+	if !set.m.Contains(value) {
+		set.m.Set(value, empty{})
 	}
 }
 
+func (set Set[T]) Remove(value T) {
+	set.m.Remove(value)
+}
+
+func (set Set[T]) Contains(value T) bool {
+	return set.m.Contains(value)
+}
+
+func (set Set[T]) Clear() {
+	set.m.Clear()
+}
+
 func (set Set[T]) Clone() sets.Set[T] {
-	return FromMap[T](set.Map.Clone())
+	return FromMap[T](set.m.Clone())
 }
 
 func (set Set[T]) Iterator() iterable.Iterator[T] {
@@ -52,11 +68,15 @@ func (set Set[T]) Iterator() iterable.Iterator[T] {
 }
 
 func (set Set[T]) ModifyingIterator() sets.Iterator[T] {
-	return Iterator[T]{set.Map.ModifyingIterator()}
+	return Iterator[T]{set.m.ModifyingIterator()}
 }
 
 func (set Set[T]) Stream() streams.Stream[T] {
-	return streams.Map(set.Map.Stream(), func(pair misc.Pair[T, empty]) T {
+	return streams.Map(set.m.Stream(), func(pair misc.Pair[T, empty]) T {
 		return pair.First
 	})
+}
+
+func (set Set[T]) Map() maps.Map[T, empty] {
+	return set.m
 }
