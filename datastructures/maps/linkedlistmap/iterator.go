@@ -6,7 +6,7 @@ import (
 )
 
 type Iterator[K comparable, V any] struct {
-	collections.Iterator[misc.Pair[K, V]]
+	listIt collections.Iterator[misc.Pair[K, V]]
 }
 
 func (it Iterator[K, V]) Get() misc.Pair[K, V] {
@@ -14,17 +14,17 @@ func (it Iterator[K, V]) Get() misc.Pair[K, V] {
 }
 
 func (it Iterator[K, V]) Key() K {
-	return it.Iterator.GetRef().First
+	return it.listIt.GetRef().First
 }
 
 func (it Iterator[K, V]) Value() V {
-	return *it.ValueRef()
+	return it.listIt.GetRef().Second
 }
 
 func (it Iterator[K, V]) ValueRef() *V {
-	return &it.Iterator.GetRef().Second
+	return &it.listIt.GetRef().Second
 }
 
 func (it Iterator[K, V]) SetValue(value V) {
-	*it.ValueRef() = value
+	it.listIt.GetRef().Second = value
 }

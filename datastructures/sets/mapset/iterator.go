@@ -5,9 +5,21 @@ import (
 )
 
 type Iterator[T any] struct {
-	maps.Iterator[T, empty]
+	mapIt maps.Iterator[T, empty]
+}
+
+func (it Iterator[T]) Valid() bool {
+	return it.mapIt.Valid()
+}
+
+func (it Iterator[T]) Move() {
+	it.mapIt.Move()
 }
 
 func (it Iterator[T]) Get() T {
-	return it.Iterator.Key()
+	return it.mapIt.Key()
+}
+
+func (it Iterator[T]) Remove() {
+	it.mapIt.Remove()
 }
