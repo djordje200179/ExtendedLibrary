@@ -26,12 +26,12 @@ func New[K cmp.Ordered, V any]() *Tree[K, V] {
 	return NewWithComparator[K, V](cmp.Compare[K])
 }
 
-func CollectorWithComparator[K, V any](comparator comparison.Comparator[K]) streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
-	return maps.Collector[K, V]{NewWithComparator[K, V](comparator)}
+func CollectorWithComparator[K, V any](comparator comparison.Comparator[K]) streams.Collector[misc.Pair[K, V], *Tree[K, V]] {
+	return maps.Collector[K, V, *Tree[K, V]]{NewWithComparator[K, V](comparator)}
 }
 
-func Collector[K cmp.Ordered, V any]() streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
-	return maps.Collector[K, V]{New[K, V]()}
+func Collector[K cmp.Ordered, V any]() streams.Collector[misc.Pair[K, V], *Tree[K, V]] {
+	return maps.Collector[K, V, *Tree[K, V]]{New[K, V]()}
 }
 
 func (tree *Tree[K, V]) Size() int {

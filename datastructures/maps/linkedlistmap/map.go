@@ -19,8 +19,8 @@ func FromList[K comparable, V any](list *linkedlist.List[misc.Pair[K, V]]) *Map[
 	return (*Map[K, V])(list)
 }
 
-func Collector[K comparable, V any]() streams.Collector[misc.Pair[K, V], maps.Map[K, V]] {
-	return maps.Collector[K, V]{New[K, V]()}
+func Collector[K comparable, V any]() streams.Collector[misc.Pair[K, V], *Map[K, V]] {
+	return maps.Collector[K, V, *Map[K, V]]{New[K, V]()}
 }
 
 func (m *Map[K, V]) Size() int {
