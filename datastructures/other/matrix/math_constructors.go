@@ -1,10 +1,12 @@
 package matrix
 
-func Zeros[T Number](size Size) *Matrix[T] {
+import "github.com/djordje200179/extendedlibrary/misc/math"
+
+func Zeros[T math.Number](size Size) *Matrix[T] {
 	return New[T](size)
 }
 
-func Ones[T Number](size Size) *Matrix[T] {
+func Ones[T math.Number](size Size) *Matrix[T] {
 	matrix := New[T](size)
 
 	for i := 0; i < size.Elements(); i++ {
@@ -14,7 +16,7 @@ func Ones[T Number](size Size) *Matrix[T] {
 	return matrix
 }
 
-func Identity[T Number](size Size) *Matrix[T] {
+func Identity[T math.Number](size Size) *Matrix[T] {
 	matrix := Zeros[T](size)
 
 	for i := 0; i < size.Height && i < size.Width; i++ {
