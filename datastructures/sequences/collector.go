@@ -4,14 +4,14 @@ type BackPusher[T any] interface {
 	PushBack(value T)
 }
 
-type Collector[T any, Sequence BackPusher[T]] struct {
-	BackPusher BackPusher[T]
+type Collector[T any, BP BackPusher[T]] struct {
+	BackPusher BP
 }
 
-func (collector Collector[T, Sequence]) Supply(value T) {
+func (collector Collector[T, BP]) Supply(value T) {
 	collector.BackPusher.PushBack(value)
 }
 
-func (collector Collector[T, Sequence]) Finish() Sequence {
-	return collector.BackPusher.(Sequence)
+func (collector Collector[T, BP]) Finish() BP {
+	return collector.BackPusher
 }
