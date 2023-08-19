@@ -1,13 +1,13 @@
 package collections
 
-type Collector[T any] struct {
-	Collection Collection[T]
+type Collector[T any, C Collection[T]] struct {
+	Collection C
 }
 
-func (collector Collector[T]) Supply(value T) {
+func (collector Collector[T, C]) Supply(value T) {
 	collector.Collection.Append(value)
 }
 
-func (collector Collector[T]) Finish() Collection[T] {
+func (collector Collector[T, C]) Finish() C {
 	return collector.Collection
 }

@@ -28,8 +28,8 @@ func FromSlice[T any](slice []T) *Array[T] {
 	return (*Array[T])(&slice)
 }
 
-func Collector[T any]() streams.Collector[T, collections.Collection[T]] {
-	return collections.Collector[T]{New[T]()}
+func Collector[T any]() streams.Collector[T, *Array[T]] {
+	return collections.Collector[T, *Array[T]]{New[T]()}
 }
 
 func (array *Array[T]) Size() int {

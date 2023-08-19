@@ -35,8 +35,8 @@ func FromSlice[T any](slice []T) *CopyOnWriteArray[T] {
 	return FromArray(rawArray.FromSlice(slice))
 }
 
-func Collector[T any]() streams.Collector[T, collections.Collection[T]] {
-	return collections.Collector[T]{New[T]()}
+func Collector[T any]() streams.Collector[T, *CopyOnWriteArray[T]] {
+	return collections.Collector[T, *CopyOnWriteArray[T]]{New[T]()}
 }
 
 func (array *CopyOnWriteArray[T]) Size() int {

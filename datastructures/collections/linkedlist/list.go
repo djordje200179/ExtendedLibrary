@@ -16,8 +16,8 @@ func New[T any]() *List[T] {
 	return new(List[T])
 }
 
-func Collector[T any]() streams.Collector[T, collections.Collection[T]] {
-	return collections.Collector[T]{New[T]()}
+func Collector[T any]() streams.Collector[T, *List[T]] {
+	return collections.Collector[T, *List[T]]{New[T]()}
 }
 
 func (list *List[T]) Size() int {
