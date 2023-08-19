@@ -1,7 +1,7 @@
 package copyonwritearray
 
 type Iterator[T any] struct {
-	array *CopyOnWriteArray[T]
+	array *Array[T]
 	index int
 }
 

@@ -13,49 +13,49 @@ import (
 
 type empty struct{}
 
-type MapBasedSet[T any] struct {
+type Set[T any] struct {
 	maps.Map[T, empty]
 }
 
-func NewHashSet[T comparable]() MapBasedSet[T] {
+func NewHashSet[T comparable]() Set[T] {
 	return FromMap[T](hashmap.New[T, empty]())
 }
 
-func NewTreeSet[T cmp.Ordered]() MapBasedSet[T] {
+func NewTreeSet[T cmp.Ordered]() Set[T] {
 	return FromMap[T](redblacktree.New[T, empty]())
 }
 
-func FromMap[T any](m maps.Map[T, empty]) MapBasedSet[T] {
-	return MapBasedSet[T]{m}
+func FromMap[T any](m maps.Map[T, empty]) Set[T] {
+	return Set[T]{m}
 }
 
-func HashSetCollector[T comparable]() streams.Collector[T, MapBasedSet[T]] {
-	return sets.Collector[T, MapBasedSet[T]]{NewHashSet[T]()}
+func HashSetCollector[T comparable]() streams.Collector[T, Set[T]] {
+	return sets.Collector[T, Set[T]]{NewHashSet[T]()}
 }
 
-func TreeSetCollector[T cmp.Ordered]() streams.Collector[T, MapBasedSet[T]] {
-	return sets.Collector[T, MapBasedSet[T]]{NewTreeSet[T]()}
+func TreeSetCollector[T cmp.Ordered]() streams.Collector[T, Set[T]] {
+	return sets.Collector[T, Set[T]]{NewTreeSet[T]()}
 }
 
-func (set MapBasedSet[T]) Add(value T) {
+func (set Set[T]) Add(value T) {
 	if !set.Contains(value) {
 		set.Map.Set(value, empty{})
 	}
 }
 
-func (set MapBasedSet[T]) Clone() sets.Set[T] {
+func (set Set[T]) Clone() sets.Set[T] {
 	return FromMap[T](set.Map.Clone())
 }
 
-func (set MapBasedSet[T]) Iterator() iterable.Iterator[T] {
+func (set Set[T]) Iterator() iterable.Iterator[T] {
 	return set.ModifyingIterator()
 }
 
-func (set MapBasedSet[T]) ModifyingIterator() sets.Iterator[T] {
+func (set Set[T]) ModifyingIterator() sets.Iterator[T] {
 	return Iterator[T]{set.Map.ModifyingIterator()}
 }
 
-func (set MapBasedSet[T]) Stream() streams.Stream[T] {
+func (set Set[T]) Stream() streams.Stream[T] {
 	return streams.Map(set.Map.Stream(), func(pair misc.Pair[T, empty]) T {
 		return pair.First
 	})
