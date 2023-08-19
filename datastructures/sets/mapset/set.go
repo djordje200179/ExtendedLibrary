@@ -17,24 +17,24 @@ type MapBasedSet[T any] struct {
 	maps.Map[T, empty]
 }
 
-func NewHashSet[T comparable]() sets.Set[T] {
+func NewHashSet[T comparable]() MapBasedSet[T] {
 	return FromMap[T](hashmap.New[T, empty]())
 }
 
-func NewTreeSet[T cmp.Ordered]() sets.Set[T] {
+func NewTreeSet[T cmp.Ordered]() MapBasedSet[T] {
 	return FromMap[T](redblacktree.New[T, empty]())
 }
 
-func FromMap[T any](m maps.Map[T, empty]) sets.Set[T] {
+func FromMap[T any](m maps.Map[T, empty]) MapBasedSet[T] {
 	return MapBasedSet[T]{m}
 }
 
-func HashSetCollector[T comparable]() streams.Collector[T, sets.Set[T]] {
-	return sets.Collector[T]{NewHashSet[T]()}
+func HashSetCollector[T comparable]() streams.Collector[T, MapBasedSet[T]] {
+	return sets.Collector[T, MapBasedSet[T]]{NewHashSet[T]()}
 }
 
-func TreeSetCollector[T cmp.Ordered]() streams.Collector[T, sets.Set[T]] {
-	return sets.Collector[T]{NewTreeSet[T]()}
+func TreeSetCollector[T cmp.Ordered]() streams.Collector[T, MapBasedSet[T]] {
+	return sets.Collector[T, MapBasedSet[T]]{NewTreeSet[T]()}
 }
 
 func (set MapBasedSet[T]) Add(value T) {
