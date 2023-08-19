@@ -18,11 +18,14 @@ This package implements many generic data structures:
 	- Read-only wrapper
 	- Concurrent wrapper
 - Sets
-	- Map wrapper
+	- Hashset
+    - Tree set
+    - Bitarray set
 	- Read-only wrapper
 - Sequences
 	- Bounded buffer
-	- Collection wrapper
+    - Linked list deque
+    - Array deque
 	- Priority queue
 - Other
 	- Bitarray
