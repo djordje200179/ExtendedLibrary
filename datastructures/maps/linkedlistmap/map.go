@@ -1,7 +1,6 @@
 package linkedlistmap
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/collections"
 	"github.com/djordje200179/extendedlibrary/datastructures/collections/linkedlist"
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
@@ -29,10 +28,13 @@ func (m *Map[K, V]) Size() int {
 	return m.List().Size()
 }
 
-func (m *Map[K, V]) find(key K) collections.Iterator[misc.Pair[K, V]] {
-	for it := m.List().ModifyingIterator(); it.Valid(); it.Move() {
+func (m *Map[K, V]) GetNode(key K) *linkedlist.Node[misc.Pair[K, V]] {
+	collectionIterator := m.List().ModifyingIterator()
+	listIterator := collectionIterator.(*linkedlist.Iterator[misc.Pair[K, V]])
+
+	for it := listIterator; it.Valid(); it.Move() {
 		if it.Get().First == key {
-			return it
+			return it.Node()
 		}
 	}
 
@@ -48,39 +50,39 @@ func (m *Map[K, V]) GetOrDefault(key K) V {
 }
 
 func (m *Map[K, V]) GetOrElse(key K, value V) V {
-	it := m.find(key)
-	if it == nil {
+	node := m.GetNode(key)
+	if node == nil {
 		return value
 	}
 
-	return it.Get().Second
+	return node.Value.Second
 }
 
 func (m *Map[K, V]) TryGet(key K) (V, bool) {
-	it := m.find(key)
-	if it == nil {
+	node := m.GetNode(key)
+	if node == nil {
 		var zero V
 		return zero, false
 	}
 
-	return it.Get().Second, true
+	return node.Value.Second, true
 }
 
 func (m *Map[K, V]) GetRef(key K) *V {
-	it := m.find(key)
-	if it == nil {
+	node := m.GetNode(key)
+	if node == nil {
 		maps.PanicOnMissingKey(key)
 	}
 
-	return &it.GetRef().Second
+	return &node.Value.Second
 }
 
 func (m *Map[K, V]) Set(key K, value V) {
-	it := m.find(key)
-	if it == nil {
+	node := m.GetNode(key)
+	if node == nil {
 		m.List().Append(misc.Pair[K, V]{key, value})
 	} else {
-		it.GetRef().Second = value
+		node.Value.Second = value
 	}
 }
 
@@ -97,15 +99,16 @@ func (m *Map[K, V]) Keys() []K {
 }
 
 func (m *Map[K, V]) Remove(key K) {
-	it := m.find(key)
-
-	if it != nil {
-		it.Remove()
+	node := m.GetNode(key)
+	if node == nil {
+		return
 	}
+
+	m.List().RemoveNode(node)
 }
 
 func (m *Map[K, V]) Contains(key K) bool {
-	return m.find(key) != nil
+	return m.GetNode(key) != nil
 }
 
 func (m *Map[K, V]) Clear() {
