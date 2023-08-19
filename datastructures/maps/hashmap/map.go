@@ -31,6 +31,16 @@ func (hashmap Map[K, V]) Size() int {
 	return len(hashmap)
 }
 
+func (hashmap Map[K, V]) Contains(key K) bool {
+	_, ok := hashmap[key]
+	return ok
+}
+
+func (hashmap Map[K, V]) TryGet(key K) (V, bool) {
+	value, ok := hashmap[key]
+	return value, ok
+}
+
 func (hashmap Map[K, V]) Get(key K) V {
 	value, ok := hashmap[key]
 	if !ok {
@@ -38,11 +48,6 @@ func (hashmap Map[K, V]) Get(key K) V {
 	}
 
 	return value
-}
-
-func (hashmap Map[K, V]) TryGet(key K) (V, bool) {
-	value, ok := hashmap[key]
-	return value, ok
 }
 
 func (hashmap Map[K, V]) GetRef(key K) *V {
@@ -60,6 +65,10 @@ func (hashmap Map[K, V]) Set(key K, value V) {
 	hashmap[key] = value
 }
 
+func (hashmap Map[K, V]) Remove(key K) {
+	delete(hashmap, key)
+}
+
 func (hashmap Map[K, V]) Keys() []K {
 	keys := make([]K, len(hashmap))
 
@@ -70,15 +79,6 @@ func (hashmap Map[K, V]) Keys() []K {
 	}
 
 	return keys
-}
-
-func (hashmap Map[K, V]) Remove(key K) {
-	delete(hashmap, key)
-}
-
-func (hashmap Map[K, V]) Contains(key K) bool {
-	_, ok := hashmap[key]
-	return ok
 }
 
 func (hashmap Map[K, V]) Clear() {

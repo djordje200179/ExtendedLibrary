@@ -40,8 +40,8 @@ func (m *Map[K, V]) GetNode(key K) *linkedlist.Node[misc.Pair[K, V]] {
 	return nil
 }
 
-func (m *Map[K, V]) Get(key K) V {
-	return *m.GetRef(key)
+func (m *Map[K, V]) Contains(key K) bool {
+	return m.GetNode(key) != nil
 }
 
 func (m *Map[K, V]) TryGet(key K) (V, bool) {
@@ -52,6 +52,10 @@ func (m *Map[K, V]) TryGet(key K) (V, bool) {
 	}
 
 	return node.Value.Second, true
+}
+
+func (m *Map[K, V]) Get(key K) V {
+	return *m.GetRef(key)
 }
 
 func (m *Map[K, V]) GetRef(key K) *V {
@@ -72,6 +76,15 @@ func (m *Map[K, V]) Set(key K, value V) {
 	}
 }
 
+func (m *Map[K, V]) Remove(key K) {
+	node := m.GetNode(key)
+	if node == nil {
+		return
+	}
+
+	m.List().RemoveNode(node)
+}
+
 func (m *Map[K, V]) Keys() []K {
 	keys := make([]K, m.Size())
 
@@ -82,19 +95,6 @@ func (m *Map[K, V]) Keys() []K {
 	}
 
 	return keys
-}
-
-func (m *Map[K, V]) Remove(key K) {
-	node := m.GetNode(key)
-	if node == nil {
-		return
-	}
-
-	m.List().RemoveNode(node)
-}
-
-func (m *Map[K, V]) Contains(key K) bool {
-	return m.GetNode(key) != nil
 }
 
 func (m *Map[K, V]) Clear() {

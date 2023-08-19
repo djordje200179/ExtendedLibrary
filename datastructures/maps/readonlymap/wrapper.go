@@ -19,20 +19,20 @@ func (wrapper Wrapper[K, V]) Size() int {
 	return wrapper.m.Size()
 }
 
-func (wrapper Wrapper[K, V]) Get(key K) V {
-	return wrapper.m.Get(key)
+func (wrapper Wrapper[K, V]) Contains(key K) bool {
+	return wrapper.m.Contains(key)
 }
 
 func (wrapper Wrapper[K, V]) TryGet(key K) (V, bool) {
 	return wrapper.m.TryGet(key)
 }
 
-func (wrapper Wrapper[K, V]) Keys() []K {
-	return wrapper.m.Keys()
+func (wrapper Wrapper[K, V]) Get(key K) V {
+	return wrapper.m.Get(key)
 }
 
-func (wrapper Wrapper[K, V]) Contains(key K) bool {
-	return wrapper.m.Contains(key)
+func (wrapper Wrapper[K, V]) Keys() []K {
+	return wrapper.m.Keys()
 }
 
 func (wrapper Wrapper[K, V]) Clone() Wrapper[K, V] {

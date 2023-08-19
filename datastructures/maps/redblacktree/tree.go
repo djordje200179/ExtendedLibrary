@@ -53,8 +53,8 @@ func (tree *Tree[K, V]) GetNode(key K) *Node[K, V] {
 	return nil
 }
 
-func (tree *Tree[K, V]) Get(key K) V {
-	return *tree.GetRef(key)
+func (tree *Tree[K, V]) Contains(key K) bool {
+	return tree.GetNode(key) != nil
 }
 
 func (tree *Tree[K, V]) TryGet(key K) (V, bool) {
@@ -65,6 +65,10 @@ func (tree *Tree[K, V]) TryGet(key K) (V, bool) {
 	}
 
 	return node.Value, true
+}
+
+func (tree *Tree[K, V]) Get(key K) V {
+	return *tree.GetRef(key)
 }
 
 func (tree *Tree[K, V]) GetRef(key K) *V {
@@ -119,18 +123,6 @@ func (tree *Tree[K, V]) Set(key K, value V) {
 	tree.nodes++
 
 	tree.fixInsert(node)
-}
-
-func (tree *Tree[K, V]) Keys() []K {
-	keys := make([]K, tree.nodes)
-
-	i := 0
-	for it := tree.Iterator(); it.Valid(); it.Move() {
-		keys[i] = it.Get().First
-		i++
-	}
-
-	return keys
 }
 
 func (tree *Tree[K, V]) removeNode(node *Node[K, V]) {
@@ -196,8 +188,16 @@ func (tree *Tree[K, V]) Remove(key K) {
 	}
 }
 
-func (tree *Tree[K, V]) Contains(key K) bool {
-	return tree.GetNode(key) != nil
+func (tree *Tree[K, V]) Keys() []K {
+	keys := make([]K, tree.nodes)
+
+	i := 0
+	for it := tree.Iterator(); it.Valid(); it.Move() {
+		keys[i] = it.Get().First
+		i++
+	}
+
+	return keys
 }
 
 func (tree *Tree[K, V]) Clear() {

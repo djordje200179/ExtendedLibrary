@@ -20,15 +20,14 @@ type Iterator[K, V any] interface {
 type Map[K, V any] interface {
 	Size() int
 
-	Get(key K) V
+	Contains(key K) bool
 	TryGet(key K) (V, bool)
+	Get(key K) V
 	GetRef(key K) *V
 	Set(key K, value V)
+	Remove(key K)
 
 	Keys() []K
-
-	Remove(key K)
-	Contains(key K) bool
 
 	Clear()
 

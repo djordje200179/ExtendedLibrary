@@ -25,11 +25,11 @@ func (wrapper *Wrapper[K, V]) Size() int {
 	return wrapper.m.Size()
 }
 
-func (wrapper *Wrapper[K, V]) Get(key K) V {
+func (wrapper *Wrapper[K, V]) Contains(key K) bool {
 	wrapper.mutex.RLock()
 	defer wrapper.mutex.RUnlock()
 
-	return wrapper.m.Get(key)
+	return wrapper.m.Contains(key)
 }
 
 func (wrapper *Wrapper[K, V]) TryGet(key K) (V, bool) {
@@ -37,6 +37,13 @@ func (wrapper *Wrapper[K, V]) TryGet(key K) (V, bool) {
 	defer wrapper.mutex.RUnlock()
 
 	return wrapper.m.TryGet(key)
+}
+
+func (wrapper *Wrapper[K, V]) Get(key K) V {
+	wrapper.mutex.RLock()
+	defer wrapper.mutex.RUnlock()
+
+	return wrapper.m.Get(key)
 }
 
 func (wrapper *Wrapper[K, V]) GetRef(key K) *V {
@@ -71,13 +78,6 @@ func (wrapper *Wrapper[K, V]) UpdateRef(key K, updateFunction func(oldValue *V))
 	updateFunction(oldValue)
 }
 
-func (wrapper *Wrapper[K, V]) Keys() []K {
-	wrapper.mutex.RLock()
-	defer wrapper.mutex.RUnlock()
-
-	return wrapper.m.Keys()
-}
-
 func (wrapper *Wrapper[K, V]) Remove(key K) {
 	wrapper.mutex.Lock()
 	defer wrapper.mutex.Unlock()
@@ -85,11 +85,11 @@ func (wrapper *Wrapper[K, V]) Remove(key K) {
 	wrapper.m.Remove(key)
 }
 
-func (wrapper *Wrapper[K, V]) Contains(key K) bool {
+func (wrapper *Wrapper[K, V]) Keys() []K {
 	wrapper.mutex.RLock()
 	defer wrapper.mutex.RUnlock()
 
-	return wrapper.m.Contains(key)
+	return wrapper.m.Keys()
 }
 
 func (wrapper *Wrapper[K, V]) Clear() {
