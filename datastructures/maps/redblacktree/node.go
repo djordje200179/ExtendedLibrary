@@ -94,6 +94,14 @@ func (node *Node[K, V]) Max() *Node[K, V] {
 	return nil
 }
 
+func (node *Node[K, V]) Clone() *Node[K, V] {
+	return &Node[K, V]{
+		key:   node.key,
+		Value: node.Value,
+		color: node.color,
+	}
+}
+
 func nodeColor[K, V any](node *Node[K, V]) color {
 	if node == nil {
 		return black

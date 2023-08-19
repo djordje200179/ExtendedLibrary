@@ -4,6 +4,7 @@ import (
 	"cmp"
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
+	"github.com/djordje200179/extendedlibrary/datastructures/sequences/collectionsequence"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 	"github.com/djordje200179/extendedlibrary/streams"
@@ -205,8 +206,45 @@ func (tree *Tree[K, V]) Clear() {
 }
 
 func (tree *Tree[K, V]) Clone() maps.Map[K, V] {
-	//TODO implement me
-	panic("implement me")
+	newTree := &Tree[K, V]{
+		nodes:      tree.nodes,
+		comparator: tree.comparator,
+	}
+
+	if tree.root == nil {
+		return newTree
+	}
+
+	newTree.root = tree.root.Clone()
+
+	nodesInOriginal := collectionsequence.NewArrayDeque[*Node[K, V]]()
+	nodesInOriginal.PushBack(tree.root)
+
+	nodesInCloned := collectionsequence.NewArrayDeque[*Node[K, V]]()
+	nodesInCloned.PushBack(newTree.root)
+
+	for !nodesInOriginal.Empty() {
+		nodeInOriginal := nodesInOriginal.PopFront()
+		nodeInCloned := nodesInCloned.PopFront()
+
+		if leftNode := nodeInOriginal.leftChild; leftNode != nil {
+			nodesInOriginal.PushBack(leftNode)
+
+			newLeftNode := leftNode.Clone()
+			nodeInCloned.leftChild = newLeftNode
+			newLeftNode.parent = nodeInCloned
+		}
+
+		if rightNode := nodeInOriginal.rightChild; rightNode != nil {
+			nodesInOriginal.PushBack(rightNode)
+
+			newRightNode := rightNode.Clone()
+			nodeInCloned.rightChild = newRightNode
+			newRightNode.parent = nodeInCloned
+		}
+	}
+
+	return newTree
 }
 
 func (tree *Tree[K, V]) Iterator() iterable.Iterator[misc.Pair[K, V]] {
