@@ -13,10 +13,10 @@ type partitionCollector[T any] struct {
 }
 
 func Partition[T any](predicate predication.Predicate[T]) streams.Collector[T, misc.Pair[[]T, []T]] {
-	return partitionCollector[T]{predicate: predicate}
+	return &partitionCollector[T]{predicate: predicate}
 }
 
-func (collector partitionCollector[T]) Supply(value T) {
+func (collector *partitionCollector[T]) Supply(value T) {
 	if collector.predicate(value) {
 		collector.trueElements = append(collector.trueElements, value)
 	} else {
@@ -24,6 +24,6 @@ func (collector partitionCollector[T]) Supply(value T) {
 	}
 }
 
-func (collector partitionCollector[T]) Finish() misc.Pair[[]T, []T] {
+func (collector *partitionCollector[T]) Finish() misc.Pair[[]T, []T] {
 	return misc.MakePair(collector.falseElements, collector.trueElements)
 }
