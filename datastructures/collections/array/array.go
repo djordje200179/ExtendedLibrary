@@ -10,7 +10,9 @@ import (
 	"slices"
 )
 
-type Array[T any] []T
+type Array[T any] struct {
+	slice []T
+}
 
 func New[T any]() *Array[T] {
 	return NewWithSize[T](0)
@@ -25,7 +27,7 @@ func NewWithCapacity[T any](initialCapacity int) *Array[T] {
 }
 
 func FromSlice[T any](slice []T) *Array[T] {
-	return (*Array[T])(&slice)
+	return &Array[T]{slice}
 }
 
 func Collector[T any]() streams.Collector[T, *Array[T]] {
@@ -33,11 +35,11 @@ func Collector[T any]() streams.Collector[T, *Array[T]] {
 }
 
 func (array *Array[T]) Size() int {
-	return len(array.Slice())
+	return len(array.slice)
 }
 
 func (array *Array[T]) Capacity() int {
-	return cap(array.Slice())
+	return cap(array.slice)
 }
 
 func (array *Array[T]) getRealIndex(index int) int {
@@ -57,7 +59,7 @@ func (array *Array[T]) getRealIndex(index int) int {
 func (array *Array[T]) GetRef(index int) *T {
 	index = array.getRealIndex(index)
 
-	return &array.Slice()[index]
+	return &array.slice[index]
 }
 
 func (array *Array[T]) Get(index int) T {
@@ -69,11 +71,11 @@ func (array *Array[T]) Set(index int, value T) {
 }
 
 func (array *Array[T]) Append(value T) {
-	*array = append(array.Slice(), value)
+	array.slice = append(array.slice, value)
 }
 
 func (array *Array[T]) AppendMany(values ...T) {
-	*array = append(array.Slice(), values...)
+	array.slice = append(array.slice, values...)
 }
 
 func (array *Array[T]) Insert(index int, value T) {
@@ -81,30 +83,30 @@ func (array *Array[T]) Insert(index int, value T) {
 
 	newArray := make([]T, array.Size()+1)
 
-	copy(newArray, array.Slice()[:index])
+	copy(newArray, array.slice[:index])
 	newArray[index] = value
-	copy(newArray[index+1:], array.Slice()[index:])
+	copy(newArray[index+1:], array.slice[index:])
 
-	*array = newArray
+	array.slice = newArray
 }
 
 func (array *Array[T]) InsertMany(index int, values ...T) {
 	index = array.getRealIndex(index)
 
-	*array = slices.Insert(array.Slice(), index, values...)
+	array.slice = slices.Insert(array.slice, index, values...)
 }
 
 func (array *Array[T]) Remove(index int) {
 	index = array.getRealIndex(index)
 
-	oldSlice := array.Slice()
+	oldSlice := array.slice
 	switch {
 	case index == 0:
-		*array = oldSlice[1:]
+		array.slice = oldSlice[1:]
 	case index == array.Size()-1:
-		*array = oldSlice[:index]
+		array.slice = oldSlice[:index]
 	default:
-		*array = append(oldSlice[:index], oldSlice[index+1:]...)
+		array.slice = append(oldSlice[:index], oldSlice[index+1:]...)
 	}
 }
 
@@ -114,27 +116,27 @@ func (array *Array[T]) Reserve(capacity int) {
 	}
 
 	newArray := make([]T, array.Size(), capacity)
-	copy(newArray, array.Slice())
+	copy(newArray, array.slice)
 
-	*array = newArray
+	array.slice = newArray
 }
 
 func (array *Array[T]) Clear() {
-	*array = make([]T, 0)
+	array.slice = make([]T, 0)
 }
 
 func (array *Array[T]) Reverse() {
-	slices.Reverse(array.Slice())
+	slices.Reverse(array.slice)
 }
 
 func (array *Array[T]) Sort(comparator comparison.Comparator[T]) {
-	slices.SortStableFunc(array.Slice(), comparator)
+	slices.SortStableFunc(array.slice, comparator)
 }
 
 func (array *Array[T]) Join(other collections.Collection[T]) {
 	switch second := other.(type) {
 	case *Array[T]:
-		array.AppendMany(*second...)
+		array.AppendMany(second.slice...)
 	default:
 		for it := other.Iterator(); it.Valid(); it.Move() {
 			array.Append(it.Get())
@@ -145,9 +147,7 @@ func (array *Array[T]) Join(other collections.Collection[T]) {
 }
 
 func (array *Array[T]) Clone() collections.Collection[T] {
-	newArray := new(Array[T])
-	*newArray = slices.Clone(*array)
-	return newArray
+	return &Array[T]{slices.Clone(array.slice)}
 }
 
 func (array *Array[T]) Iterator() iterable.Iterator[T] {
@@ -159,17 +159,17 @@ func (array *Array[T]) ModifyingIterator() collections.Iterator[T] {
 }
 
 func (array *Array[T]) Stream() streams.Stream[T] {
-	supplier := suppliers.SliceValues(array.Slice())
+	supplier := suppliers.SliceValues(array.slice)
 	return streams.New(supplier)
 }
 
 func (array *Array[T]) RefsStream() streams.Stream[*T] {
-	supplier := suppliers.SliceRefs(array.Slice())
+	supplier := suppliers.SliceRefs(array.slice)
 	return streams.New(supplier)
 }
 
 func (array *Array[T]) FindIndex(predicate predication.Predicate[T]) (int, bool) {
-	index := slices.IndexFunc(array.Slice(), predicate)
+	index := slices.IndexFunc(array.slice, predicate)
 	if index == -1 {
 		return 0, false
 	}
@@ -187,12 +187,12 @@ func (array *Array[T]) FindRef(predicate predication.Predicate[T]) (*T, bool) {
 }
 
 func (array *Array[T]) Slice() []T {
-	return *array
+	return array.slice
 }
 
 func (array *Array[T]) SliceRange(from, to int) []T {
 	from = array.getRealIndex(from)
 	to = array.getRealIndex(to)
 
-	return array.Slice()[from:to]
+	return array.slice[from:to]
 }
