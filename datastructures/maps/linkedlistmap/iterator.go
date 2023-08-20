@@ -10,7 +10,7 @@ type Iterator[K comparable, V any] struct {
 }
 
 func (it Iterator[K, V]) Get() misc.Pair[K, V] {
-	return misc.Pair[K, V]{it.Key(), it.Value()}
+	return misc.MakePair(it.Key(), it.Value())
 }
 
 func (it Iterator[K, V]) Key() K {

@@ -25,5 +25,5 @@ func (collector partitionCollector[T]) Supply(value T) {
 }
 
 func (collector partitionCollector[T]) Finish() misc.Pair[[]T, []T] {
-	return misc.Pair[[]T, []T]{collector.falseElements, collector.trueElements}
+	return misc.MakePair(collector.falseElements, collector.trueElements)
 }

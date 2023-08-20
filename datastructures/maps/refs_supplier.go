@@ -13,11 +13,8 @@ func RefsStream[K, V any](m Map[K, V]) streams.Stream[misc.Pair[K, *V]] {
 			return optional.Empty[misc.Pair[K, *V]]()
 		}
 
-		defer iterator.Move()
-
-		key := iterator.Key()
-		valueRef := iterator.ValueRef()
-		pair := misc.Pair[K, *V]{key, valueRef}
+		pair := misc.MakePair(iterator.Key(), iterator.ValueRef())
+		iterator.Move()
 
 		return optional.FromValue(pair)
 	}

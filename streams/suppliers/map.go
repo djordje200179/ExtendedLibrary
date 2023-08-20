@@ -30,7 +30,7 @@ func (iterator *mapIterator[K, V]) supply() optional.Optional[misc.Pair[K, V]] {
 		key := iterator.keys[iterator.index]
 		value := iterator.m[key]
 		iterator.index++
-		return optional.FromValue(misc.Pair[K, V]{key, value})
+		return optional.FromValue(misc.MakePair(key, value))
 	} else {
 		return optional.Empty[misc.Pair[K, V]]()
 	}
