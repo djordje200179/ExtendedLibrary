@@ -17,8 +17,11 @@ type Wrapper[K, V any] struct {
 	capacity int
 }
 
-func From[K, V any](m maps.Map[K, *Node[K, V]]) *Wrapper[K, V] {
-	wrapper := &Wrapper[K, V]{m: m}
+func From[K, V any](m maps.Map[K, *Node[K, V]], capacity int) *Wrapper[K, V] {
+	wrapper := &Wrapper[K, V]{
+		m:        m,
+		capacity: capacity,
+	}
 
 	for it := m.Iterator(); it.Valid(); it.Move() {
 		node := it.Get().Second
@@ -39,7 +42,10 @@ func NewHashmap[K comparable, V any]() *Wrapper[K, V] {
 
 func NewFIFOHashmap[K comparable, V any](capacity int) *Wrapper[K, V] {
 	m := hashmap.NewWithCapacity[K, *Node[K, V]](capacity)
-	wrapper := &Wrapper[K, V]{m: m, capacity: capacity}
+	wrapper := &Wrapper[K, V]{
+		m:        m,
+		capacity: capacity,
+	}
 
 	return wrapper
 }
@@ -154,9 +160,10 @@ func (wrapper *Wrapper[K, V]) Clone() maps.Map[K, V] {
 	}
 
 	return &Wrapper[K, V]{
-		m:    clonedMap,
-		head: clonedHead,
-		tail: clonedTail,
+		m:        clonedMap,
+		head:     clonedHead,
+		tail:     clonedTail,
+		capacity: wrapper.capacity,
 	}
 }
 
