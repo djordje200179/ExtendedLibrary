@@ -36,8 +36,7 @@ func From[K, V any](m maps.Map[K, *Node[K, V]], capacity int) *Wrapper[K, V] {
 }
 
 func NewHashmap[K comparable, V any]() *Wrapper[K, V] {
-	m := hashmap.New[K, *Node[K, V]]()
-	return &Wrapper[K, V]{m: m}
+	return NewFIFOHashmap[K, V](0)
 }
 
 func NewFIFOHashmap[K comparable, V any](capacity int) *Wrapper[K, V] {
