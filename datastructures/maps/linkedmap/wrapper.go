@@ -3,6 +3,7 @@ package linkedmap
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
+	"github.com/djordje200179/extendedlibrary/datastructures/maps/hashmap"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/streams"
@@ -12,6 +13,8 @@ type Wrapper[K, V any] struct {
 	m maps.Map[K, *Node[K, V]]
 
 	head, tail *Node[K, V]
+
+	capacity int
 }
 
 func From[K, V any](m maps.Map[K, *Node[K, V]]) *Wrapper[K, V] {
@@ -25,6 +28,18 @@ func From[K, V any](m maps.Map[K, *Node[K, V]]) *Wrapper[K, V] {
 			wrapper.tail = node
 		}
 	}
+
+	return wrapper
+}
+
+func NewHashmap[K comparable, V any]() *Wrapper[K, V] {
+	m := hashmap.New[K, *Node[K, V]]()
+	return &Wrapper[K, V]{m: m}
+}
+
+func NewFIFOHashmap[K comparable, V any](capacity int) *Wrapper[K, V] {
+	m := hashmap.NewWithCapacity[K, *Node[K, V]](capacity)
+	wrapper := &Wrapper[K, V]{m: m, capacity: capacity}
 
 	return wrapper
 }
@@ -72,6 +87,17 @@ func (wrapper *Wrapper[K, V]) Set(key K, value V) {
 	wrapper.tail = node
 
 	wrapper.m.Set(key, node)
+
+	if wrapper.capacity > 0 && wrapper.m.Size() > wrapper.capacity {
+		firstNode := wrapper.head
+
+		wrapper.head = firstNode.next
+		if wrapper.head != nil {
+			wrapper.head.prev = nil
+		}
+
+		wrapper.m.Remove(firstNode.key)
+	}
 }
 
 func (wrapper *Wrapper[K, V]) Remove(key K) {
