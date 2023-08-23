@@ -14,7 +14,7 @@ This package implements many generic data structures:
 - Maps
 	- Red-black tree (binary search tree)
 	- Hashmap
-	- Linked list map
+	- Linked wrapper
 	- Read-only wrapper
 	- Concurrent wrapper
 - Sets
