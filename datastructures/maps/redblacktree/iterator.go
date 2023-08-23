@@ -13,6 +13,10 @@ func (it *Iterator[K, V]) Valid() bool {
 }
 
 func (it *Iterator[K, V]) Move() {
+	if it.curr == nil {
+		return
+	}
+
 	it.curr = it.curr.Next()
 }
 

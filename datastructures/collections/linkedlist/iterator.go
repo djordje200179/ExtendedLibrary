@@ -12,6 +12,10 @@ func (it *Iterator[T]) Valid() bool {
 }
 
 func (it *Iterator[T]) Move() {
+	if it.curr == nil {
+		return
+	}
+
 	it.curr = it.curr.next
 	it.index++
 }
