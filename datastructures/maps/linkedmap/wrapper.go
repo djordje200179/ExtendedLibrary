@@ -9,17 +9,27 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
+type Order bool
+
+const (
+	FIFO Order = false
+	LRU        = true
+)
+
 type Wrapper[K, V any] struct {
 	m maps.Map[K, *Node[K, V]]
 
 	head, tail *Node[K, V]
+	order      Order
 
 	capacity int
 }
 
-func From[K, V any](m maps.Map[K, *Node[K, V]], capacity int) *Wrapper[K, V] {
+func From[K, V any](m maps.Map[K, *Node[K, V]], capacity int, order Order) *Wrapper[K, V] {
 	wrapper := &Wrapper[K, V]{
-		m:        m,
+		m: m,
+
+		order:    order,
 		capacity: capacity,
 	}
 
@@ -35,18 +45,38 @@ func From[K, V any](m maps.Map[K, *Node[K, V]], capacity int) *Wrapper[K, V] {
 	return wrapper
 }
 
-func NewHashmap[K comparable, V any]() *Wrapper[K, V] {
-	return NewFIFOHashmap[K, V](0)
-}
-
-func NewFIFOHashmap[K comparable, V any](capacity int) *Wrapper[K, V] {
+func NewHashmap[K comparable, V any](capacity int, order Order) *Wrapper[K, V] {
 	m := hashmap.NewWithCapacity[K, *Node[K, V]](capacity)
 	wrapper := &Wrapper[K, V]{
-		m:        m,
+		m: m,
+
+		order:    order,
 		capacity: capacity,
 	}
 
 	return wrapper
+}
+
+func (wrapper *Wrapper[K, V]) moveToFront(node *Node[K, V]) {
+	if node.prev != nil {
+		node.prev.next = node.next
+	} else {
+		wrapper.head = node.next
+	}
+
+	if node.next != nil {
+		node.next.prev = node.prev
+	} else {
+		wrapper.tail = node.prev
+	}
+
+	if wrapper.head == nil {
+		wrapper.head = node
+	} else {
+		wrapper.tail.next = node
+		node.prev = wrapper.tail
+	}
+	wrapper.tail = node
 }
 
 func (wrapper *Wrapper[K, V]) Size() int {
@@ -63,30 +93,53 @@ func (wrapper *Wrapper[K, V]) TryGet(key K) (V, bool) {
 		return functions.Zero[V](), false
 	}
 
+	if wrapper.order == LRU {
+		wrapper.moveToFront(node)
+	}
+
 	return node.Value, true
 }
 
 func (wrapper *Wrapper[K, V]) Get(key K) V {
-	return wrapper.m.Get(key).Value
+	node := wrapper.m.Get(key)
+
+	if wrapper.order == LRU {
+		wrapper.moveToFront(node)
+	}
+
+	return node.Value
 }
 
 func (wrapper *Wrapper[K, V]) GetRef(key K) *V {
-	return &wrapper.m.Get(key).Value
+	node := wrapper.m.Get(key)
+
+	if wrapper.order == LRU {
+		wrapper.moveToFront(node)
+	}
+
+	return &node.Value
 }
 
 func (wrapper *Wrapper[K, V]) Set(key K, value V) {
 	node, ok := wrapper.m.TryGet(key)
 	if ok {
 		node.Value = value
+
+		if wrapper.order == LRU {
+			wrapper.moveToFront(node)
+		}
+
 		return
 	}
 
-	if wrapper.capacity > 0 && wrapper.m.Size() > wrapper.capacity {
+	if wrapper.capacity > 0 && wrapper.m.Size() == wrapper.capacity {
 		firstNode := wrapper.head
 
 		wrapper.head = firstNode.next
 		if wrapper.head != nil {
 			wrapper.head.prev = nil
+		} else {
+			wrapper.tail = nil
 		}
 
 		wrapper.m.Remove(firstNode.key)
@@ -159,10 +212,12 @@ func (wrapper *Wrapper[K, V]) Clone() maps.Map[K, V] {
 	}
 
 	return &Wrapper[K, V]{
-		m:        clonedMap,
+		m: clonedMap,
+
 		head:     clonedHead,
 		tail:     clonedTail,
 		capacity: wrapper.capacity,
+		order:    wrapper.order,
 	}
 }
 
