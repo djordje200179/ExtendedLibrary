@@ -82,6 +82,17 @@ func (wrapper *Wrapper[K, V]) Set(key K, value V) {
 		return
 	}
 
+	if wrapper.capacity > 0 && wrapper.m.Size() > wrapper.capacity {
+		firstNode := wrapper.head
+
+		wrapper.head = firstNode.next
+		if wrapper.head != nil {
+			wrapper.head.prev = nil
+		}
+
+		wrapper.m.Remove(firstNode.key)
+	}
+
 	node = &Node[K, V]{key: key, Value: value}
 
 	if wrapper.head == nil {
@@ -93,17 +104,6 @@ func (wrapper *Wrapper[K, V]) Set(key K, value V) {
 	wrapper.tail = node
 
 	wrapper.m.Set(key, node)
-
-	if wrapper.capacity > 0 && wrapper.m.Size() > wrapper.capacity {
-		firstNode := wrapper.head
-
-		wrapper.head = firstNode.next
-		if wrapper.head != nil {
-			wrapper.head.prev = nil
-		}
-
-		wrapper.m.Remove(firstNode.key)
-	}
 }
 
 func (wrapper *Wrapper[K, V]) Remove(key K) {
