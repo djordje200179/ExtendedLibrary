@@ -95,10 +95,10 @@ func (hashmap Map[K, V]) Clone() maps.Map[K, V] {
 }
 
 func (hashmap Map[K, V]) Iterator() iterable.Iterator[misc.Pair[K, V]] {
-	return hashmap.ModifyingIterator()
+	return hashmap.MapIterator()
 }
 
-func (hashmap Map[K, V]) ModifyingIterator() maps.Iterator[K, V] {
+func (hashmap Map[K, V]) MapIterator() maps.Iterator[K, V] {
 	return &Iterator[K, V]{
 		m:     hashmap,
 		keys:  hashmap.Keys(),

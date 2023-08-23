@@ -64,11 +64,11 @@ func (set Set[T]) Clone() sets.Set[T] {
 }
 
 func (set Set[T]) Iterator() iterable.Iterator[T] {
-	return set.ModifyingIterator()
+	return set.SetIterator()
 }
 
-func (set Set[T]) ModifyingIterator() sets.Iterator[T] {
-	return Iterator[T]{set.m.ModifyingIterator()}
+func (set Set[T]) SetIterator() sets.Iterator[T] {
+	return Iterator[T]{set.m.MapIterator()}
 }
 
 func (set Set[T]) Stream() streams.Stream[T] {

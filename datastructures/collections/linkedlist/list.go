@@ -211,10 +211,10 @@ func (list *List[T]) Clone() collections.Collection[T] {
 }
 
 func (list *List[T]) Iterator() iterable.Iterator[T] {
-	return list.ModifyingIterator()
+	return list.CollectionIterator()
 }
 
-func (list *List[T]) ModifyingIterator() collections.Iterator[T] {
+func (list *List[T]) CollectionIterator() collections.Iterator[T] {
 	return &Iterator[T]{
 		list:  list,
 		curr:  list.head,
@@ -227,7 +227,7 @@ func (list *List[T]) Stream() streams.Stream[T] {
 }
 
 func (list *List[T]) RefsStream() streams.Stream[*T] {
-	return collections.RefsStream(list.ModifyingIterator())
+	return collections.RefsStream(list.CollectionIterator())
 }
 
 func (list *List[T]) FindIndex(predicate predication.Predicate[T]) (int, bool) {

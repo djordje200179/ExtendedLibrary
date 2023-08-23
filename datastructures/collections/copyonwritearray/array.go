@@ -158,10 +158,10 @@ func (array *Array[T]) Clone() collections.Collection[T] {
 }
 
 func (array *Array[T]) Iterator() iterable.Iterator[T] {
-	return array.ModifyingIterator()
+	return array.CollectionIterator()
 }
 
-func (array *Array[T]) ModifyingIterator() collections.Iterator[T] {
+func (array *Array[T]) CollectionIterator() collections.Iterator[T] {
 	return &Iterator[T]{array, 0}
 }
 

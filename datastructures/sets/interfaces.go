@@ -23,6 +23,6 @@ type Set[T any] interface {
 	misc.Cloner[Set[T]]
 
 	iterable.Iterable[T]
-	ModifyingIterator() Iterator[T]
+	SetIterator() Iterator[T]
 	streams.Streamer[T]
 }

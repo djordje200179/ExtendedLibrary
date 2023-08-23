@@ -59,10 +59,10 @@ func (set *Set) Clone() sets.Set[int] {
 }
 
 func (set *Set) Iterator() iterable.Iterator[int] {
-	return set.ModifyingIterator()
+	return set.SetIterator()
 }
 
-func (set *Set) ModifyingIterator() sets.Iterator[int] {
+func (set *Set) SetIterator() sets.Iterator[int] {
 	return &Iterator{0, set}
 }
 

@@ -43,8 +43,7 @@ for it := list.Iterator(); it.Valid(); it.Next() {
 }
 ```
 Be aware that this kind of iterator supports only reading elements, not modifying them.
-To modify elements, you need to get a special kind of iterator
-(by calling `ModifyingIterator()` method).
+To modify elements, you need to get a special iterator for that kind of collection.
 They also have specialized methods to modify structure (like insertion before the
 current element in a linked list).
 And through them, you can also access the element directly by reference (pointer).

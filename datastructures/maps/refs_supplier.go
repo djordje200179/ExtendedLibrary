@@ -7,7 +7,7 @@ import (
 )
 
 func RefsStream[K, V any](m Map[K, V]) streams.Stream[misc.Pair[K, *V]] {
-	iterator := m.ModifyingIterator()
+	iterator := m.MapIterator()
 	supplier := func() optional.Optional[misc.Pair[K, *V]] {
 		if !iterator.Valid() {
 			return optional.Empty[misc.Pair[K, *V]]()

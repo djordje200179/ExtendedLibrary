@@ -34,7 +34,7 @@ type Map[K, V any] interface {
 	misc.Cloner[Map[K, V]]
 
 	iterable.Iterable[misc.Pair[K, V]]
-	ModifyingIterator() Iterator[K, V]
+	MapIterator() Iterator[K, V]
 	streams.Streamer[misc.Pair[K, V]]
 	RefsStream() streams.Stream[misc.Pair[K, *V]]
 }

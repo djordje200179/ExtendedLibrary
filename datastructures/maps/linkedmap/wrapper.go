@@ -141,7 +141,7 @@ func (wrapper *Wrapper[K, V]) Clone() maps.Map[K, V] {
 	clonedMap := wrapper.m.Clone()
 
 	var clonedHead, clonedTail *Node[K, V]
-	for oldIt, newIt := wrapper.m.Iterator(), clonedMap.ModifyingIterator(); oldIt.Valid(); oldIt.Move() {
+	for oldIt, newIt := wrapper.m.Iterator(), clonedMap.MapIterator(); oldIt.Valid(); oldIt.Move() {
 		oldNode := oldIt.Get().Second
 
 		newNode := oldNode.Clone()
@@ -167,10 +167,10 @@ func (wrapper *Wrapper[K, V]) Clone() maps.Map[K, V] {
 }
 
 func (wrapper *Wrapper[K, V]) Iterator() iterable.Iterator[misc.Pair[K, V]] {
-	return wrapper.ModifyingIterator()
+	return wrapper.MapIterator()
 }
 
-func (wrapper *Wrapper[K, V]) ModifyingIterator() maps.Iterator[K, V] {
+func (wrapper *Wrapper[K, V]) MapIterator() maps.Iterator[K, V] {
 	return &Iterator[K, V]{wrapper: wrapper, curr: wrapper.head}
 }
 

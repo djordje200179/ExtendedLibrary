@@ -248,10 +248,10 @@ func (tree *Tree[K, V]) Clone() maps.Map[K, V] {
 }
 
 func (tree *Tree[K, V]) Iterator() iterable.Iterator[misc.Pair[K, V]] {
-	return tree.ModifyingIterator()
+	return tree.MapIterator()
 }
 
-func (tree *Tree[K, V]) ModifyingIterator() maps.Iterator[K, V] {
+func (tree *Tree[K, V]) MapIterator() maps.Iterator[K, V] {
 	return &Iterator[K, V]{tree, tree.root.Min()}
 }
 

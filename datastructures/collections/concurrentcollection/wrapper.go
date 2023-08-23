@@ -122,11 +122,11 @@ func (wrapper *Wrapper[T]) Clone() collections.Collection[T] {
 }
 
 func (wrapper *Wrapper[T]) Iterator() iterable.Iterator[T] {
-	return wrapper.ModifyingIterator()
+	return wrapper.CollectionIterator()
 }
 
-func (wrapper *Wrapper[T]) ModifyingIterator() collections.Iterator[T] {
-	return Iterator[T]{wrapper.collection.ModifyingIterator(), &wrapper.mutex}
+func (wrapper *Wrapper[T]) CollectionIterator() collections.Iterator[T] {
+	return Iterator[T]{wrapper.collection.CollectionIterator(), &wrapper.mutex}
 }
 
 func (wrapper *Wrapper[T]) Stream() streams.Stream[T] {

@@ -40,7 +40,7 @@ type Collection[T any] interface {
 	misc.Cloner[Collection[T]]
 
 	iterable.Iterable[T]
-	ModifyingIterator() Iterator[T]
+	CollectionIterator() Iterator[T]
 	streams.Streamer[T]
 	RefsStream() streams.Stream[*T]
 

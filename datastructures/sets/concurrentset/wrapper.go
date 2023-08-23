@@ -61,11 +61,11 @@ func (wrapper *Wrapper[T]) Clone() sets.Set[T] {
 }
 
 func (wrapper *Wrapper[T]) Iterator() iterable.Iterator[T] {
-	return wrapper.ModifyingIterator()
+	return wrapper.SetIterator()
 }
 
-func (wrapper *Wrapper[T]) ModifyingIterator() sets.Iterator[T] {
-	return Iterator[T]{wrapper.set.ModifyingIterator(), &wrapper.mutex}
+func (wrapper *Wrapper[T]) SetIterator() sets.Iterator[T] {
+	return Iterator[T]{wrapper.set.SetIterator(), &wrapper.mutex}
 }
 
 func (wrapper *Wrapper[T]) Stream() streams.Stream[T] {
