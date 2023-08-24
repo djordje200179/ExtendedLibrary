@@ -29,38 +29,38 @@ func (list *List[T]) GetNode(index int) *Node[T] {
 		collections.PanicOnIndexOutOfBounds(index, list.size)
 	}
 
+	if index == 0 {
+		return list.head
+	}
+
 	var curr *Node[T]
-	if index >= 0 {
+	if index > 0 {
 		curr = list.head
+		for i := 0; i < index; i++ {
+			curr = curr.next
+		}
 	} else {
 		curr = list.tail
-	}
-
-	if index < 0 {
-		index = -index - 1
-	}
-
-	for i := 0; i < index; i++ {
-		if index >= 0 {
-			curr = curr.next
-		} else {
+		for i := -1; i > index; i-- {
 			curr = curr.prev
 		}
 	}
-
 	return curr
 }
 
 func (list *List[T]) GetRef(index int) *T {
-	return &list.GetNode(index).Value
+	node := list.GetNode(index)
+	return &node.Value
 }
 
 func (list *List[T]) Get(index int) T {
-	return *list.GetRef(index)
+	node := list.GetNode(index)
+	return node.Value
 }
 
 func (list *List[T]) Set(index int, value T) {
-	*list.GetRef(index) = value
+	node := list.GetNode(index)
+	node.Value = value
 }
 
 func (list *List[T]) Prepend(value T) {
