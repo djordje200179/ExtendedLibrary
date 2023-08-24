@@ -159,47 +159,6 @@ func (list *List[T]) Reverse() {
 	list.head, list.tail = list.tail, list.head
 }
 
-func (list *List[T]) SwapNodes(node1, node2 *Node[T]) {
-	if node1 == node2 {
-		return
-	}
-
-	if (node1.prev == nil && list.head != node1) || (node1.next == nil && list.tail != node1) {
-		panic("node1 is not part of the list")
-	}
-
-	if (node2.prev == nil && list.head != node2) || (node2.next == nil && list.tail != node2) {
-		panic("node2 is not part of the list")
-	}
-
-	node1.prev, node2.prev = node2.prev, node1.prev
-	node1.next, node2.next = node2.next, node1.next
-
-	if node1.prev != nil {
-		node1.prev.next = node1
-	} else {
-		list.head = node1
-	}
-
-	if node1.next != nil {
-		node1.next.prev = node1
-	} else {
-		list.tail = node1
-	}
-
-	if node2.prev != nil {
-		node2.prev.next = node2
-	} else {
-		list.head = node2
-	}
-
-	if node2.next != nil {
-		node2.next.prev = node2
-	} else {
-		list.tail = node2
-	}
-}
-
 func (list *List[T]) Join(other collections.Collection[T]) {
 	switch second := other.(type) {
 	case *List[T]:
