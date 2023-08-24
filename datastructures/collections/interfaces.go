@@ -28,6 +28,7 @@ type Collection[T any] interface {
 	GetRef(index int) *T
 	Set(index int, value T)
 
+	Prepend(value T)
 	Append(value T)
 	Insert(index int, value T)
 	Remove(index int)

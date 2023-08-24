@@ -64,6 +64,13 @@ func (wrapper *Wrapper[T]) UpdateRef(index int, updateFunction func(value *T)) {
 	updateFunction(oldValue)
 }
 
+func (wrapper *Wrapper[T]) Prepend(value T) {
+	wrapper.mutex.Lock()
+	defer wrapper.mutex.Unlock()
+
+	wrapper.collection.Prepend(value)
+}
+
 func (wrapper *Wrapper[T]) Append(value T) {
 	wrapper.mutex.Lock()
 	defer wrapper.mutex.Unlock()

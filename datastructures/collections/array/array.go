@@ -70,6 +70,24 @@ func (array *Array[T]) Set(index int, value T) {
 	*array.GetRef(index) = value
 }
 
+func (array *Array[T]) Prepend(value T) {
+	newArray := make([]T, array.Size()+1)
+
+	newArray[0] = value
+	copy(newArray[1:], array.slice)
+
+	array.slice = newArray
+}
+
+func (array *Array[T]) PrependMany(values ...T) {
+	newArray := make([]T, array.Size()+len(values))
+
+	copy(newArray, values)
+	copy(newArray[len(values):], array.slice)
+
+	array.slice = newArray
+}
+
 func (array *Array[T]) Append(value T) {
 	array.slice = append(array.slice, value)
 }

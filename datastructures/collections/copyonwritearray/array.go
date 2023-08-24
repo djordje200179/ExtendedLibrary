@@ -61,6 +61,26 @@ func (array *Array[T]) Set(index int, value T) {
 	array.rawArray = newArray
 }
 
+func (array *Array[T]) Prepend(value T) {
+	array.mutex.Lock()
+	defer array.mutex.Unlock()
+
+	newArray := array.rawArray.Clone().(*rawArray.Array[T])
+	newArray.Prepend(value)
+
+	array.rawArray = newArray
+}
+
+func (array *Array[T]) PrependMany(values ...T) {
+	array.mutex.Lock()
+	defer array.mutex.Unlock()
+
+	newArray := array.rawArray.Clone().(*rawArray.Array[T])
+	newArray.PrependMany(values...)
+
+	array.rawArray = newArray
+}
+
 func (array *Array[T]) Append(value T) {
 	array.mutex.Lock()
 	defer array.mutex.Unlock()

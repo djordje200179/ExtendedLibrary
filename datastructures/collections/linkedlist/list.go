@@ -63,6 +63,22 @@ func (list *List[T]) Set(index int, value T) {
 	*list.GetRef(index) = value
 }
 
+func (list *List[T]) Prepend(value T) {
+	node := &Node[T]{
+		Value: value,
+	}
+
+	node.next = list.head
+	if list.head == nil {
+		list.head.prev = node
+	} else {
+		list.tail = node
+	}
+	list.head = node
+
+	list.size++
+}
+
 func (list *List[T]) Append(value T) {
 	if list.size == 0 {
 		node := &Node[T]{
