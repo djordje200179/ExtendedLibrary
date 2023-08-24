@@ -69,7 +69,7 @@ func (list *List[T]) Prepend(value T) {
 	}
 
 	node.next = list.head
-	if list.head == nil {
+	if list.head != nil {
 		list.head.prev = node
 	} else {
 		list.tail = node
