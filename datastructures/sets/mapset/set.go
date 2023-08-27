@@ -5,7 +5,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps/hashmap"
-	"github.com/djordje200179/extendedlibrary/datastructures/maps/redblacktree"
+	"github.com/djordje200179/extendedlibrary/datastructures/maps/rbt"
 	"github.com/djordje200179/extendedlibrary/datastructures/sets"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/streams"
@@ -22,7 +22,7 @@ func NewHashSet[T comparable]() Set[T] {
 }
 
 func NewTreeSet[T cmp.Ordered]() Set[T] {
-	return FromMap[T](redblacktree.New[T, empty]())
+	return FromMap[T](rbt.New[T, empty]())
 }
 
 func FromMap[T any](m maps.Map[T, empty]) Set[T] {
