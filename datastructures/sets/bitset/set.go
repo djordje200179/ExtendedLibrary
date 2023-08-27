@@ -1,8 +1,8 @@
 package bitset
 
 import (
+	"github.com/djordje200179/extendedlibrary/datastructures/collections/bitarray"
 	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
-	"github.com/djordje200179/extendedlibrary/datastructures/other/bitarray"
 	"github.com/djordje200179/extendedlibrary/datastructures/sets"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
