@@ -3,10 +3,10 @@ package bitarray
 import "math/bits"
 
 func (array *Array) All() bool {
-	sliceSize := array.array.Size()
+	sliceSize := len(array.slice)
 	if array.lastElemOff != 0 {
 		lastElementMask := uint8(0xFF) >> (8 - array.lastElemOff)
-		lastElement := array.array.Get(sliceSize - 1)
+		lastElement := array.slice[sliceSize-1]
 
 		if lastElement != lastElementMask {
 			return false
@@ -16,7 +16,7 @@ func (array *Array) All() bool {
 	}
 
 	for i := 0; i < sliceSize-1; i++ {
-		if array.array.Get(i) != 0xFF {
+		if array.slice[i] != 0xFF {
 			return false
 		}
 	}
@@ -25,10 +25,10 @@ func (array *Array) All() bool {
 }
 
 func (array *Array) Any() bool {
-	sliceSize := array.array.Size()
+	sliceSize := len(array.slice)
 	if array.lastElemOff != 0 {
 		lastElementMask := uint8(0xFF) >> (8 - array.lastElemOff)
-		lastElement := array.array.Get(sliceSize - 1)
+		lastElement := array.slice[sliceSize-1]
 
 		if lastElement&lastElementMask != 0 {
 			return true
@@ -38,7 +38,7 @@ func (array *Array) Any() bool {
 	}
 
 	for i := 0; i < sliceSize-1; i++ {
-		if array.array.Get(i) != 0 {
+		if array.slice[i] != 0 {
 			return true
 		}
 	}
@@ -47,10 +47,10 @@ func (array *Array) Any() bool {
 }
 
 func (array *Array) None() bool {
-	sliceSize := array.array.Size()
+	sliceSize := len(array.slice)
 	if array.lastElemOff != 0 {
 		lastElementMask := uint8(0xFF) >> (8 - array.lastElemOff)
-		lastElement := array.array.Get(sliceSize - 1)
+		lastElement := array.slice[sliceSize-1]
 
 		if lastElement&lastElementMask != 0 {
 			return false
@@ -60,7 +60,7 @@ func (array *Array) None() bool {
 	}
 
 	for i := 0; i < sliceSize-1; i++ {
-		if array.array.Get(i) != 0 {
+		if array.slice[i] != 0 {
 			return false
 		}
 	}
@@ -71,10 +71,10 @@ func (array *Array) None() bool {
 func (array *Array) Count() int {
 	count := 0
 
-	sliceSize := array.array.Size()
+	sliceSize := len(array.slice)
 	if array.lastElemOff != 0 {
 		lastElementMask := uint8(0xFF) >> (8 - array.lastElemOff)
-		lastElement := array.array.Get(sliceSize - 1)
+		lastElement := array.slice[sliceSize-1]
 
 		count += bits.OnesCount8(lastElement & lastElementMask)
 
@@ -82,7 +82,7 @@ func (array *Array) Count() int {
 	}
 
 	for i := 0; i < sliceSize-1; i++ {
-		elem := array.array.Get(i)
+		elem := array.slice[i]
 
 		count += bits.OnesCount8(elem)
 	}

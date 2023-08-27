@@ -2,19 +2,17 @@ package bitarray
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/cols"
-	"github.com/djordje200179/extendedlibrary/datastructures/cols/array"
 	"strings"
 )
 
 type Array struct {
-	array       array.Array[uint8]
+	slice       []uint8
 	lastElemOff uint8
 }
 
 func New() *Array {
 	return &Array{
-		array:       *array.New[uint8](),
-		lastElemOff: 0,
+		slice: make([]uint8, 0),
 	}
 }
 
@@ -22,7 +20,7 @@ func NewWithSize(initialSize int) *Array {
 	arrSize := (initialSize + 7) / 8
 
 	return &Array{
-		array:       *array.NewWithSize[uint8](arrSize),
+		slice:       make([]uint8, arrSize),
 		lastElemOff: uint8(initialSize % 8),
 	}
 }
@@ -31,7 +29,7 @@ func NewWithCapacity(initialCapacity int) *Array {
 	arrCapacity := (initialCapacity + 7) / 8
 
 	return &Array{
-		array:       *array.NewWithCapacity[uint8](arrCapacity),
+		slice:       make([]uint8, 0, arrCapacity),
 		lastElemOff: 0,
 	}
 }
@@ -48,9 +46,9 @@ func FromSlice(slice []bool) *Array {
 
 func (array *Array) Size() int {
 	if array.lastElemOff == 0 {
-		return array.array.Size() * 8
+		return len(array.slice) * 8
 	} else {
-		return (array.array.Size()-1)*8 + int(array.lastElemOff)
+		return (len(array.slice)-1)*8 + int(array.lastElemOff)
 	}
 }
 
@@ -73,8 +71,7 @@ func (array *Array) Get(index int) bool {
 
 	elemIndex := index / 8
 	elemOff := index % 8
-	elem := array.array.Get(elemIndex)
-	masked := elem & (1 << elemOff)
+	masked := array.slice[elemIndex] & (1 << elemOff)
 
 	return masked != 0
 }
@@ -84,7 +81,7 @@ func (array *Array) Set(index int, value bool) {
 
 	elemIndex := index / 8
 	elemOff := index % 8
-	elem := array.array.Get(elemIndex)
+	elem := array.slice[elemIndex]
 
 	mask := uint8(1) << elemOff
 	if value {
@@ -93,7 +90,7 @@ func (array *Array) Set(index int, value bool) {
 		elem &= ^mask
 	}
 
-	array.array.Set(elemIndex, elem)
+	array.slice[elemIndex] = elem
 }
 
 func (array *Array) SetAll(value bool) {
@@ -102,9 +99,8 @@ func (array *Array) SetAll(value bool) {
 		elem = 0xFF
 	}
 
-	sliceSize := array.array.Size()
-	for i := 0; i < sliceSize; i++ {
-		array.array.Set(i, elem)
+	for i := 0; i < len(array.slice); i++ {
+		array.slice[i] = elem
 	}
 }
 
@@ -113,27 +109,23 @@ func (array *Array) Flip(index int) {
 
 	elemIndex := index / 8
 	elemOff := index % 8
-	elem := array.array.Get(elemIndex)
+	elem := array.slice[elemIndex]
 
 	mask := uint8(1) << elemOff
 	elem ^= mask
 
-	array.array.Set(elemIndex, elem)
+	array.slice[elemIndex] = elem
 }
 
 func (array *Array) FlipAll() {
-	sliceSize := array.array.Size()
-	for i := 0; i < sliceSize; i++ {
-		elem := array.array.Get(i)
-
-		resElem := ^elem
-		array.array.Set(i, resElem)
+	for i := 0; i < len(array.slice); i++ {
+		array.slice[i] = ^array.slice[i]
 	}
 }
 
 func (array *Array) Append(value bool) {
 	if array.lastElemOff == 0 {
-		array.array.Append(0)
+		array.slice = append(array.slice, 0)
 	}
 
 	array.lastElemOff = (array.lastElemOff + 1) % 8
@@ -148,13 +140,13 @@ func (array *Array) Insert(index int, value bool) {
 	elemOff := index % 8
 
 	if array.lastElemOff == 0 {
-		array.array.Append(0)
+		array.slice = append(array.slice, 0)
 	}
 	array.lastElemOff = (array.lastElemOff + 1) % 8
 
 	var lastBit bool
 	if elemOff != 0 {
-		elem := array.array.Get(elemIndex)
+		elem := array.slice[elemIndex]
 
 		lastBit = elem&(1<<7) != 0
 		higherBits := elem >> elemOff << (elemOff + 1)
@@ -167,11 +159,11 @@ func (array *Array) Insert(index int, value bool) {
 
 		newElem := higherBits | lowerBits | shiftedValue
 
-		array.array.Set(elemIndex, newElem)
+		array.slice[elemIndex] = newElem
 	}
 
-	for i := elemIndex + 1; i < array.array.Size(); i++ {
-		elem := array.array.Get(i)
+	for i := elemIndex + 1; i < len(array.slice); i++ {
+		elem := array.slice[i]
 
 		newLastBit := elem&(1<<7) != 0
 		elem = elem << 1
@@ -180,7 +172,7 @@ func (array *Array) Insert(index int, value bool) {
 			elem |= 1
 		}
 
-		array.array.Set(i, elem)
+		array.slice[i] = elem
 		lastBit = newLastBit
 	}
 }
@@ -192,8 +184,8 @@ func (array *Array) Remove(index int) {
 	elemOff := index % 8
 
 	var firstBit bool
-	for i := array.array.Size() - 1; i > elemIndex; i-- {
-		elem := array.array.Get(i)
+	for i := len(array.slice) - 1; i > elemIndex; i-- {
+		elem := array.slice[i]
 
 		newFirstBit := elem&1 != 0
 		elem = elem >> 1
@@ -202,29 +194,29 @@ func (array *Array) Remove(index int) {
 			elem |= 1 << 7
 		}
 
-		array.array.Set(i, elem)
+		array.slice[i] = elem
 		firstBit = newFirstBit
 	}
 
 	if elemOff != 0 {
-		elem := array.array.Get(elemIndex)
+		elem := array.slice[elemIndex]
 
 		higherBits := elem >> elemOff << elemOff
 		lowerBits := elem << (8 - elemOff) >> (8 - elemOff)
 
 		newElem := higherBits | lowerBits
 
-		array.array.Set(elemIndex, newElem)
+		array.slice[elemIndex] = newElem
 	}
 
 	array.lastElemOff = (array.lastElemOff - 1) % 8
 	if array.lastElemOff == 0 {
-		array.array.Remove(array.array.Size() - 1)
+		array.slice = array.slice[:len(array.slice)-1]
 	}
 }
 
 func (array *Array) Clear() {
-	array.array.Clear()
+	array.slice = make([]uint8, 0)
 	array.lastElemOff = 0
 }
 
@@ -234,7 +226,7 @@ func (array *Array) Reverse() {
 
 func (array *Array) Join(other *Array) {
 	if array.lastElemOff == 0 {
-		array.array.AppendMany(other.array...)
+		array.slice = append(array.slice, other.slice...)
 		array.lastElemOff = other.lastElemOff
 	} else {
 		for i := 0; i < other.Size(); i++ {
@@ -248,7 +240,7 @@ func (array *Array) Join(other *Array) {
 func (array *Array) Clone() *Array {
 	cloned := NewWithSize(array.Size())
 	cloned.lastElemOff = array.lastElemOff
-	copy(cloned.array, array.array)
+	copy(cloned.slice, array.slice)
 
 	return cloned
 }

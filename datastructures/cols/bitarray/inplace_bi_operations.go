@@ -7,13 +7,8 @@ func (array *Array) applyBiOperation(other *Array, operation bitwiseOperation) {
 		panic("Array sizes don't match")
 	}
 
-	sliceSize := array.array.Size()
-	for i := 0; i < sliceSize; i++ {
-		elem1 := array.array.Get(i)
-		elem2 := other.array.Get(i)
-
-		resElem := operation(elem1, elem2)
-		array.array.Set(i, resElem)
+	for i := 0; i < len(array.slice); i++ {
+		array.slice[i] = operation(array.slice[i], other.slice[i])
 	}
 }
 
