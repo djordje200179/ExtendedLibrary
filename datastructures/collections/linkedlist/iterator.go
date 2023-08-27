@@ -33,12 +33,12 @@ func (it *Iterator[T]) Set(value T) {
 }
 
 func (it *Iterator[T]) InsertBefore(value T) {
-	it.list.InsertBeforeNode(it.curr, value)
+	it.curr.InsertBefore(value)
 	it.index++
 }
 
 func (it *Iterator[T]) InsertAfter(value T) {
-	it.list.InsertAfterNode(it.curr, value)
+	it.curr.InsertAfter(value)
 }
 
 func (it *Iterator[T]) Remove() {

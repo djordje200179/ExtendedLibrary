@@ -89,39 +89,12 @@ func (list *List[T]) Append(value T) {
 		list.tail = node
 		list.size++
 	} else {
-		list.InsertAfterNode(list.tail, value)
+		list.tail.InsertAfter(value)
 	}
 }
 
 func (list *List[T]) Insert(index int, value T) {
-	prevNode := list.GetNode(index)
-	list.InsertBeforeNode(prevNode, value)
-}
-
-func (list *List[T]) InsertBeforeNode(nextNode *Node[T], value T) {
-	newNode := &Node[T]{value, nextNode.prev, nextNode}
-
-	if nextNode.prev != nil {
-		nextNode.prev.next = newNode
-	} else {
-		list.head = newNode
-	}
-
-	nextNode.prev = newNode
-	list.size++
-}
-
-func (list *List[T]) InsertAfterNode(prevNode *Node[T], value T) {
-	newNode := &Node[T]{value, prevNode, prevNode.next}
-
-	if prevNode.next != nil {
-		prevNode.next.prev = newNode
-	} else {
-		list.tail = newNode
-	}
-
-	prevNode.next = newNode
-	list.size++
+	list.GetNode(index).InsertBefore(value)
 }
 
 func (list *List[T]) Remove(index int) {
