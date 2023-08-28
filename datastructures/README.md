@@ -8,9 +8,10 @@ This package implements many generic data structures:
 - Collections
 	- Array
 	- Linked list
+	- Bitarray
+    - Concurrent linked list
 	- Read-only wrapper
 	- Concurrent wrapper
-	- Copy-on-write array
 - Maps
 	- Red-black tree (binary search tree)
 	- Hashmap
@@ -28,7 +29,6 @@ This package implements many generic data structures:
     - Array deque
 	- Priority queue
 - Other
-	- Bitarray
 	- Matrix
 
 ## Iteration
