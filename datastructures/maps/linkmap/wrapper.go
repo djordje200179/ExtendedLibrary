@@ -9,13 +9,15 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
+// Order represents the order of the nodes in the map.
 type Order bool
 
 const (
-	FIFO Order = false
-	LRU        = true
+	FIFO Order = false // FIFO represents the first-in-first-out order.
+	LRU        = true  // LRU represents the least-recently-used order.
 )
 
+// Wrapper is a map that keeps track of the order of the nodes.
 type Wrapper[K, V any] struct {
 	m maps.Map[K, *Node[K, V]]
 
@@ -25,6 +27,7 @@ type Wrapper[K, V any] struct {
 	capacity int
 }
 
+// From returns a new Wrapper that wraps the given map.
 func From[K, V any](m maps.Map[K, *Node[K, V]], capacity int, order Order) *Wrapper[K, V] {
 	wrapper := &Wrapper[K, V]{
 		m: m,
@@ -45,6 +48,7 @@ func From[K, V any](m maps.Map[K, *Node[K, V]], capacity int, order Order) *Wrap
 	return wrapper
 }
 
+// NewHashmap returns a new Wrapper around a empty hashmap.
 func NewHashmap[K comparable, V any](capacity int, order Order) *Wrapper[K, V] {
 	m := hashmap.NewWithCapacity[K, *Node[K, V]](capacity)
 	wrapper := &Wrapper[K, V]{
@@ -79,14 +83,19 @@ func (wrapper *Wrapper[K, V]) moveToFront(node *Node[K, V]) {
 	wrapper.tail = node
 }
 
+// Size returns the number of entries in the map.
 func (wrapper *Wrapper[K, V]) Size() int {
 	return wrapper.m.Size()
 }
 
+// Contains returns true if the map contains the given key.
 func (wrapper *Wrapper[K, V]) Contains(key K) bool {
 	return wrapper.m.Contains(key)
 }
 
+// TryGet returns the value associated with the given key.
+// If the key is not in the map, the zero value and false is returned.
+// If the order is LRU, the entry is moved to the front.
 func (wrapper *Wrapper[K, V]) TryGet(key K) (V, bool) {
 	node, ok := wrapper.m.TryGet(key)
 	if !ok {
@@ -100,6 +109,9 @@ func (wrapper *Wrapper[K, V]) TryGet(key K) (V, bool) {
 	return node.Value, true
 }
 
+// Get returns the value associated with the given key.
+// Panics if the key is not in the map.
+// If the order is LRU, the entry is moved to the front.
 func (wrapper *Wrapper[K, V]) Get(key K) V {
 	node := wrapper.m.Get(key)
 
@@ -110,6 +122,9 @@ func (wrapper *Wrapper[K, V]) Get(key K) V {
 	return node.Value
 }
 
+// GetRef returns a reference to the value associated with the given key.
+// Panics if the key is not in the map.
+// If the order is LRU, the entry is moved to the front.
 func (wrapper *Wrapper[K, V]) GetRef(key K) *V {
 	node := wrapper.m.Get(key)
 
@@ -120,6 +135,9 @@ func (wrapper *Wrapper[K, V]) GetRef(key K) *V {
 	return &node.Value
 }
 
+// Set sets the value associated with the given key.
+// Entry is moved to the front of the map.
+// If the map is full, the last entry is removed.
 func (wrapper *Wrapper[K, V]) Set(key K, value V) {
 	node, ok := wrapper.m.TryGet(key)
 	if ok {
@@ -158,6 +176,8 @@ func (wrapper *Wrapper[K, V]) Set(key K, value V) {
 	wrapper.m.Set(key, node)
 }
 
+// Remove removes the entry with the given key.
+// If the key is not in the map, nothing happens.
 func (wrapper *Wrapper[K, V]) Remove(key K) {
 	node, ok := wrapper.m.TryGet(key)
 	if !ok {
@@ -179,10 +199,12 @@ func (wrapper *Wrapper[K, V]) Remove(key K) {
 	wrapper.m.Remove(key)
 }
 
+// Keys returns a slice of all keys in the map.
 func (wrapper *Wrapper[K, V]) Keys() []K {
 	return wrapper.m.Keys()
 }
 
+// Clear removes all entries from the map.
 func (wrapper *Wrapper[K, V]) Clear() {
 	wrapper.m.Clear()
 
@@ -190,6 +212,8 @@ func (wrapper *Wrapper[K, V]) Clear() {
 	wrapper.tail = nil
 }
 
+// Clone returns a copy of the wrapper and
+// of the underlying map.
 func (wrapper *Wrapper[K, V]) Clone() maps.Map[K, V] {
 	clonedMap := wrapper.m.Clone()
 
@@ -221,18 +245,22 @@ func (wrapper *Wrapper[K, V]) Clone() maps.Map[K, V] {
 	}
 }
 
+// Iterator returns a iterator over the entries in the map.
 func (wrapper *Wrapper[K, V]) Iterator() iterable.Iterator[misc.Pair[K, V]] {
 	return wrapper.MapIterator()
 }
 
+// MapIterator returns a iterator over the entries in the map.
 func (wrapper *Wrapper[K, V]) MapIterator() maps.Iterator[K, V] {
 	return &Iterator[K, V]{wrapper: wrapper, curr: wrapper.head}
 }
 
+// Stream returns a stream over the entries in the map.
 func (wrapper *Wrapper[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
 	return iterable.IteratorStream(wrapper.Iterator())
 }
 
+// RefsStream returns a stream over the entries in the map.
 func (wrapper *Wrapper[K, V]) RefsStream() streams.Stream[misc.Pair[K, *V]] {
 	return maps.RefsStream[K, V](wrapper)
 }

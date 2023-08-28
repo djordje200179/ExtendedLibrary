@@ -7,9 +7,11 @@ const (
 	black color = true
 )
 
+// Node is a node of a red-black tree.
+// It should not be created directly.
 type Node[K, V any] struct {
 	key   K
-	Value V
+	Value V // Value is the value stored in the node.
 
 	color color
 
@@ -18,22 +20,28 @@ type Node[K, V any] struct {
 	parent     *Node[K, V]
 }
 
+// Key returns the key of the node.
 func (node *Node[K, V]) Key() K {
 	return node.key
 }
 
+// LeftChild returns the left child of the node.
 func (node *Node[K, V]) LeftChild() *Node[K, V] {
 	return node.leftChild
 }
 
+// RightChild returns the right child of the node.
 func (node *Node[K, V]) RightChild() *Node[K, V] {
 	return node.rightChild
 }
 
+// Parent returns the parent of the node.
 func (node *Node[K, V]) Parent() *Node[K, V] {
 	return node.parent
 }
 
+// Sibling returns the sibling of the node.
+// If the node is the root, it returns nil.
 func (node *Node[K, V]) Sibling() *Node[K, V] {
 	if node.parent == nil {
 		return nil
@@ -46,6 +54,8 @@ func (node *Node[K, V]) Sibling() *Node[K, V] {
 	}
 }
 
+// Prev returns the previous node in the tree
+// in the order of the keys.
 func (node *Node[K, V]) Prev() *Node[K, V] {
 	if node.leftChild != nil {
 		return node.leftChild.Max()
@@ -60,6 +70,8 @@ func (node *Node[K, V]) Prev() *Node[K, V] {
 	return nil
 }
 
+// Next returns the next node in the tree
+// in the order of the keys.
 func (node *Node[K, V]) Next() *Node[K, V] {
 	if node.rightChild != nil {
 		return node.rightChild.Min()
@@ -74,6 +86,7 @@ func (node *Node[K, V]) Next() *Node[K, V] {
 	return nil
 }
 
+// Min returns the minimum node in the subtree rooted at the node.
 func (node *Node[K, V]) Min() *Node[K, V] {
 	for curr := node; curr != nil; curr = curr.leftChild {
 		if curr.leftChild == nil {
@@ -84,6 +97,7 @@ func (node *Node[K, V]) Min() *Node[K, V] {
 	return nil
 }
 
+// Max returns the maximum node in the subtree rooted at the node.
 func (node *Node[K, V]) Max() *Node[K, V] {
 	for curr := node; curr != nil; curr = curr.rightChild {
 		if curr.rightChild == nil {
@@ -94,6 +108,9 @@ func (node *Node[K, V]) Max() *Node[K, V] {
 	return nil
 }
 
+// Clone returns a clone of the node.
+// The clone has the same key, value, and color as the node.
+// The clone does not have any links to other nodes.
 func (node *Node[K, V]) Clone() *Node[K, V] {
 	return &Node[K, V]{
 		key:   node.key,

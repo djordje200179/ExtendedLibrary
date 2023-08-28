@@ -6,6 +6,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
+// RefsStream returns a stream of keys and references to values in the map.
 func RefsStream[K, V any](m Map[K, V]) streams.Stream[misc.Pair[K, *V]] {
 	iterator := m.MapIterator()
 	supplier := func() optional.Optional[misc.Pair[K, *V]] {
