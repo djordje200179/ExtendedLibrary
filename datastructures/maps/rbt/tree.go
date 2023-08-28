@@ -93,7 +93,7 @@ func (tree *Tree[K, V]) Get(key K) V {
 func (tree *Tree[K, V]) GetRef(key K) *V {
 	node := tree.GetNode(key)
 	if node == nil {
-		maps.PanicOnMissingKey(key)
+		panic(maps.ErrMissingKey[K]{Key: key})
 	}
 
 	return &node.Value

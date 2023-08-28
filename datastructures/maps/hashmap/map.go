@@ -55,7 +55,7 @@ func (hashmap Map[K, V]) TryGet(key K) (V, bool) {
 func (hashmap Map[K, V]) Get(key K) V {
 	value, ok := hashmap[key]
 	if !ok {
-		maps.PanicOnMissingKey(key)
+		panic(maps.ErrMissingKey[K]{Key: key})
 	}
 
 	return value
@@ -68,7 +68,7 @@ func (hashmap Map[K, V]) GetRef(key K) *V {
 	ptr, ok := internalMapGet(mt, mv, unsafe.Pointer(&key))
 
 	if !ok {
-		maps.PanicOnMissingKey(key)
+		panic(maps.ErrMissingKey[K]{Key: key})
 	}
 
 	return (*V)(ptr)

@@ -19,7 +19,7 @@ func New[T any]() *List[T] {
 	return new(List[T])
 }
 
-// Collector creates a new stream collector that collects elements into an empty List.
+// Collector creates a new streams.Collector that collects elements into an empty List.
 func Collector[T any]() streams.Collector[T, *List[T]] {
 	return cols.Collector[T, *List[T]]{New[T]()}
 }
@@ -34,7 +34,7 @@ func (list *List[T]) Size() int {
 // Panics if the index is out of bounds.
 func (list *List[T]) GetNode(index int) *Node[T] {
 	if index >= list.size || index < -list.size {
-		cols.PanicOnIndexOutOfBounds(index, list.size)
+		panic(cols.ErrIndexOutOfBounds{Index: index, Length: list.size})
 	}
 
 	if index == 0 {

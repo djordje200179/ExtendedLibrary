@@ -10,21 +10,28 @@ import (
 type Iterator[T any] interface {
 	iterable.Iterator[T]
 
-	Remove() // Remove removes the current element
+	// Remove removes the current element
+	Remove()
 }
 
 // Set is an interface that represents a set of elements
 type Set[T any] interface {
-	Size() int // Size returns the size of the set
+	// Size returns the size of the set
+	Size() int
 
-	Add(value T)           // Add adds the given value to the set
-	Remove(value T)        // Remove removes the given value from the set
-	Contains(value T) bool // Contains returns true if the set contains the given value
+	// Add adds the given value to the set
+	Add(value T)
+	// Remove removes the given value from the set
+	Remove(value T)
+	// Contains returns true if the set contains the given value
+	Contains(value T) bool
 
-	Clear() // Clear clears the set
+	// Clear clears the set
+	Clear()
 	misc.Cloner[Set[T]]
 
 	iterable.Iterable[T]
-	SetIterator() Iterator[T] // SetIterator returns an iterator over the set
+	// SetIterator returns an iterator over the set
+	SetIterator() Iterator[T]
 	streams.Streamer[T]
 }

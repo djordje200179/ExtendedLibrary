@@ -1,17 +1,16 @@
 package cols
 
-// Collector is a generic type that can be used to collect values into a collection.
-// It is used by the stream to collect values into a collection.
+// Collector is a streams.Collector that can be used to collect values into a Collection.
 type Collector[T any, C Collection[T]] struct {
 	Collection C // The collection to collect values into.
 }
 
-// Supply adds a value to the end of the collection.
+// Supply appends the value to the end of the Collection.
 func (collector Collector[T, C]) Supply(value T) {
 	collector.Collection.Append(value)
 }
 
-// Finish returns the collection.
+// Finish returns the Collection.
 func (collector Collector[T, C]) Finish() C {
 	return collector.Collection
 }

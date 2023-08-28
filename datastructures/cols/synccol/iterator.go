@@ -5,8 +5,8 @@ import (
 	"sync"
 )
 
-// Iterator is a wrapper around an iterator that provides thread-safe access to the
-// underlying collection.
+// Iterator is a wrapper around a cols.Iterator that provides thread-safe
+// access to the underlying collection.
 type Iterator[T any] struct {
 	colIt cols.Iterator[T]
 

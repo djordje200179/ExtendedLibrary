@@ -4,7 +4,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
-// StreamIterator is an iterator that iterates over a stream.
+// StreamIterator is an Iterator that iterates over a streams.Stream.
 type StreamIterator[T any] struct {
 	stream streams.Stream[T]
 
@@ -13,19 +13,19 @@ type StreamIterator[T any] struct {
 	started, ended bool
 }
 
-// NewStreamIterator creates a new stream iterator.
+// NewStreamIterator creates a new StreamIterator.
 func NewStreamIterator[T any](stream streams.Stream[T]) *StreamIterator[T] {
 	return &StreamIterator[T]{
 		stream: stream,
 	}
 }
 
-// Valid returns true if the iterator is valid.
+// Valid returns true if the end has not been reached.
 func (it *StreamIterator[T]) Valid() bool {
 	return !it.ended
 }
 
-// Move moves fetches the next element from the stream.
+// Move fetches the next element if it exists.
 func (it *StreamIterator[T]) Move() {
 	if elem := it.stream.First(); elem.Valid {
 		it.current = elem.Value

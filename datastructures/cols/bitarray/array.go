@@ -68,7 +68,7 @@ func (array *Array) getRealIndex(index int) int {
 	size := array.Size()
 
 	if index >= size || index < -size {
-		cols.PanicOnIndexOutOfBounds(index, size)
+		panic(cols.ErrIndexOutOfBounds{Index: index, Length: size})
 	}
 
 	if index < 0 {

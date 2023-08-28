@@ -9,21 +9,21 @@ import (
 	"sync"
 )
 
-// Wrapper is a wrapper around a collection that provides thread-safe access to the collection.
-// Locking is done through read-write mutex. This means that multiple goroutines can read from the collection at the same time,
-// but only one goroutine can write to the collection at the same time.
+// Wrapper is a wrapper around a cols.Collection that provides thread-safe access.
+// Locking is done through read-write mutex. This means that multiple goroutines
+// can read at the same time, but only one goroutine can write at the same time.
 type Wrapper[T any] struct {
 	collection cols.Collection[T]
 
 	mutex sync.RWMutex
 }
 
-// From creates a new Wrapper from the given collection.
+// From creates a new Wrapper around the given cols.Collection.
 func From[T any](collection cols.Collection[T]) *Wrapper[T] {
 	return &Wrapper[T]{collection, sync.RWMutex{}}
 }
 
-// Size returns the number of elements in the collection.
+// Size returns the number of elements.
 func (wrapper *Wrapper[T]) Size() int {
 	wrapper.mutex.RLock()
 	defer wrapper.mutex.RUnlock()
@@ -40,8 +40,9 @@ func (wrapper *Wrapper[T]) Get(index int) T {
 }
 
 // GetRef returns a reference to the element at the given index.
-// Usage of this method is discouraged, as it breaks the thread-safety of the collection.
-// Lock will not be held while the reference is used, so it is possible that the value of the element changes while the reference is used.
+// Usage of this method is discouraged, as it breaks the thread-safety.
+// Lock will not be held while the reference is used, so it is possible
+// that the value of the element changes while the reference is used.
 func (wrapper *Wrapper[T]) GetRef(index int) *T {
 	wrapper.mutex.RLock()
 	defer wrapper.mutex.RUnlock()
@@ -57,7 +58,7 @@ func (wrapper *Wrapper[T]) Set(index int, value T) {
 	wrapper.collection.Set(index, value)
 }
 
-// Update updates the value of the element at the given index.
+// Update calculates and sets the new value of the element at the given index.
 func (wrapper *Wrapper[T]) Update(index int, updateFunction func(value T) T) {
 	wrapper.mutex.Lock()
 	defer wrapper.mutex.Unlock()
@@ -67,7 +68,7 @@ func (wrapper *Wrapper[T]) Update(index int, updateFunction func(value T) T) {
 	wrapper.collection.Set(index, newValue)
 }
 
-// UpdateRef updates the value of the element at the given index.
+// UpdateRef in-place updates the value of the element at the given index.
 func (wrapper *Wrapper[T]) UpdateRef(index int, updateFunction func(value *T)) {
 	wrapper.mutex.Lock()
 	defer wrapper.mutex.Unlock()
@@ -108,7 +109,7 @@ func (wrapper *Wrapper[T]) Remove(index int) {
 	wrapper.collection.Remove(index)
 }
 
-// Clear removes all elements from the collection.
+// Clear clears the collection.
 func (wrapper *Wrapper[T]) Clear() {
 	wrapper.mutex.Lock()
 	defer wrapper.mutex.Unlock()
@@ -116,7 +117,7 @@ func (wrapper *Wrapper[T]) Clear() {
 	wrapper.collection.Clear()
 }
 
-// Reverse reverses the order of elements in the collection.
+// Reverse reverses the collection.
 func (wrapper *Wrapper[T]) Reverse() {
 	wrapper.mutex.Lock()
 	defer wrapper.mutex.Unlock()
@@ -124,7 +125,7 @@ func (wrapper *Wrapper[T]) Reverse() {
 	wrapper.collection.Reverse()
 }
 
-// Sort sorts the elements in the collection using the given comparator.
+// Sort sorts the elements using the given comparator.
 func (wrapper *Wrapper[T]) Sort(comparator comparison.Comparator[T]) {
 	wrapper.mutex.Lock()
 	defer wrapper.mutex.Unlock()
@@ -132,7 +133,7 @@ func (wrapper *Wrapper[T]) Sort(comparator comparison.Comparator[T]) {
 	wrapper.collection.Sort(comparator)
 }
 
-// Join appends all elements from the given collection to the end of the collection.
+// Join joins the collection with the given collection.
 func (wrapper *Wrapper[T]) Join(other cols.Collection[T]) {
 	wrapper.mutex.Lock()
 	defer wrapper.mutex.Unlock()
@@ -140,8 +141,8 @@ func (wrapper *Wrapper[T]) Join(other cols.Collection[T]) {
 	wrapper.collection.Join(other)
 }
 
-// Clone returns a shallow copy of a Wrapper.
-// Cloned Wrapper will have the same underlying collection as the original Wrapper.
+// Clone returns a copy of a Wrapper with the new
+// underlying collection that is also cloned.
 func (wrapper *Wrapper[T]) Clone() cols.Collection[T] {
 	wrapper.mutex.RLock()
 	defer wrapper.mutex.RUnlock()
@@ -150,27 +151,28 @@ func (wrapper *Wrapper[T]) Clone() cols.Collection[T] {
 	return &Wrapper[T]{clonedCollection, sync.RWMutex{}}
 }
 
-// Iterator returns an iterator over the elements in the collection.
+// Iterator returns an iterable.Iterator over the elements.
 func (wrapper *Wrapper[T]) Iterator() iterable.Iterator[T] {
 	return wrapper.CollectionIterator()
 }
 
-// CollectionIterator returns an iterator over the elements in the collection.
+// CollectionIterator returns a cols.Iterator over the elements.
 func (wrapper *Wrapper[T]) CollectionIterator() cols.Iterator[T] {
 	return Iterator[T]{wrapper.collection.CollectionIterator(), &wrapper.mutex}
 }
 
-// Stream returns a stream over the elements in the collection.
+// Stream returns a streams.Stream over the elements.
 func (wrapper *Wrapper[T]) Stream() streams.Stream[T] {
 	return wrapper.collection.Stream()
 }
 
-// RefsStream returns a stream over the references to the elements in the collection.
+// RefsStream returns a streams.Stream over the references to the elements.
 func (wrapper *Wrapper[T]) RefsStream() streams.Stream[*T] {
 	return wrapper.collection.RefsStream()
 }
 
 // FindIndex returns the index of the first element that satisfies the given predicate.
+// If no element satisfies the predicate, 0 and false are returned.
 func (wrapper *Wrapper[T]) FindIndex(predicate predication.Predicate[T]) (int, bool) {
 	wrapper.mutex.RLock()
 	defer wrapper.mutex.RUnlock()
@@ -179,8 +181,9 @@ func (wrapper *Wrapper[T]) FindIndex(predicate predication.Predicate[T]) (int, b
 }
 
 // FindRef returns a reference to the first element that satisfies the given predicate.
-// Usage of this method is discouraged, as it breaks the thread-safety of the collection.
-// Lock will not be held while the reference is used, so it is possible that the value of the element changes while the reference is used.
+// If no element satisfies the predicate, nil and false are returned.
+// Lock will not be held while the reference is used, so it is possible
+// that the value of the element changes while the reference is used.
 func (wrapper *Wrapper[T]) FindRef(predicate predication.Predicate[T]) (*T, bool) {
 	wrapper.mutex.RLock()
 	defer wrapper.mutex.RUnlock()
@@ -188,8 +191,8 @@ func (wrapper *Wrapper[T]) FindRef(predicate predication.Predicate[T]) (*T, bool
 	return wrapper.collection.FindRef(predicate)
 }
 
-// Transaction executes the given function with the collection as an argument.
-// The collection will be locked for writing while the function is executed.
+// Transaction executes the given function with the cols.Collection as an argument.
+// Wrapped cols.Collection will be locked for writing while the function is executed.
 func (wrapper *Wrapper[T]) Transaction(updateFunction func(collection cols.Collection[T])) {
 	wrapper.mutex.Lock()
 	defer wrapper.mutex.Unlock()

@@ -6,7 +6,7 @@ type collector[T any] struct {
 	list *List[T]
 }
 
-// Collector creates a new stream Collector that collects elements into an empty List.
+// Collector creates a new streams.Collector that collects elements into an empty List.
 func Collector[T any]() streams.Collector[T, *List[T]] {
 	return &collector[T]{New[T]()}
 }

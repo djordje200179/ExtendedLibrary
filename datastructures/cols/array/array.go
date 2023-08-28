@@ -36,7 +36,7 @@ func FromSlice[T any](slice []T) *Array[T] {
 	return &Array[T]{slice}
 }
 
-// Collector creates a new stream Collector that collects elements into an empty Array.
+// Collector creates a new streams.Collector that collects elements into an empty Array.
 func Collector[T any]() streams.Collector[T, *Array[T]] {
 	return cols.Collector[T, *Array[T]]{New[T]()}
 }
@@ -55,7 +55,7 @@ func (array *Array[T]) getRealIndex(index int) int {
 	size := array.Size()
 
 	if index >= size || index < -size {
-		cols.PanicOnIndexOutOfBounds(index, size)
+		panic(cols.ErrIndexOutOfBounds{Index: index, Length: size})
 	}
 
 	if index < 0 {
@@ -210,7 +210,7 @@ func (array *Array[T]) Join(other cols.Collection[T]) {
 	other.Clear()
 }
 
-// Clone returns a shallow copy of the Array.
+// Clone returns a copy of the Array.
 func (array *Array[T]) Clone() cols.Collection[T] {
 	return &Array[T]{slices.Clone(array.slice)}
 }

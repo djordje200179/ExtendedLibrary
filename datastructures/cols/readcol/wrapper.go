@@ -7,17 +7,17 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
-// Wrapper is a wrapper around a collection that provides read-only access to the collection.
+// Wrapper is a wrapper around a cols.Collection that provides read-only access to it.
 type Wrapper[T any] struct {
 	collection cols.Collection[T]
 }
 
-// From creates a new Wrapper from the given collection.
+// From creates a new Wrapper around the given cols.Collection.
 func From[T any](collection cols.Collection[T]) Wrapper[T] {
 	return Wrapper[T]{collection}
 }
 
-// Size returns the number of elements in the collection.
+// Size returns the number of elements.
 func (wrapper Wrapper[T]) Size() int {
 	return wrapper.collection.Size()
 }
@@ -27,24 +27,24 @@ func (wrapper Wrapper[T]) Get(index int) T {
 	return wrapper.collection.Get(index)
 }
 
-// Clone returns a shallow copy of a Wrapper.
-// Cloned Wrapper will have the same underlying collection as the original Wrapper.
+// Clone returns a copy of a Wrapper with the same underlying cols.Collection.
 func (wrapper Wrapper[T]) Clone() Wrapper[T] {
 	clonedCollection := wrapper.collection.Clone()
 	return Wrapper[T]{clonedCollection}
 }
 
-// Iterator returns an iterator over the elements in the collection.
+// Iterator returns an iterable.Iterator over the elements.
 func (wrapper Wrapper[T]) Iterator() iterable.Iterator[T] {
 	return wrapper.collection.Iterator()
 }
 
-// Stream returns a stream over the elements in the collection.
+// Stream returns a streams.Stream over the elements.
 func (wrapper Wrapper[T]) Stream() streams.Stream[T] {
 	return wrapper.collection.Stream()
 }
 
 // FindIndex returns the index of the first element that satisfies the given predicate.
+// If no element satisfies the predicate, 0 and false are returned.
 func (wrapper Wrapper[T]) FindIndex(predicate predication.Predicate[T]) (int, bool) {
 	return wrapper.collection.FindIndex(predicate)
 }
