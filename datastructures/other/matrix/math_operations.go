@@ -2,7 +2,14 @@ package matrix
 
 import "github.com/djordje200179/extendedlibrary/misc/math"
 
+// Add adds multiple matrices together and returns the result.
+// If the matrices are not of the same size, it panics.
+// If no matrices are provided, it returns nil.
 func Add[T math.Real](matrices ...*Matrix[T]) *Matrix[T] {
+	if len(matrices) == 0 {
+		return nil
+	}
+
 	for i := 1; i < len(matrices); i++ {
 		if matrices[i].Size() != matrices[i-1].Size() {
 			panic("Matrix sizes don't match")
@@ -21,6 +28,8 @@ func Add[T math.Real](matrices ...*Matrix[T]) *Matrix[T] {
 	return result
 }
 
+// Subtract subtracts the second matrix from the first and returns the result.
+// If the matrices are not of the same size, it panics.
 func Subtract[T math.Real](first, second *Matrix[T]) *Matrix[T] {
 	if first.Size() != second.Size() {
 		panic("Matrix sizes don't match")
@@ -37,6 +46,7 @@ func Subtract[T math.Real](first, second *Matrix[T]) *Matrix[T] {
 	return result
 }
 
+// ScalarMultiply multiplies the matrix with a scalar and returns the result.
 func ScalarMultiply[T math.Real](matrix *Matrix[T], scalar T) *Matrix[T] {
 	result := New[T](matrix.Size())
 
@@ -47,6 +57,7 @@ func ScalarMultiply[T math.Real](matrix *Matrix[T], scalar T) *Matrix[T] {
 	return result
 }
 
+// Multiply multiplies two matrices together and returns the result.
 func Multiply[T math.Real](first, second *Matrix[T]) *Matrix[T] {
 	if first.Size().Width != second.Size().Height {
 		panic("Matrix sizes don't match")
@@ -72,7 +83,15 @@ func Multiply[T math.Real](first, second *Matrix[T]) *Matrix[T] {
 	return result
 }
 
+// DotMultiply multiplies multiple matrices together and returns the result.
+// This function is equivalent to multiplying the matrices element by element.
+// If the matrices are not of the same size, it panics.
+// If no matrices are provided, it returns nil.
 func DotMultiply[T math.Real](matrices ...*Matrix[T]) *Matrix[T] {
+	if len(matrices) == 0 {
+		return nil
+	}
+
 	for i := 1; i < len(matrices); i++ {
 		if matrices[i].Size() != matrices[i-1].Size() {
 			panic("Matrix sizes don't match")
@@ -92,6 +111,7 @@ func DotMultiply[T math.Real](matrices ...*Matrix[T]) *Matrix[T] {
 	return result
 }
 
+// Negate negates the matrix and returns the result.
 func Negate[T math.Real](matrix *Matrix[T]) *Matrix[T] {
 	return ScalarMultiply[T](matrix, -1)
 }

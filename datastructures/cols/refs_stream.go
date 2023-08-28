@@ -5,6 +5,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
+// RefsStream returns a stream of pointers to the elements of the given collection
 func RefsStream[T any](iterator Iterator[T]) streams.Stream[*T] {
 	supplier := func() optional.Optional[*T] {
 		if iterator.Valid() {

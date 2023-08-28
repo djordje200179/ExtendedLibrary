@@ -4,6 +4,8 @@ import (
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 )
 
+// Sort sorts the elements in the List by the specified comparator.
+// The sorting algorithm is a stable variant of merge sort.
 func (list *List[T]) Sort(comparator comparison.Comparator[T]) {
 	if list == nil || list.head == nil || list.head.next == nil {
 		return

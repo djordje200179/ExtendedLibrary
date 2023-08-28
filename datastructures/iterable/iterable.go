@@ -1,8 +1,9 @@
 package iterable
 
-// An Iterator fits well with iteration through for loop.
+// An Iterator is used to iterate through a collection of elements.
+// It fits well with the for-loop syntax.
 type Iterator[T any] interface {
-	Valid() bool // Valid returns false if the iterator is exhausted.
+	Valid() bool // Valid returns true if the iterator points to a valid element.
 	Move()       // Move moves the iterator to the next element.
 
 	Get() T // Get returns the current element.

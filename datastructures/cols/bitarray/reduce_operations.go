@@ -2,6 +2,7 @@ package bitarray
 
 import "math/bits"
 
+// All returns true if all bits are set to 1.
 func (array *Array) All() bool {
 	sliceSize := len(array.slice)
 	if array.lastElemOff != 0 {
@@ -24,6 +25,7 @@ func (array *Array) All() bool {
 	return true
 }
 
+// Any returns true if any bit is set to 1.
 func (array *Array) Any() bool {
 	sliceSize := len(array.slice)
 	if array.lastElemOff != 0 {
@@ -46,6 +48,7 @@ func (array *Array) Any() bool {
 	return false
 }
 
+// None returns true if no bit is set to 1.
 func (array *Array) None() bool {
 	sliceSize := len(array.slice)
 	if array.lastElemOff != 0 {
@@ -68,6 +71,7 @@ func (array *Array) None() bool {
 	return true
 }
 
+// Count returns the number of bits set to 1.
 func (array *Array) Count() int {
 	count := 0
 

@@ -2,12 +2,15 @@ package matrix
 
 import "fmt"
 
+// Matrix is a two-dimensional array of values.
+// The zero value is ready to use. Do not copy a non-zero Matrix.
 type Matrix[T any] struct {
 	values []T
 
 	columns int
 }
 
+// New creates a new matrix with the given size.
 func New[T any](size Size) *Matrix[T] {
 	values := make([]T, size.Elements())
 
@@ -19,7 +22,8 @@ func New[T any](size Size) *Matrix[T] {
 	return matrix
 }
 
-func FromSlices[T any](values [][]T) *Matrix[T] {
+// NewFromSlices creates a new matrix from the given slices.
+func NewFromSlices[T any](values [][]T) *Matrix[T] {
 	if len(values) == 0 {
 		return New[T](Size{})
 	}
@@ -44,25 +48,33 @@ func FromSlices[T any](values [][]T) *Matrix[T] {
 	return matrix
 }
 
+// Size returns the size of the matrix.
 func (matrix *Matrix[T]) Size() Size {
-	rows := len(matrix.values) / matrix.columns
+	var rows int
+	if matrix.columns != 0 {
+		rows = len(matrix.values) / matrix.columns
+	}
 
 	return Size{rows, matrix.columns}
 }
 
+// GetRef returns a reference to the value at the given position.
 func (matrix *Matrix[T]) GetRef(row, column int) *T {
 	index := matrix.Size().Index(row, column)
 	return &matrix.values[index]
 }
 
+// Get returns the value at the given position.
 func (matrix *Matrix[T]) Get(row, column int) T {
 	return *matrix.GetRef(row, column)
 }
 
+// Set sets the value at the given position.
 func (matrix *Matrix[T]) Set(row, column int, value T) {
 	*matrix.GetRef(row, column) = value
 }
 
+// Clone returns a copy of the matrix.
 func (matrix *Matrix[T]) Clone() *Matrix[T] {
 	newMatrix := New[T](matrix.Size())
 	copy(newMatrix.values, matrix.values)
@@ -70,6 +82,7 @@ func (matrix *Matrix[T]) Clone() *Matrix[T] {
 	return newMatrix
 }
 
+// InsertRow inserts a row at the given index.
 func (matrix *Matrix[T]) InsertRow(index int, row []T) {
 	if len(row) != matrix.columns {
 		panic("Row length does not match matrix width")
@@ -91,6 +104,7 @@ func (matrix *Matrix[T]) InsertRow(index int, row []T) {
 	matrix.values = newValues
 }
 
+// InsertColumn inserts a column at the given index.
 func (matrix *Matrix[T]) InsertColumn(index int, column []T) {
 	size := matrix.Size()
 
@@ -113,6 +127,7 @@ func (matrix *Matrix[T]) InsertColumn(index int, column []T) {
 	matrix.columns++
 }
 
+// AppendRow appends a row to the matrix.
 func (matrix *Matrix[T]) AppendRow(row []T) {
 	if len(row) != matrix.columns {
 		panic("Row length does not match matrix width")
@@ -121,10 +136,12 @@ func (matrix *Matrix[T]) AppendRow(row []T) {
 	matrix.values = append(matrix.values, row...)
 }
 
+// AppendColumn appends a column to the matrix.
 func (matrix *Matrix[T]) AppendColumn(column []T) {
 	matrix.InsertColumn(matrix.columns, column)
 }
 
+// RemoveRow removes the row at the given index.
 func (matrix *Matrix[T]) RemoveRow(index int) {
 	newValues := make([]T, len(matrix.values)-matrix.columns)
 
@@ -139,6 +156,7 @@ func (matrix *Matrix[T]) RemoveRow(index int) {
 	matrix.values = newValues
 }
 
+// RemoveColumn removes the column at the given index.
 func (matrix *Matrix[T]) RemoveColumn(index int) {
 	size := matrix.Size()
 
@@ -156,6 +174,9 @@ func (matrix *Matrix[T]) RemoveColumn(index int) {
 	matrix.columns--
 }
 
+// Reshape reshapes the matrix into the given size.
+// The number of elements must be the same.
+// The matrix is reshaped in row-major order.
 func (matrix *Matrix[T]) Reshape(newSize Size) {
 	oldSize := matrix.Size()
 
@@ -166,6 +187,7 @@ func (matrix *Matrix[T]) Reshape(newSize Size) {
 	matrix.columns = newSize.Width
 }
 
+// Transpose transposes the matrix.
 func (matrix *Matrix[T]) Transpose() {
 	oldSize := matrix.Size()
 	newSize := oldSize.Transposed()

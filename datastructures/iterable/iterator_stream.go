@@ -5,6 +5,7 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
+// IteratorStream creates a stream from an iterator.
 func IteratorStream[T any](iterator Iterator[T]) streams.Stream[T] {
 	supplier := func() optional.Optional[T] {
 		if iterator.Valid() {
