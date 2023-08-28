@@ -6,12 +6,15 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
+// Queue is a priority queue implementation based on a binary heap.
+// By default, the queue is a min-heap, but a custom comparator can be provided.
 type Queue[T any] struct {
 	slice []T
 
 	comparator comparison.Comparator[T]
 }
 
+// New creates a new priority queue with the given comparator.
 func New[T any](comparator comparison.Comparator[T]) *Queue[T] {
 	pq := &Queue[T]{
 		slice: make([]T, 0),
@@ -22,14 +25,18 @@ func New[T any](comparator comparison.Comparator[T]) *Queue[T] {
 	return pq
 }
 
+// Collector returns a collector that collects elements into a priority queue.
 func Collector[T any](comparator comparison.Comparator[T]) streams.Collector[T, *Queue[T]] {
 	return seqs.Collector[T, *Queue[T]]{New[T](comparator)}
 }
 
+// Empty returns true if the queue is empty.
 func (pq *Queue[T]) Empty() bool {
 	return len(pq.slice) == 0
 }
 
+// PushBack pushes a new element into the queue.
+// The element is inserted at the end of the queue and then moved up the heap until the heap property is satisfied.
 func (pq *Queue[T]) PushBack(value T) {
 	pq.slice = append(pq.slice, value)
 
@@ -45,6 +52,8 @@ func (pq *Queue[T]) PushBack(value T) {
 	}
 }
 
+// PeekFront returns the element at the front of the queue.
+// Panics if the queue is empty.
 func (pq *Queue[T]) PeekFront() T {
 	if pq.Empty() {
 		panic("Priority queue is empty")
@@ -53,6 +62,8 @@ func (pq *Queue[T]) PeekFront() T {
 	return pq.slice[0]
 }
 
+// PopFront removes and returns the element at the front of the queue.
+// Panics if the queue is empty.
 func (pq *Queue[T]) PopFront() T {
 	if pq.Empty() {
 		panic("Priority queue is empty")

@@ -8,42 +8,55 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
+// Deque is a double-ended queue.
+// It is a sequence of elements in which items can be inserted or removed from either the front or back.
+// Pushing is always possible, but popping and peeking panics if the deque is empty.
 type Deque[T any] struct {
 	collection cols.Collection[T]
 }
 
+// NewArrayDeque creates a new Deque backed by an array.
 func NewArrayDeque[T any]() Deque[T] {
 	return Deque[T]{array.New[T]()}
 }
 
+// NewLinkedListDeque creates a new Deque backed by a linked list.
 func NewLinkedListDeque[T any]() Deque[T] {
 	return Deque[T]{linklist.New[T]()}
 }
 
-func From[T any](sequence cols.Collection[T]) Deque[T] {
-	return Deque[T]{sequence}
+// From creates a new Deque from a collection.
+func From[T any](collection cols.Collection[T]) Deque[T] {
+	return Deque[T]{collection}
 }
 
+// ArrayCollector creates a collector that collects elements into an array-backed Deque.
 func ArrayCollector[T any]() streams.Collector[T, seqs.Queue[T]] {
 	return seqs.Collector[T, seqs.Queue[T]]{NewArrayDeque[T]()}
 }
 
+// LinkedListCollector creates a collector that collects elements into a linked list-backed Deque.
 func LinkedListCollector[T any]() streams.Collector[T, seqs.Queue[T]] {
 	return seqs.Collector[T, seqs.Queue[T]]{NewLinkedListDeque[T]()}
 }
 
+// Empty returns true if the Deque is empty.
 func (deque Deque[T]) Empty() bool {
 	return deque.collection.Size() == 0
 }
 
+// PushFront inserts an element at the front of the Deque.
 func (deque Deque[T]) PushFront(value T) {
 	deque.collection.Insert(0, value)
-
 }
+
+// PushBack inserts an element at the back of the Deque.
 func (deque Deque[T]) PushBack(value T) {
 	deque.collection.Append(value)
 }
 
+// PeekFront returns the element at the front of the Deque.
+// Panics if the Deque is empty.
 func (deque Deque[T]) PeekFront() T {
 	if deque.Empty() {
 		panic("Deque is empty")
@@ -52,6 +65,8 @@ func (deque Deque[T]) PeekFront() T {
 	return deque.collection.Get(0)
 }
 
+// PeekBack returns the element at the back of the Deque.
+// Panics if the Deque is empty.
 func (deque Deque[T]) PeekBack() T {
 	if deque.Empty() {
 		panic("Deque is empty")
@@ -60,6 +75,8 @@ func (deque Deque[T]) PeekBack() T {
 	return deque.collection.Get(-1)
 }
 
+// PopFront removes and returns the element at the front of the Deque.
+// Panics if the Deque is empty.
 func (deque Deque[T]) PopFront() T {
 	if deque.Empty() {
 		panic("Deque is empty")
@@ -68,6 +85,9 @@ func (deque Deque[T]) PopFront() T {
 	defer deque.collection.Remove(0)
 	return deque.PeekFront()
 }
+
+// PopBack removes and returns the element at the back of the Deque.
+// Panics if the Deque is empty.
 func (deque Deque[T]) PopBack() T {
 	if deque.Empty() {
 		panic("Deque is empty")
