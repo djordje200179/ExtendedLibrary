@@ -58,16 +58,17 @@ func (array *Array[T]) getRealIndex(index int) int {
 
 func (array *Array[T]) GetRef(index int) *T {
 	index = array.getRealIndex(index)
-
 	return &array.slice[index]
 }
 
 func (array *Array[T]) Get(index int) T {
-	return *array.GetRef(index)
+	index = array.getRealIndex(index)
+	return array.slice[index]
 }
 
 func (array *Array[T]) Set(index int, value T) {
-	*array.GetRef(index) = value
+	index = array.getRealIndex(index)
+	array.slice[index] = value
 }
 
 func (array *Array[T]) Prepend(value T) {
@@ -128,15 +129,20 @@ func (array *Array[T]) Remove(index int) {
 	}
 }
 
-func (array *Array[T]) Reserve(capacity int) {
-	if capacity <= array.Capacity() {
+func (array *Array[T]) Reserve(additionalCapacity int) {
+	newCapacity := array.Capacity() + additionalCapacity
+
+	if newCapacity <= array.Capacity() {
 		return
 	}
 
-	newArray := make([]T, array.Size(), capacity)
-	copy(newArray, array.slice)
+	newSlice := make([]T, array.Size(), newCapacity)
+	copy(newSlice, array.slice)
+	array.slice = newSlice
+}
 
-	array.slice = newArray
+func (array *Array[T]) Shrink() {
+	array.slice = slices.Clip(array.slice)
 }
 
 func (array *Array[T]) Clear() {

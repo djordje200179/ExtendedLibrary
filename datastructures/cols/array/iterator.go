@@ -18,11 +18,11 @@ func (it *Iterator[T]) GetRef() *T {
 }
 
 func (it *Iterator[T]) Get() T {
-	return *it.GetRef()
+	return it.array.Get(it.index)
 }
 
 func (it *Iterator[T]) Set(value T) {
-	*it.GetRef() = value
+	it.array.Set(it.index, value)
 }
 
 func (it *Iterator[T]) InsertBefore(value T) {
