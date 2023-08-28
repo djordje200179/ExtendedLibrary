@@ -24,7 +24,8 @@ func NewFromIterable[T any](iterable iter.Iterable[T]) *List[T] {
 	list := New[T]()
 
 	for it := iterable.Iterator(); it.Valid(); it.Move() {
-		list.Append(it.Get())
+		val := it.Get()
+		list.Append(val)
 	}
 
 	return list
@@ -88,19 +89,18 @@ func (list *List[T]) Set(index int, value T) {
 
 // Prepend inserts the specified element at the beginning of the List.
 func (list *List[T]) Prepend(value T) {
-	node := &Node[T]{
-		Value: value,
-	}
+	if list.size == 0 {
+		node := &Node[T]{
+			Value: value,
+			list:  list,
+		}
 
-	node.next = list.head
-	if list.head != nil {
-		list.head.prev = node
-	} else {
+		list.head = node
 		list.tail = node
+		list.size++
+	} else {
+		list.head.InsertBefore(value)
 	}
-	list.head = node
-
-	list.size++
 }
 
 // Append inserts the specified element at the end of the List.
@@ -108,6 +108,7 @@ func (list *List[T]) Append(value T) {
 	if list.size == 0 {
 		node := &Node[T]{
 			Value: value,
+			list:  list,
 		}
 
 		list.head = node
