@@ -19,9 +19,15 @@ func New[T any]() *List[T] {
 	return new(List[T])
 }
 
-// Collector creates a new streams.Collector that collects elements into an empty List.
-func Collector[T any]() streams.Collector[T, *List[T]] {
-	return cols.Collector[T, *List[T]]{New[T]()}
+// NewFromIterable creates a list from the specified iterable.
+func NewFromIterable[T any](iter iterable.Iterable[T]) *List[T] {
+	list := New[T]()
+
+	for it := iter.Iterator(); it.Valid(); it.Move() {
+		list.Append(it.Get())
+	}
+
+	return list
 }
 
 // Size returns the number of elements in the list.

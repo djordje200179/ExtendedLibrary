@@ -31,14 +31,31 @@ func NewWithCapacity[T any](initialCapacity int) *Array[T] {
 	return FromSlice(make([]T, 0, initialCapacity))
 }
 
+// NewFromIterable creates a new Array from the specified iterable.
+func NewFromIterable[T any](iter iterable.Iterable[T]) *Array[T] {
+	var array *Array[T]
+	if finiteIterable, ok := any(iter).(iterable.FiniteIterable[T]); ok {
+		array = NewWithSize[T](finiteIterable.Size())
+
+		i := 0
+		for it := iter.Iterator(); it.Valid(); it.Move() {
+			array.slice[i] = it.Get()
+			i++
+		}
+	} else {
+		array = New[T]()
+
+		for it := iter.Iterator(); it.Valid(); it.Move() {
+			array.Append(it.Get())
+		}
+	}
+
+	return array
+}
+
 // FromSlice creates a new Array from the specified slice.
 func FromSlice[T any](slice []T) *Array[T] {
 	return &Array[T]{slice}
-}
-
-// Collector creates a new streams.Collector that collects elements into an empty Array.
-func Collector[T any]() streams.Collector[T, *Array[T]] {
-	return cols.Collector[T, *Array[T]]{New[T]()}
 }
 
 // Size returns the number of elements in the Array.

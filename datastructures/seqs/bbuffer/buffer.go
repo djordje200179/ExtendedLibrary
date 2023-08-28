@@ -1,10 +1,5 @@
 package bbuffer
 
-import (
-	"github.com/djordje200179/extendedlibrary/datastructures/seqs"
-	"github.com/djordje200179/extendedlibrary/streams"
-)
-
 // Buffer is a bounded buffer, which is a queue with a fixed size.
 // Operations are blocking if the buffer is full or empty.
 type Buffer[T any] chan T
@@ -17,11 +12,6 @@ func New[T any](size int) Buffer[T] {
 // FromChannel creates a bounded buffer from the given channel.
 func FromChannel[T any](channel chan T) Buffer[T] {
 	return channel
-}
-
-// Collector returns a collector for an empty buffer with the given size.
-func Collector[T any](size int) streams.Collector[T, seqs.Queue[T]] {
-	return seqs.Collector[T, seqs.Queue[T]]{New[T](size)}
 }
 
 // Empty returns true if the buffer is empty.

@@ -1,9 +1,8 @@
 package pq
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/seqs"
+	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
-	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 // Queue is a priority queue implementation based on a binary heap.
@@ -25,9 +24,15 @@ func New[T any](comparator comparison.Comparator[T]) *Queue[T] {
 	return pq
 }
 
-// Collector returns a collector that collects elements into a priority queue.
-func Collector[T any](comparator comparison.Comparator[T]) streams.Collector[T, *Queue[T]] {
-	return seqs.Collector[T, *Queue[T]]{New[T](comparator)}
+// NewFromIterable creates a new Queue with the given comparator and elements from the given iterable.
+func NewFromIterable[T any](comparator comparison.Comparator[T], iter iterable.Iterable[T]) *Queue[T] {
+	pq := New[T](comparator)
+
+	for it := iter.Iterator(); it.Valid(); it.Move() {
+		pq.PushBack(it.Get())
+	}
+
+	return pq
 }
 
 // Empty returns true if the queue is empty.

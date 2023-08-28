@@ -34,16 +34,6 @@ func FromMap[T any](m maps.Map[T, empty]) Set[T] {
 	return Set[T]{m}
 }
 
-// HashSetCollector creates a collector for an empty hash set.
-func HashSetCollector[T comparable]() streams.Collector[T, Set[T]] {
-	return sets.Collector[T, Set[T]]{NewHashSet[T]()}
-}
-
-// TreeSetCollector creates a collector for an empty tree set.
-func TreeSetCollector[T cmp.Ordered]() streams.Collector[T, Set[T]] {
-	return sets.Collector[T, Set[T]]{NewTreeSet[T]()}
-}
-
 // Size returns the number of elements in the set.
 func (set Set[T]) Size() int {
 	return set.m.Size()

@@ -12,24 +12,38 @@ import (
 // Map is a hash map with builtin map as a base.
 type Map[K comparable, V any] map[K]V
 
-// New creates an empty hash map.
+// New creates an empty Map.
 func New[K comparable, V any]() Map[K, V] {
 	return NewWithCapacity[K, V](0)
 }
 
-// NewWithCapacity creates an empty hash map with the specified capacity.
+// NewWithCapacity creates an empty Map with the specified capacity.
 func NewWithCapacity[K comparable, V any](capacity int) Map[K, V] {
 	return FromMap(make(map[K]V, capacity))
 }
 
-// FromMap creates a hash map from the specified map.
-func FromMap[K comparable, V any](m map[K]V) Map[K, V] {
+// NewFromIterable creates a Map from the specified iterable.
+func NewFromIterable[K comparable, V any](iter iterable.Iterable[misc.Pair[K, V]]) Map[K, V] {
+	var m Map[K, V]
+
+	if finiteIter, ok := any(iter).(iterable.FiniteIterable[misc.Pair[K, V]]); ok {
+		m = NewWithCapacity[K, V](finiteIter.Size())
+	} else {
+		m = New[K, V]()
+	}
+
+	for it := iter.Iterator(); it.Valid(); it.Move() {
+		entry := it.Get()
+
+		m[entry.First] = entry.Second
+	}
+
 	return m
 }
 
-// Collector returns a collector that collects key-value pairs into an empty hash map.
-func Collector[K comparable, V any]() streams.Collector[misc.Pair[K, V], Map[K, V]] {
-	return maps.Collector[K, V, Map[K, V]]{New[K, V]()}
+// FromMap creates a new Map from the specified map.
+func FromMap[K comparable, V any](m map[K]V) Map[K, V] {
+	return m
 }
 
 // Size returns the number of entries in the map.

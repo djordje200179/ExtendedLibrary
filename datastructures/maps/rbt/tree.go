@@ -19,28 +19,40 @@ type Tree[K, V any] struct {
 	comparator comparison.Comparator[K]
 }
 
-// NewWithComparator creates an empty red-black tree with the specified comparator.
+// NewWithComparator creates an empty Tree with the specified comparator.
 func NewWithComparator[K, V any](comparator comparison.Comparator[K]) *Tree[K, V] {
 	return &Tree[K, V]{
 		comparator: comparator,
 	}
 }
 
-// New creates an empty red-black tree with the default comparator for ordered keys.
+// New creates an empty Tree with the default comparator for ordered keys.
 func New[K cmp.Ordered, V any]() *Tree[K, V] {
 	return NewWithComparator[K, V](cmp.Compare[K])
 }
 
-// CollectorWithComparator returns a collector that collects key-value pairs into an empty red-black tree
-// with the specified comparator.
-func CollectorWithComparator[K, V any](comparator comparison.Comparator[K]) streams.Collector[misc.Pair[K, V], *Tree[K, V]] {
-	return maps.Collector[K, V, *Tree[K, V]]{NewWithComparator[K, V](comparator)}
+// NewWithComparatorFromIterable creates a Tree with the specified comparator from the specified iterable.
+func NewWithComparatorFromIterable[K, V any](comparator comparison.Comparator[K], iter iterable.Iterable[misc.Pair[K, V]]) *Tree[K, V] {
+	tree := NewWithComparator[K, V](comparator)
+
+	for it := iter.Iterator(); it.Valid(); it.Move() {
+		entry := it.Get()
+		tree.Set(entry.First, entry.Second)
+	}
+
+	return tree
 }
 
-// Collector returns a collector that collects key-value pairs into an empty red-black tree
-// with the default comparator for ordered keys.
-func Collector[K cmp.Ordered, V any]() streams.Collector[misc.Pair[K, V], *Tree[K, V]] {
-	return maps.Collector[K, V, *Tree[K, V]]{New[K, V]()}
+// NewFromIterable creates a Tree from the specified iterable.
+func NewFromIterable[K cmp.Ordered, V any](iter iterable.Iterable[misc.Pair[K, V]]) *Tree[K, V] {
+	tree := New[K, V]()
+
+	for it := iter.Iterator(); it.Valid(); it.Move() {
+		entry := it.Get()
+		tree.Set(entry.First, entry.Second)
+	}
+
+	return tree
 }
 
 // Size returns the number of entries in the tree.

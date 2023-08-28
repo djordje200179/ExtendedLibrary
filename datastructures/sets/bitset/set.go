@@ -19,15 +19,20 @@ func New(size int) *Set {
 	return &Set{bitarray.NewWithSize(size), 0}
 }
 
+// NewFromIterable creates a set with the given size from the given iterable.
+func NewFromIterable(size int, iter iterable.Iterable[int]) *Set {
+	set := New(size)
+
+	for it := iter.Iterator(); it.Valid(); it.Move() {
+		set.Add(it.Get())
+	}
+
+	return set
+}
+
 // FromArray creates a set from the given array.
 func FromArray(arr *bitarray.Array) *Set {
 	return &Set{arr, arr.Count()}
-}
-
-// Collector creates a new stream Collector that collects elements into an empty Set
-// with the given size.
-func Collector(size int) streams.Collector[int, *Set] {
-	return sets.Collector[int, *Set]{New(size)}
 }
 
 // Size returns the number of elements in the Set.

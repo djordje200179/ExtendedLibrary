@@ -17,3 +17,12 @@ type Iterable[T any] interface {
 	// Iterator creates and returns a new Iterator.
 	Iterator() Iterator[T]
 }
+
+// A FiniteIterable is a finite collection of elements.
+// It can be iterated through using an Iterator.
+// Useful for passing to data structures constructors.
+type FiniteIterable[T any] interface {
+	Iterable[T]
+	// Size returns the number of elements in the collection.
+	Size() int
+}

@@ -18,6 +18,18 @@ func New[T any]() *List[T] {
 	return new(List[T])
 }
 
+// NewFromIterable creates a List from the specified iterable in reverse order.
+// List.Reverse can be used to restore the original order.
+func NewFromIterable[T any](iter iterable.Iterable[T]) *List[T] {
+	list := New[T]()
+
+	for it := iter.Iterator(); it.Valid(); it.Move() {
+		list.Prepend(it.Get())
+	}
+
+	return list
+}
+
 // Prepend adds the specified value to the beginning of the List.
 func (list *List[T]) Prepend(value T) {
 	node := &Node[T]{Value: value}

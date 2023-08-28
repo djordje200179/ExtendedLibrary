@@ -4,8 +4,6 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/cols"
 	"github.com/djordje200179/extendedlibrary/datastructures/cols/array"
 	"github.com/djordje200179/extendedlibrary/datastructures/cols/linklist"
-	"github.com/djordje200179/extendedlibrary/datastructures/seqs"
-	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 // Deque is a double-ended queue.
@@ -28,16 +26,6 @@ func NewLinkedListDeque[T any]() Deque[T] {
 // From creates a new Deque from a collection.
 func From[T any](collection cols.Collection[T]) Deque[T] {
 	return Deque[T]{collection}
-}
-
-// ArrayCollector creates a collector that collects elements into an array-backed Deque.
-func ArrayCollector[T any]() streams.Collector[T, seqs.Queue[T]] {
-	return seqs.Collector[T, seqs.Queue[T]]{NewArrayDeque[T]()}
-}
-
-// LinkedListCollector creates a collector that collects elements into a linked list-backed Deque.
-func LinkedListCollector[T any]() streams.Collector[T, seqs.Queue[T]] {
-	return seqs.Collector[T, seqs.Queue[T]]{NewLinkedListDeque[T]()}
 }
 
 // Empty returns true if the Deque is empty.

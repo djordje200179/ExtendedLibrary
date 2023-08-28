@@ -71,6 +71,7 @@ the type.
 arr1 := array.New[T]()
 arr2 := array.NewWithCapacity[T](capacity)
 hmap := hashmap.NewWithCapacity[T](capacity)
+list := linklist.NewFromIterable[T](iterable)
 ```
 
 ### Casts
@@ -87,11 +88,6 @@ queue := boundedbuffer.FromChannel(ch)
 You can also collect every finite stream into a suitable collection.
 
 ```go
-list := streams.Collect(streams.FromRange(0, 100), linkedlist.Collector[int]())
-hmap := streams.Collect(streams.Map(
-	streams.FromRange(0, 100),
-	func(i int) misc.Pair[int, int] {
-		return misc.Pair[int, int]{i, i * i}
-	},
-), hashmap.Collector[int, int]())
+iter := iterable.StreamIterator(streams.FromRange(0, 100))
+arr := array.NewFromIterable[T](iter)
 ```
