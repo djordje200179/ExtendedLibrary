@@ -7,29 +7,35 @@ import (
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
+// Set is a set implementation based on bit array.
 type Set struct {
 	arr *bitarray.Array
 
 	elements int
 }
 
+// New creates an empty set with the given size.
 func New(size int) *Set {
 	return &Set{bitarray.NewWithSize(size), 0}
 }
 
+// FromArray creates a set from the given array.
 func FromArray(arr *bitarray.Array) *Set {
-	elements := 0
-	return &Set{arr, elements}
+	return &Set{arr, arr.Count()}
 }
 
+// Collector creates a new stream Collector that collects elements into an empty Set
+// with the given size.
 func Collector(size int) streams.Collector[int, *Set] {
 	return sets.Collector[int, *Set]{New(size)}
 }
 
+// Size returns the number of elements in the Set.
 func (set *Set) Size() int {
 	return set.elements
 }
 
+// Add adds the given value to the Set.
 func (set *Set) Add(value int) {
 	if !set.Contains(value) {
 		set.arr.Set(value, true)
@@ -37,6 +43,8 @@ func (set *Set) Add(value int) {
 	}
 }
 
+// Remove removes the given value from the Set.
+// If the value is not in the Set, this method does nothing.
 func (set *Set) Remove(value int) {
 	if set.Contains(value) {
 		set.arr.Set(value, false)
@@ -44,32 +52,39 @@ func (set *Set) Remove(value int) {
 	}
 }
 
+// Contains returns true if the Set contains the given value.
 func (set *Set) Contains(value int) bool {
 	return set.arr.Get(value)
 }
 
+// Clear removes all elements from the Set.
 func (set *Set) Clear() {
 	set.arr.Clear()
 	set.elements = 0
 }
 
+// Clone returns a shallow copy of the Set.
 func (set *Set) Clone() sets.Set[int] {
 	clonedArray := set.arr.Clone()
 	return &Set{clonedArray, set.elements}
 }
 
+// Iterator returns an iterator over the elements in the Set.
 func (set *Set) Iterator() iterable.Iterator[int] {
 	return set.SetIterator()
 }
 
+// SetIterator returns an iterator over the elements in the Set.
 func (set *Set) SetIterator() sets.Iterator[int] {
 	return &Iterator{0, set}
 }
 
+// Stream returns a stream over the elements in the Set.
 func (set *Set) Stream() streams.Stream[int] {
 	return iterable.IteratorStream(set.Iterator())
 }
 
+// Array returns the underlying bit array.
 func (set *Set) Array() *bitarray.Array {
 	return set.arr
 }
