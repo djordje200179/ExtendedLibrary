@@ -1,7 +1,7 @@
 package linkmap
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
+	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps/hashmap"
 	"github.com/djordje200179/extendedlibrary/misc"
@@ -245,8 +245,8 @@ func (wrapper *Wrapper[K, V]) Clone() maps.Map[K, V] {
 	}
 }
 
-// Iterator returns a iterator over the entries in the map.
-func (wrapper *Wrapper[K, V]) Iterator() iterable.Iterator[misc.Pair[K, V]] {
+// Iterator returns an iter.Iterator over the entries in the map.
+func (wrapper *Wrapper[K, V]) Iterator() iter.Iterator[misc.Pair[K, V]] {
 	return wrapper.MapIterator()
 }
 
@@ -255,12 +255,12 @@ func (wrapper *Wrapper[K, V]) MapIterator() maps.Iterator[K, V] {
 	return &Iterator[K, V]{wrapper: wrapper, curr: wrapper.head}
 }
 
-// Stream returns a stream over the entries in the map.
+// Stream returns a streams.Stream over the entries in the map.
 func (wrapper *Wrapper[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
-	return iterable.IteratorStream(wrapper.Iterator())
+	return iter.IteratorStream(wrapper.Iterator())
 }
 
-// RefsStream returns a stream over the entries in the map.
+// RefsStream returns a streams.Stream over the entries in the map.
 func (wrapper *Wrapper[K, V]) RefsStream() streams.Stream[misc.Pair[K, *V]] {
 	return maps.RefsStream[K, V](wrapper)
 }

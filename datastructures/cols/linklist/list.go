@@ -2,7 +2,7 @@ package linklist
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/cols"
-	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
+	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/misc/functions/predication"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
@@ -19,11 +19,11 @@ func New[T any]() *List[T] {
 	return new(List[T])
 }
 
-// NewFromIterable creates a list from the specified iterable.
-func NewFromIterable[T any](iter iterable.Iterable[T]) *List[T] {
+// NewFromIterable creates a list from the specified iter.Iterable.
+func NewFromIterable[T any](iterable iter.Iterable[T]) *List[T] {
 	list := New[T]()
 
-	for it := iter.Iterator(); it.Valid(); it.Move() {
+	for it := iterable.Iterator(); it.Valid(); it.Move() {
 		list.Append(it.Get())
 	}
 
@@ -201,7 +201,7 @@ func (list *List[T]) Clone() cols.Collection[T] {
 }
 
 // Iterator returns an iterator over the elements in the List.
-func (list *List[T]) Iterator() iterable.Iterator[T] {
+func (list *List[T]) Iterator() iter.Iterator[T] {
 	return list.CollectionIterator()
 }
 
@@ -216,7 +216,7 @@ func (list *List[T]) CollectionIterator() cols.Iterator[T] {
 
 // Stream returns a stream of the elements in the List.
 func (list *List[T]) Stream() streams.Stream[T] {
-	return iterable.IteratorStream(list.Iterator())
+	return iter.IteratorStream(list.Iterator())
 }
 
 // RefsStream returns a stream of references to the elements in the List.

@@ -1,7 +1,7 @@
 package readset
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
+	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/datastructures/sets"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
@@ -32,12 +32,12 @@ func (wrapper Wrapper[T]) Clone() Wrapper[T] {
 	return Wrapper[T]{clonedSet}
 }
 
-// Iterator returns an iterator over the Set.
-func (wrapper Wrapper[T]) Iterator() iterable.Iterator[T] {
+// Iterator returns an iter.Iterator over the Set.
+func (wrapper Wrapper[T]) Iterator() iter.Iterator[T] {
 	return wrapper.set.Iterator()
 }
 
-// Stream returns a stream over the Set.
+// Stream returns a streams.Stream over the Set.
 func (wrapper Wrapper[T]) Stream() streams.Stream[T] {
 	return wrapper.set.Stream()
 }

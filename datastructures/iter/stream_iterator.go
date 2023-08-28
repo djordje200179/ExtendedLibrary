@@ -1,4 +1,4 @@
-package iterable
+package iter
 
 import (
 	"github.com/djordje200179/extendedlibrary/streams"

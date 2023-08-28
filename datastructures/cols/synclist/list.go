@@ -1,7 +1,7 @@
 package synclist
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
+	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/streams"
 	"sync/atomic"
 )
@@ -18,12 +18,12 @@ func New[T any]() *List[T] {
 	return new(List[T])
 }
 
-// NewFromIterable creates a List from the specified iterable in reverse order.
-// List.Reverse can be used to restore the original order.
-func NewFromIterable[T any](iter iterable.Iterable[T]) *List[T] {
+// NewFromIterable creates a List from the specified iter.Iterable in
+// reverse order. List.Reverse can be used to restore the original order.
+func NewFromIterable[T any](iterable iter.Iterable[T]) *List[T] {
 	list := New[T]()
 
-	for it := iter.Iterator(); it.Valid(); it.Move() {
+	for it := iterable.Iterator(); it.Valid(); it.Move() {
 		list.Prepend(it.Get())
 	}
 
@@ -62,13 +62,13 @@ func (list *List[T]) Reverse() {
 }
 
 // Iterator returns an iterator over the elements in the List.
-func (list *List[T]) Iterator() iterable.Iterator[T] {
+func (list *List[T]) Iterator() iter.Iterator[T] {
 	return &Iterator[T]{curr: list.head.Load()}
 }
 
 // Stream returns a stream over the elements in the List.
 func (list *List[T]) Stream() streams.Stream[T] {
-	return iterable.IteratorStream(list.Iterator())
+	return iter.IteratorStream(list.Iterator())
 }
 
 // Head returns the first element in the List.

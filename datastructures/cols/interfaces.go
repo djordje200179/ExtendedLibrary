@@ -1,16 +1,16 @@
 package cols
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
+	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions/predication"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
-// Iterator is a special iterable.Iterator that can modify the collection it iterates over.
+// Iterator is a special iter.Iterator that can modify the collection it iterates over.
 type Iterator[T any] interface {
-	iterable.Iterator[T]
+	iter.Iterator[T]
 	// GetRef returns a reference to the current element.
 	GetRef() *T
 	// Set sets the current element to the given value.
@@ -28,7 +28,7 @@ type Iterator[T any] interface {
 	Index() int
 }
 
-// Collection is a special iterable.Iterable that represents a collection of elements.
+// Collection is a special iter.Iterable that represents a collection of elements.
 type Collection[T any] interface {
 	// Size returns the number of elements.
 	Size() int
@@ -60,7 +60,7 @@ type Collection[T any] interface {
 
 	misc.Cloner[Collection[T]]
 
-	iterable.Iterable[T]
+	iter.Iterable[T]
 	// CollectionIterator creates and returns a new Iterator.
 	CollectionIterator() Iterator[T]
 	streams.Streamer[T]

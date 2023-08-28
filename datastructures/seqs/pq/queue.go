@@ -1,7 +1,7 @@
 package pq
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
+	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 )
 
@@ -24,11 +24,11 @@ func New[T any](comparator comparison.Comparator[T]) *Queue[T] {
 	return pq
 }
 
-// NewFromIterable creates a new Queue with the given comparator and elements from the given iterable.
-func NewFromIterable[T any](comparator comparison.Comparator[T], iter iterable.Iterable[T]) *Queue[T] {
+// NewFromIterable creates a new Queue with the given comparator and elements from the given iter.Iterable
+func NewFromIterable[T any](comparator comparison.Comparator[T], iterable iter.Iterable[T]) *Queue[T] {
 	pq := New[T](comparator)
 
-	for it := iter.Iterator(); it.Valid(); it.Move() {
+	for it := iterable.Iterator(); it.Valid(); it.Move() {
 		pq.PushBack(it.Get())
 	}
 

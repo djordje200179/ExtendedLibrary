@@ -2,7 +2,7 @@ package mapset
 
 import (
 	"cmp"
-	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
+	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps/hashmap"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps/rbt"
@@ -66,8 +66,8 @@ func (set Set[T]) Clone() sets.Set[T] {
 	return FromMap[T](set.m.Clone())
 }
 
-// Iterator returns an iterator over the set.
-func (set Set[T]) Iterator() iterable.Iterator[T] {
+// Iterator returns an iter.Iterator over the set.
+func (set Set[T]) Iterator() iter.Iterator[T] {
 	return set.SetIterator()
 }
 
@@ -76,7 +76,7 @@ func (set Set[T]) SetIterator() sets.Iterator[T] {
 	return Iterator[T]{set.m.MapIterator()}
 }
 
-// Stream returns a stream of the set elements.
+// Stream returns a streams.Stream of the set elements.
 func (set Set[T]) Stream() streams.Stream[T] {
 	return streams.Map(set.m.Stream(), func(pair misc.Pair[T, empty]) T {
 		return pair.First

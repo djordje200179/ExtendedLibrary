@@ -1,7 +1,7 @@
 package readmap
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
+	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/streams"
@@ -50,8 +50,8 @@ func (wrapper Wrapper[K, V]) Clone() Wrapper[K, V] {
 	return Wrapper[K, V]{clonedMap}
 }
 
-// Iterator returns an iterator over the entries in the map.
-func (wrapper Wrapper[K, V]) Iterator() iterable.Iterator[misc.Pair[K, V]] {
+// Iterator returns an iter.Iterator over the entries in the map.
+func (wrapper Wrapper[K, V]) Iterator() iter.Iterator[misc.Pair[K, V]] {
 	return wrapper.m.Iterator()
 }
 

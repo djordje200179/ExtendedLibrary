@@ -2,7 +2,7 @@ package array
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/cols"
-	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
+	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions/predication"
 	"github.com/djordje200179/extendedlibrary/streams"
@@ -31,21 +31,21 @@ func NewWithCapacity[T any](initialCapacity int) *Array[T] {
 	return FromSlice(make([]T, 0, initialCapacity))
 }
 
-// NewFromIterable creates a new Array from the specified iterable.
-func NewFromIterable[T any](iter iterable.Iterable[T]) *Array[T] {
+// NewFromIterable creates a new Array from the specified iter.Iterable.
+func NewFromIterable[T any](iterable iter.Iterable[T]) *Array[T] {
 	var array *Array[T]
-	if finiteIterable, ok := any(iter).(iterable.FiniteIterable[T]); ok {
+	if finiteIterable, ok := any(iterable).(iter.FiniteIterable[T]); ok {
 		array = NewWithSize[T](finiteIterable.Size())
 
 		i := 0
-		for it := iter.Iterator(); it.Valid(); it.Move() {
+		for it := iterable.Iterator(); it.Valid(); it.Move() {
 			array.slice[i] = it.Get()
 			i++
 		}
 	} else {
 		array = New[T]()
 
-		for it := iter.Iterator(); it.Valid(); it.Move() {
+		for it := iterable.Iterator(); it.Valid(); it.Move() {
 			array.Append(it.Get())
 		}
 	}
@@ -233,7 +233,7 @@ func (array *Array[T]) Clone() cols.Collection[T] {
 }
 
 // Iterator returns an iterator over the elements in the Array.
-func (array *Array[T]) Iterator() iterable.Iterator[T] {
+func (array *Array[T]) Iterator() iter.Iterator[T] {
 	return array.CollectionIterator()
 }
 

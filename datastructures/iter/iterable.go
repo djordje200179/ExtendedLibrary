@@ -1,4 +1,4 @@
-package iterable
+package iter
 
 // An Iterator is used to iterate through elements.
 // It fits well with the for-loop syntax.

@@ -1,7 +1,7 @@
 package hashmap
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
+	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/streams"
@@ -22,17 +22,17 @@ func NewWithCapacity[K comparable, V any](capacity int) Map[K, V] {
 	return FromMap(make(map[K]V, capacity))
 }
 
-// NewFromIterable creates a Map from the specified iterable.
-func NewFromIterable[K comparable, V any](iter iterable.Iterable[misc.Pair[K, V]]) Map[K, V] {
+// NewFromIterable creates a Map from the specified iter.Iterable.
+func NewFromIterable[K comparable, V any](iterable iter.Iterable[misc.Pair[K, V]]) Map[K, V] {
 	var m Map[K, V]
 
-	if finiteIter, ok := any(iter).(iterable.FiniteIterable[misc.Pair[K, V]]); ok {
+	if finiteIter, ok := any(iterable).(iter.FiniteIterable[misc.Pair[K, V]]); ok {
 		m = NewWithCapacity[K, V](finiteIter.Size())
 	} else {
 		m = New[K, V]()
 	}
 
-	for it := iter.Iterator(); it.Valid(); it.Move() {
+	for it := iterable.Iterator(); it.Valid(); it.Move() {
 		entry := it.Get()
 
 		m[entry.First] = entry.Second
@@ -127,8 +127,8 @@ func (hashmap Map[K, V]) Clone() maps.Map[K, V] {
 	return cloned
 }
 
-// Iterator returns an iterator over the map.
-func (hashmap Map[K, V]) Iterator() iterable.Iterator[misc.Pair[K, V]] {
+// Iterator returns an iter.Iterator over the map.
+func (hashmap Map[K, V]) Iterator() iter.Iterator[misc.Pair[K, V]] {
 	return hashmap.MapIterator()
 }
 
@@ -141,13 +141,13 @@ func (hashmap Map[K, V]) MapIterator() maps.Iterator[K, V] {
 	}
 }
 
-// Stream returns a stream over the map.
+// Stream returns a streams.Stream over the map.
 func (hashmap Map[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
 	supplier := suppliers.Map(hashmap)
 	return streams.New(supplier)
 }
 
-// RefsStream returns a stream over references to the map values.
+// RefsStream returns a streams.Stream over references to the map values.
 func (hashmap Map[K, V]) RefsStream() streams.Stream[misc.Pair[K, *V]] {
 	return maps.RefsStream[K, V](hashmap)
 }

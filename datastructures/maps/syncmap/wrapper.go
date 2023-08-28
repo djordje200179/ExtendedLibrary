@@ -1,7 +1,7 @@
 package syncmap
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
+	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/streams"
@@ -126,8 +126,8 @@ func (wrapper *Wrapper[K, V]) Clone() maps.Map[K, V] {
 	return &Wrapper[K, V]{clonedMap, sync.RWMutex{}}
 }
 
-// Iterator returns an iterator over the map.
-func (wrapper *Wrapper[K, V]) Iterator() iterable.Iterator[misc.Pair[K, V]] {
+// Iterator returns an iter.Iterator over the map.
+func (wrapper *Wrapper[K, V]) Iterator() iter.Iterator[misc.Pair[K, V]] {
 	return wrapper.MapIterator()
 }
 

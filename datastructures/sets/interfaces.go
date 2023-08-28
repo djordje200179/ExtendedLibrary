@@ -1,14 +1,14 @@
 package sets
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
+	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 // Iterator is an iterator over a set.
 type Iterator[T any] interface {
-	iterable.Iterator[T]
+	iter.Iterator[T]
 
 	// Remove removes the current element
 	Remove()
@@ -30,7 +30,7 @@ type Set[T any] interface {
 	Clear()
 	misc.Cloner[Set[T]]
 
-	iterable.Iterable[T]
+	iter.Iterable[T]
 	// SetIterator returns an iterator over the set
 	SetIterator() Iterator[T]
 	streams.Streamer[T]

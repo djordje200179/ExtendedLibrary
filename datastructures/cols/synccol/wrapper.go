@@ -2,7 +2,7 @@ package synccol
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/cols"
-	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
+	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions/predication"
 	"github.com/djordje200179/extendedlibrary/streams"
@@ -151,8 +151,8 @@ func (wrapper *Wrapper[T]) Clone() cols.Collection[T] {
 	return &Wrapper[T]{clonedCollection, sync.RWMutex{}}
 }
 
-// Iterator returns an iterable.Iterator over the elements.
-func (wrapper *Wrapper[T]) Iterator() iterable.Iterator[T] {
+// Iterator returns an iter.Iterator over the elements.
+func (wrapper *Wrapper[T]) Iterator() iter.Iterator[T] {
 	return wrapper.CollectionIterator()
 }
 

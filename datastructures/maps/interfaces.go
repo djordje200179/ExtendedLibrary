@@ -1,14 +1,14 @@
 package maps
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
+	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 // Iterator is an iterator over a Map.
 type Iterator[K, V any] interface {
-	iterable.Iterator[misc.Pair[K, V]]
+	iter.Iterator[misc.Pair[K, V]]
 
 	// Key returns the key of the current entry.
 	Key() K
@@ -49,7 +49,7 @@ type Map[K, V any] interface {
 
 	misc.Cloner[Map[K, V]]
 
-	iterable.Iterable[misc.Pair[K, V]]
+	iter.Iterable[misc.Pair[K, V]]
 	// MapIterator returns an iterator over the map
 	MapIterator() Iterator[K, V]
 	streams.Streamer[misc.Pair[K, V]]

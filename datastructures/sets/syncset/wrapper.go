@@ -1,7 +1,7 @@
 package syncset
 
 import (
-	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
+	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/datastructures/sets"
 	"github.com/djordje200179/extendedlibrary/streams"
 	"sync"
@@ -70,8 +70,8 @@ func (wrapper *Wrapper[T]) Clone() sets.Set[T] {
 	return From[T](clonedSet)
 }
 
-// Iterator returns an iterator over the elements in the set.
-func (wrapper *Wrapper[T]) Iterator() iterable.Iterator[T] {
+// Iterator returns an iter.Iterator over the elements in the set.
+func (wrapper *Wrapper[T]) Iterator() iter.Iterator[T] {
 	return wrapper.SetIterator()
 }
 
@@ -80,7 +80,7 @@ func (wrapper *Wrapper[T]) SetIterator() sets.Iterator[T] {
 	return Iterator[T]{wrapper.set.SetIterator(), &wrapper.mutex}
 }
 
-// Stream returns a stream over the elements in the set.
+// Stream returns a streams.Stream over the elements in the set.
 func (wrapper *Wrapper[T]) Stream() streams.Stream[T] {
 	return wrapper.set.Stream()
 }

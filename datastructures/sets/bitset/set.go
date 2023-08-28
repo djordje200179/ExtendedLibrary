@@ -2,7 +2,7 @@ package bitset
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/cols/bitarray"
-	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
+	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/datastructures/sets"
 	"github.com/djordje200179/extendedlibrary/streams"
 )
@@ -19,11 +19,11 @@ func New(size int) *Set {
 	return &Set{bitarray.NewWithSize(size), 0}
 }
 
-// NewFromIterable creates a set with the given size from the given iterable.
-func NewFromIterable(size int, iter iterable.Iterable[int]) *Set {
+// NewFromIterable creates a set with the given size from the given iter.Iterable.
+func NewFromIterable(size int, iterable iter.Iterable[int]) *Set {
 	set := New(size)
 
-	for it := iter.Iterator(); it.Valid(); it.Move() {
+	for it := iterable.Iterator(); it.Valid(); it.Move() {
 		set.Add(it.Get())
 	}
 
@@ -74,8 +74,8 @@ func (set *Set) Clone() sets.Set[int] {
 	return &Set{clonedArray, set.elements}
 }
 
-// Iterator returns an iterator over the elements in the Set.
-func (set *Set) Iterator() iterable.Iterator[int] {
+// Iterator returns an iter.Iterator over the elements in the Set.
+func (set *Set) Iterator() iter.Iterator[int] {
 	return set.SetIterator()
 }
 
@@ -84,9 +84,9 @@ func (set *Set) SetIterator() sets.Iterator[int] {
 	return &Iterator{0, set}
 }
 
-// Stream returns a stream over the elements in the Set.
+// Stream returns a streams.Stream over the elements in the Set.
 func (set *Set) Stream() streams.Stream[int] {
-	return iterable.IteratorStream(set.Iterator())
+	return iter.IteratorStream(set.Iterator())
 }
 
 // Array returns the underlying bit array.

@@ -2,7 +2,7 @@ package rbt
 
 import (
 	"cmp"
-	"github.com/djordje200179/extendedlibrary/datastructures/iterable"
+	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/datastructures/seqs/colseq"
 	"github.com/djordje200179/extendedlibrary/misc"
@@ -31,11 +31,11 @@ func New[K cmp.Ordered, V any]() *Tree[K, V] {
 	return NewWithComparator[K, V](cmp.Compare[K])
 }
 
-// NewWithComparatorFromIterable creates a Tree with the specified comparator from the specified iterable.
-func NewWithComparatorFromIterable[K, V any](comparator comparison.Comparator[K], iter iterable.Iterable[misc.Pair[K, V]]) *Tree[K, V] {
+// NewWithComparatorFromIterable creates a Tree with the specified comparator from the specified iter.Iterable.
+func NewWithComparatorFromIterable[K, V any](comparator comparison.Comparator[K], iterable iter.Iterable[misc.Pair[K, V]]) *Tree[K, V] {
 	tree := NewWithComparator[K, V](comparator)
 
-	for it := iter.Iterator(); it.Valid(); it.Move() {
+	for it := iterable.Iterator(); it.Valid(); it.Move() {
 		entry := it.Get()
 		tree.Set(entry.First, entry.Second)
 	}
@@ -43,11 +43,11 @@ func NewWithComparatorFromIterable[K, V any](comparator comparison.Comparator[K]
 	return tree
 }
 
-// NewFromIterable creates a Tree from the specified iterable.
-func NewFromIterable[K cmp.Ordered, V any](iter iterable.Iterable[misc.Pair[K, V]]) *Tree[K, V] {
+// NewFromIterable creates a Tree from the specified iter.Iterable.
+func NewFromIterable[K cmp.Ordered, V any](iterable iter.Iterable[misc.Pair[K, V]]) *Tree[K, V] {
 	tree := New[K, V]()
 
-	for it := iter.Iterator(); it.Valid(); it.Move() {
+	for it := iterable.Iterator(); it.Valid(); it.Move() {
 		entry := it.Get()
 		tree.Set(entry.First, entry.Second)
 	}
@@ -283,8 +283,8 @@ func (tree *Tree[K, V]) Clone() maps.Map[K, V] {
 	return newTree
 }
 
-// Iterator returns an iterator over the tree.
-func (tree *Tree[K, V]) Iterator() iterable.Iterator[misc.Pair[K, V]] {
+// Iterator returns an iter.Iterator over the tree.
+func (tree *Tree[K, V]) Iterator() iter.Iterator[misc.Pair[K, V]] {
 	return tree.MapIterator()
 }
 
@@ -293,12 +293,12 @@ func (tree *Tree[K, V]) MapIterator() maps.Iterator[K, V] {
 	return &Iterator[K, V]{tree, tree.root.Min()}
 }
 
-// Stream returns a stream over the tree.
+// Stream returns a streams.Stream over the tree.
 func (tree *Tree[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
-	return iterable.IteratorStream(tree.Iterator())
+	return iter.IteratorStream(tree.Iterator())
 }
 
-// RefsStream returns a stream over references to the tree values.
+// RefsStream returns a streams.Stream over references to the tree values.
 func (tree *Tree[K, V]) RefsStream() streams.Stream[misc.Pair[K, *V]] {
 	return maps.RefsStream[K, V](tree)
 }
