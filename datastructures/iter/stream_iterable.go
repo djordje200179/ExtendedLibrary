@@ -45,3 +45,21 @@ func (it *StreamIterator[T]) Get() T {
 
 	return it.current
 }
+
+// StreamIterable is an Iterable that iterates over a streams.Stream.
+// It has only one Iterator, so it can be iterated only once.
+type StreamIterable[T any] struct {
+	iterator StreamIterator[T]
+}
+
+// NewStreamIterable creates a new StreamIterable from a streams.Stream.
+func NewStreamIterable[T any](stream streams.Stream[T]) *StreamIterable[T] {
+	return &StreamIterable[T]{
+		iterator: *NewStreamIterator[T](stream),
+	}
+}
+
+// Iterator returns common Iterator.
+func (it *StreamIterable[T]) Iterator() Iterator[T] {
+	return &it.iterator
+}

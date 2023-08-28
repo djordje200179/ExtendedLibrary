@@ -88,6 +88,7 @@ queue := boundedbuffer.FromChannel(ch)
 You can also collect every finite stream into a suitable collection.
 
 ```go
-iter := iterable.StreamIterator(streams.FromRange(0, 100))
+stream := streams.New(suppliers.Range(0, 100))
+iter := iter.StreamIterable(stream)
 arr := array.NewFromIterable[T](iter)
 ```
