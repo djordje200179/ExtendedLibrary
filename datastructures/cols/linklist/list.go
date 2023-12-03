@@ -177,6 +177,10 @@ func (list *List[T]) Reverse() {
 func (list *List[T]) Join(other cols.Collection[T]) {
 	switch second := other.(type) {
 	case *List[T]:
+		for curr := second.head; curr != nil; curr = curr.next {
+			curr.list = list
+		}
+
 		list.tail.next = second.head
 		second.head.prev = list.tail
 		list.tail = second.tail
