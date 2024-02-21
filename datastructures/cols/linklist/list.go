@@ -4,7 +4,6 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/cols"
 	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/misc/functions/predication"
-	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 // List is a doubly linked list implementation.
@@ -219,14 +218,22 @@ func (list *List[T]) CollectionIterator() cols.Iterator[T] {
 	}
 }
 
-// Stream returns a stream of the elements in the List.
-func (list *List[T]) Stream() streams.Stream[T] {
-	return iter.IteratorStream(list.Iterator())
+// Stream streams the elements in the List.
+func (list *List[T]) Stream(yield func(T) bool) {
+	for curr := list.head; curr != nil; curr = curr.next {
+		if !yield(curr.Value) {
+			return
+		}
+	}
 }
 
-// RefsStream returns a stream of references to the elements in the List.
-func (list *List[T]) RefsStream() streams.Stream[*T] {
-	return cols.RefsStream(list.CollectionIterator())
+// RefsStream streams references to the elements in the List.
+func (list *List[T]) RefsStream(yield func(*T) bool) {
+	for curr := list.head; curr != nil; curr = curr.next {
+		if !yield(&curr.Value) {
+			return
+		}
+	}
 }
 
 // FindIndex returns the index of the first element that matches the specified predicate.

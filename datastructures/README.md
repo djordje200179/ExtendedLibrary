@@ -49,17 +49,17 @@ current element in a linked list).
 And through them, you can also access the element directly by reference (pointer).
 
 ### Streams
-Collection, maps and sets also implement `Streamer` interface, that allows them to
-fit well with streams (separate package).
+Collection, maps and sets support value streaming through Go 1.22 
+range over func functionality.
 
 ```go
-collection.Stream().ForEach(func(value T) {
-
-})
+for val := range collection.Stream {
+	
+}
 ```
 
-Collections and maps also support getting a stream of references (pointers) to elements,
-so you don't need to copy huge structure elements
+Collections and maps also support getting a stream of references (pointers) 
+to elements, so you don't need to copy huge structure elements
 
 ## Construction
 

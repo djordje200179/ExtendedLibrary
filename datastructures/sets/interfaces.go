@@ -3,7 +3,6 @@ package sets
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/misc"
-	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 // Iterator is an iterator over a set.
@@ -33,5 +32,6 @@ type Set[T any] interface {
 	iter.Iterable[T]
 	// SetIterator returns an iterator over the set
 	SetIterator() Iterator[T]
-	streams.Streamer[T]
+	// Stream streams elements of the set
+	Stream(yield func(T) bool)
 }

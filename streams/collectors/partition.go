@@ -7,7 +7,7 @@ import (
 )
 
 type partitionCollector[T any] struct {
-	falseElements, trueElements []T
+	falsy, truly []T
 
 	predicate predication.Predicate[T]
 }
@@ -16,14 +16,14 @@ func Partition[T any](predicate predication.Predicate[T]) streams.Collector[T, m
 	return &partitionCollector[T]{predicate: predicate}
 }
 
-func (collector *partitionCollector[T]) Supply(value T) {
-	if collector.predicate(value) {
-		collector.trueElements = append(collector.trueElements, value)
+func (c *partitionCollector[T]) Supply(value T) {
+	if c.predicate(value) {
+		c.truly = append(c.truly, value)
 	} else {
-		collector.falseElements = append(collector.falseElements, value)
+		c.falsy = append(c.falsy, value)
 	}
 }
 
-func (collector *partitionCollector[T]) Finish() misc.Pair[[]T, []T] {
-	return misc.MakePair(collector.falseElements, collector.trueElements)
+func (c *partitionCollector[T]) Finish() misc.Pair[[]T, []T] {
+	return misc.MakePair(c.falsy, c.truly)
 }

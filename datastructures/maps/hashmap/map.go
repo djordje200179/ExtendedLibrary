@@ -4,8 +4,6 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/misc"
-	"github.com/djordje200179/extendedlibrary/streams"
-	"github.com/djordje200179/extendedlibrary/streams/suppliers"
 	"unsafe"
 )
 
@@ -47,27 +45,27 @@ func FromMap[K comparable, V any](m map[K]V) Map[K, V] {
 }
 
 // Size returns the number of entries in the map.
-func (hashmap Map[K, V]) Size() int {
-	return len(hashmap)
+func (m Map[K, V]) Size() int {
+	return len(m)
 }
 
 // Contains returns true if the map contains the specified key.
-func (hashmap Map[K, V]) Contains(key K) bool {
-	_, ok := hashmap[key]
+func (m Map[K, V]) Contains(key K) bool {
+	_, ok := m[key]
 	return ok
 }
 
 // TryGet returns the value associated with the specified key,
 // or zero value and false if the key is not present.
-func (hashmap Map[K, V]) TryGet(key K) (V, bool) {
-	value, ok := hashmap[key]
+func (m Map[K, V]) TryGet(key K) (V, bool) {
+	value, ok := m[key]
 	return value, ok
 }
 
 // Get returns the value associated with the specified key.
 // Panics if the key is not present.
-func (hashmap Map[K, V]) Get(key K) V {
-	value, ok := hashmap[key]
+func (m Map[K, V]) Get(key K) V {
+	value, ok := m[key]
 	if !ok {
 		panic(maps.ErrMissingKey[K]{Key: key})
 	}
@@ -77,8 +75,8 @@ func (hashmap Map[K, V]) Get(key K) V {
 
 // GetRef returns a reference to the value associated with the specified key.
 // Panics if the key is not present.
-func (hashmap Map[K, V]) GetRef(key K) *V {
-	mt, mv := mapTypeAndValue(hashmap)
+func (m Map[K, V]) GetRef(key K) *V {
+	mt, mv := mapTypeAndValue(m)
 	ptr, ok := internalMapGet(mt, mv, unsafe.Pointer(&key))
 
 	if !ok {
@@ -89,38 +87,25 @@ func (hashmap Map[K, V]) GetRef(key K) *V {
 }
 
 // Set sets the value associated with the specified key.
-func (hashmap Map[K, V]) Set(key K, value V) {
-	hashmap[key] = value
+func (m Map[K, V]) Set(key K, value V) {
+	m[key] = value
 }
 
 // Remove removes the entry with the specified key.
 // Does nothing if the key is not present.
-func (hashmap Map[K, V]) Remove(key K) {
-	delete(hashmap, key)
-}
-
-// Keys returns a slice of all keys in the map.
-func (hashmap Map[K, V]) Keys() []K {
-	keys := make([]K, len(hashmap))
-
-	i := 0
-	for key := range hashmap {
-		keys[i] = key
-		i++
-	}
-
-	return keys
+func (m Map[K, V]) Remove(key K) {
+	delete(m, key)
 }
 
 // Clear removes all entries from the map.
-func (hashmap Map[K, V]) Clear() {
-	clear(hashmap)
+func (m Map[K, V]) Clear() {
+	clear(m)
 }
 
 // Clone returns a shallow copy of the map.
-func (hashmap Map[K, V]) Clone() maps.Map[K, V] {
+func (m Map[K, V]) Clone() maps.Map[K, V] {
 	cloned := New[K, V]()
-	for k, v := range hashmap {
+	for k, v := range m {
 		cloned[k] = v
 	}
 
@@ -128,31 +113,44 @@ func (hashmap Map[K, V]) Clone() maps.Map[K, V] {
 }
 
 // Iterator returns an iter.Iterator over the map.
-func (hashmap Map[K, V]) Iterator() iter.Iterator[misc.Pair[K, V]] {
-	return hashmap.MapIterator()
+func (m Map[K, V]) Iterator() iter.Iterator[misc.Pair[K, V]] {
+	return m.MapIterator()
 }
 
 // MapIterator returns an iterator over the map.
-func (hashmap Map[K, V]) MapIterator() maps.Iterator[K, V] {
+func (m Map[K, V]) MapIterator() maps.Iterator[K, V] {
+	// TODO: Use builtin function
+	keys := make([]K, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+
 	return &Iterator[K, V]{
-		m:     hashmap,
-		keys:  hashmap.Keys(),
+		m:     m,
+		keys:  keys,
 		index: 0,
 	}
 }
 
-// Stream returns a streams.Stream over the map.
-func (hashmap Map[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
-	supplier := suppliers.Map(hashmap)
-	return streams.New(supplier)
+// Stream2 streams over the entries in the Map.
+func (m Map[K, V]) Stream2(yield func(K, V) bool) {
+	for k, v := range m {
+		if !yield(k, v) {
+			break
+		}
+	}
 }
 
-// RefsStream returns a streams.Stream over references to the map values.
-func (hashmap Map[K, V]) RefsStream() streams.Stream[misc.Pair[K, *V]] {
-	return maps.RefsStream[K, V](hashmap)
+// RefsStream2 streams over the keys and references to the values in the Map.
+func (m Map[K, V]) RefsStream2(yield func(K, *V) bool) {
+	for it := m.MapIterator(); it.Valid(); it.Move() {
+		if !yield(it.Key(), it.ValueRef()) {
+			break
+		}
+	}
 }
 
 // Map returns the builtin map used as a base.
-func (hashmap Map[K, V]) Map() map[K]V {
-	return hashmap
+func (m Map[K, V]) Map() map[K]V {
+	return m
 }

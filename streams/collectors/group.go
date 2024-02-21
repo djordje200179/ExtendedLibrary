@@ -17,11 +17,21 @@ func Group[T any, K comparable](mapper functions.Mapper[T, K]) streams.Collector
 	}
 }
 
-func (collector groupCollector[T, K]) Supply(value T) {
-	key := collector.mapper(value)
-	collector.m[key] = append(collector.m[key], value)
+func (c groupCollector[T, K]) Supply(value T) {
+	key := c.mapper(value)
+	c.m[key] = append(c.m[key], value)
 }
 
-func (collector groupCollector[T, K]) Finish() map[K][]T {
-	return collector.m
+func (c groupCollector[T, K]) Finish() map[K][]T {
+	return c.m
+}
+
+func Group2[K comparable, V any](s streams.Stream2[K, V]) map[K][]V {
+	m := make(map[K][]V)
+
+	for k, v := range s {
+		m[k] = append(m[k], v)
+	}
+
+	return m
 }

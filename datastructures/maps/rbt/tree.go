@@ -7,7 +7,6 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/seqs/colseq"
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
-	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 // Tree is a red-black tree implementation of a map.
@@ -222,19 +221,6 @@ func (tree *Tree[K, V]) Remove(key K) {
 	}
 }
 
-// Keys returns a slice of all keys in the tree.
-func (tree *Tree[K, V]) Keys() []K {
-	keys := make([]K, tree.nodes)
-
-	i := 0
-	for it := tree.Iterator(); it.Valid(); it.Move() {
-		keys[i] = it.Get().First
-		i++
-	}
-
-	return keys
-}
-
 // Clear removes all entries from the tree.
 func (tree *Tree[K, V]) Clear() {
 	tree.root = nil
@@ -293,14 +279,22 @@ func (tree *Tree[K, V]) MapIterator() maps.Iterator[K, V] {
 	return &Iterator[K, V]{tree, tree.root.Min()}
 }
 
-// Stream returns a streams.Stream over the tree.
-func (tree *Tree[K, V]) Stream() streams.Stream[misc.Pair[K, V]] {
-	return iter.IteratorStream(tree.Iterator())
+// Stream2 streams over the entries in the Tree.
+func (tree *Tree[K, V]) Stream2(yield func(K, V) bool) {
+	for it := tree.MapIterator(); it.Valid(); it.Move() {
+		if !yield(it.Key(), it.Value()) {
+			return
+		}
+	}
 }
 
-// RefsStream returns a streams.Stream over references to the tree values.
-func (tree *Tree[K, V]) RefsStream() streams.Stream[misc.Pair[K, *V]] {
-	return maps.RefsStream[K, V](tree)
+// RefsStream2 streams over the keys and references to the values in the Map.
+func (tree *Tree[K, V]) RefsStream2(yield func(K, *V) bool) {
+	for it := tree.MapIterator(); it.Valid(); it.Move() {
+		if !yield(it.Key(), it.ValueRef()) {
+			return
+		}
+	}
 }
 
 // Root returns the root node of the tree.

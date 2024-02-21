@@ -11,10 +11,10 @@ func ToMap[K comparable, V any]() streams.Collector[misc.Pair[K, V], map[K]V] {
 	return mapCollector[K, V](make(map[K]V))
 }
 
-func (collector mapCollector[K, V]) Supply(pair misc.Pair[K, V]) {
-	collector[pair.First] = pair.Second
+func (c mapCollector[K, V]) Supply(pair misc.Pair[K, V]) {
+	c[pair.First] = pair.Second
 }
 
-func (collector mapCollector[K, V]) Finish() map[K]V {
-	return collector
+func (c mapCollector[K, V]) Finish() map[K]V {
+	return c
 }

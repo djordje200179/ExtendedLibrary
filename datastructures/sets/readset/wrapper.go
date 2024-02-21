@@ -3,7 +3,6 @@ package readset
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/datastructures/sets"
-	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 // Wrapper is a wrapper around a Set that provides read-only access to it.
@@ -17,27 +16,27 @@ func From[T any](set sets.Set[T]) Wrapper[T] {
 }
 
 // Size returns the number of elements in the Set.
-func (wrapper Wrapper[T]) Size() int {
-	return wrapper.set.Size()
+func (w Wrapper[T]) Size() int {
+	return w.set.Size()
 }
 
 // Contains returns true if the Set contains the given value.
-func (wrapper Wrapper[T]) Contains(value T) bool {
-	return wrapper.set.Contains(value)
+func (w Wrapper[T]) Contains(value T) bool {
+	return w.set.Contains(value)
 }
 
 // Clone returns a shallow copy of the Set.
-func (wrapper Wrapper[T]) Clone() Wrapper[T] {
-	clonedSet := wrapper.set.Clone()
+func (w Wrapper[T]) Clone() Wrapper[T] {
+	clonedSet := w.set.Clone()
 	return Wrapper[T]{clonedSet}
 }
 
 // Iterator returns an iter.Iterator over the Set.
-func (wrapper Wrapper[T]) Iterator() iter.Iterator[T] {
-	return wrapper.set.Iterator()
+func (w Wrapper[T]) Iterator() iter.Iterator[T] {
+	return w.set.Iterator()
 }
 
-// Stream returns a streams.Stream over the Set.
-func (wrapper Wrapper[T]) Stream() streams.Stream[T] {
-	return wrapper.set.Stream()
+// Stream streams the elements of the Set.
+func (w Wrapper[T]) Stream(yield func(T) bool) {
+	w.set.Stream(yield)
 }

@@ -3,7 +3,6 @@ package maps
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/misc"
-	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 // Iterator is an iterator over a Map.
@@ -41,18 +40,16 @@ type Map[K, V any] interface {
 	// Remove removes the entry associated with the given key
 	Remove(key K)
 
-	// Keys returns a slice of all keys in the map
-	Keys() []K
-
 	// Clear clears the map
 	Clear()
 
 	misc.Cloner[Map[K, V]]
 
 	iter.Iterable[misc.Pair[K, V]]
-	// MapIterator returns an iterator over the map
+	// MapIterator returns an iterator over the Map
 	MapIterator() Iterator[K, V]
-	streams.Streamer[misc.Pair[K, V]]
-	// RefsStream returns a stream keys and pointers to the values of the map
-	RefsStream() streams.Stream[misc.Pair[K, *V]]
+	// Stream2 streams entries of the Map
+	Stream2(yield func(K, V) bool)
+	// RefsStream2 streams keys and references to values of the Map
+	RefsStream2(yield func(K, *V) bool)
 }

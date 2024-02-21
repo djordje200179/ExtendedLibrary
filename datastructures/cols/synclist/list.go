@@ -2,7 +2,6 @@ package synclist
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/iter"
-	"github.com/djordje200179/extendedlibrary/streams"
 	"sync/atomic"
 )
 
@@ -66,9 +65,13 @@ func (list *List[T]) Iterator() iter.Iterator[T] {
 	return &Iterator[T]{curr: list.head.Load()}
 }
 
-// Stream returns a stream over the elements in the List.
-func (list *List[T]) Stream() streams.Stream[T] {
-	return iter.IteratorStream(list.Iterator())
+// Stream streams the elements of the List.
+func (list *List[T]) Stream(yield func(T) bool) {
+	for curr := list.head.Load(); curr != nil; curr = curr.next {
+		if !yield(curr.Value) {
+			break
+		}
+	}
 }
 
 // Head returns the first element in the List.

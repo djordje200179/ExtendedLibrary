@@ -3,7 +3,6 @@ package syncset
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/datastructures/sets"
-	"github.com/djordje200179/extendedlibrary/streams"
 	"sync"
 )
 
@@ -22,74 +21,77 @@ func From[T any](set sets.Set[T]) *Wrapper[T] {
 }
 
 // Size returns the number of elements in the set.
-func (wrapper *Wrapper[T]) Size() int {
-	wrapper.mutex.RLock()
-	defer wrapper.mutex.RUnlock()
+func (w *Wrapper[T]) Size() int {
+	w.mutex.RLock()
+	defer w.mutex.RUnlock()
 
-	return wrapper.set.Size()
+	return w.set.Size()
 }
 
 // Add adds the given value to the set.
-func (wrapper *Wrapper[T]) Add(value T) {
-	wrapper.mutex.Lock()
-	defer wrapper.mutex.Unlock()
+func (w *Wrapper[T]) Add(value T) {
+	w.mutex.Lock()
+	defer w.mutex.Unlock()
 
-	wrapper.set.Add(value)
+	w.set.Add(value)
 }
 
 // Remove removes the given value from the set.
-func (wrapper *Wrapper[T]) Remove(value T) {
-	wrapper.mutex.Lock()
-	defer wrapper.mutex.Unlock()
+func (w *Wrapper[T]) Remove(value T) {
+	w.mutex.Lock()
+	defer w.mutex.Unlock()
 
-	wrapper.set.Remove(value)
+	w.set.Remove(value)
 }
 
 // Contains returns true if the set contains the given value.
-func (wrapper *Wrapper[T]) Contains(value T) bool {
-	wrapper.mutex.RLock()
-	defer wrapper.mutex.RUnlock()
+func (w *Wrapper[T]) Contains(value T) bool {
+	w.mutex.RLock()
+	defer w.mutex.RUnlock()
 
-	return wrapper.set.Contains(value)
+	return w.set.Contains(value)
 }
 
 // Clear removes all elements from the set.
-func (wrapper *Wrapper[T]) Clear() {
-	wrapper.mutex.Lock()
-	defer wrapper.mutex.Unlock()
+func (w *Wrapper[T]) Clear() {
+	w.mutex.Lock()
+	defer w.mutex.Unlock()
 
-	wrapper.set.Clear()
+	w.set.Clear()
 }
 
 // Clone returns a shallow copy of the set.
-func (wrapper *Wrapper[T]) Clone() sets.Set[T] {
-	wrapper.mutex.RLock()
-	defer wrapper.mutex.RUnlock()
+func (w *Wrapper[T]) Clone() sets.Set[T] {
+	w.mutex.RLock()
+	defer w.mutex.RUnlock()
 
-	clonedSet := wrapper.set.Clone()
+	clonedSet := w.set.Clone()
 	return From[T](clonedSet)
 }
 
 // Iterator returns an iter.Iterator over the elements in the set.
-func (wrapper *Wrapper[T]) Iterator() iter.Iterator[T] {
-	return wrapper.SetIterator()
+func (w *Wrapper[T]) Iterator() iter.Iterator[T] {
+	return w.SetIterator()
 }
 
 // SetIterator returns an iterator over the elements in the set.
-func (wrapper *Wrapper[T]) SetIterator() sets.Iterator[T] {
-	return Iterator[T]{wrapper.set.SetIterator(), &wrapper.mutex}
+func (w *Wrapper[T]) SetIterator() sets.Iterator[T] {
+	return Iterator[T]{w.set.SetIterator(), &w.mutex}
 }
 
-// Stream returns a streams.Stream over the elements in the set.
-func (wrapper *Wrapper[T]) Stream() streams.Stream[T] {
-	return wrapper.set.Stream()
+// Stream streams the elements of the Set.
+func (w *Wrapper[T]) Stream(yield func(T) bool) {
+	w.mutex.RLock()
+	defer w.mutex.RUnlock()
+
+	w.set.Stream(yield)
 }
 
 // Transaction executes the given update function with the set as an argument.
 // The set is locked for writing during the execution of the update function.
-func (wrapper *Wrapper[T]) Transaction(updateFunction func(set sets.Set[T])) {
-	wrapper.mutex.Lock()
-	defer wrapper.mutex.Unlock()
+func (w *Wrapper[T]) Transaction(updateFunction func(set sets.Set[T])) {
+	w.mutex.Lock()
+	defer w.mutex.Unlock()
 
-	updateFunction(wrapper.set)
+	updateFunction(w.set)
 }

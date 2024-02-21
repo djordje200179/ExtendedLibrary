@@ -7,8 +7,6 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/maps/hashmap"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps/rbt"
 	"github.com/djordje200179/extendedlibrary/datastructures/sets"
-	"github.com/djordje200179/extendedlibrary/misc"
-	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 type empty struct{}
@@ -35,55 +33,57 @@ func FromMap[T any](m maps.Map[T, empty]) Set[T] {
 }
 
 // Size returns the number of elements in the set.
-func (set Set[T]) Size() int {
-	return set.m.Size()
+func (s Set[T]) Size() int {
+	return s.m.Size()
 }
 
 // Add adds a value to the set.
-func (set Set[T]) Add(value T) {
-	if !set.m.Contains(value) {
-		set.m.Set(value, empty{})
+func (s Set[T]) Add(value T) {
+	if !s.m.Contains(value) {
+		s.m.Set(value, empty{})
 	}
 }
 
 // Remove removes a value from the set.
-func (set Set[T]) Remove(value T) {
-	set.m.Remove(value)
+func (s Set[T]) Remove(value T) {
+	s.m.Remove(value)
 }
 
 // Contains returns true if the set contains the value.
-func (set Set[T]) Contains(value T) bool {
-	return set.m.Contains(value)
+func (s Set[T]) Contains(value T) bool {
+	return s.m.Contains(value)
 }
 
 // Clear removes all elements from the set.
-func (set Set[T]) Clear() {
-	set.m.Clear()
+func (s Set[T]) Clear() {
+	s.m.Clear()
 }
 
 // Clone returns a shallow copy of the set.
-func (set Set[T]) Clone() sets.Set[T] {
-	return FromMap[T](set.m.Clone())
+func (s Set[T]) Clone() sets.Set[T] {
+	return FromMap[T](s.m.Clone())
 }
 
 // Iterator returns an iter.Iterator over the set.
-func (set Set[T]) Iterator() iter.Iterator[T] {
-	return set.SetIterator()
+func (s Set[T]) Iterator() iter.Iterator[T] {
+	return s.SetIterator()
 }
 
 // SetIterator returns an iterator over the set.
-func (set Set[T]) SetIterator() sets.Iterator[T] {
-	return Iterator[T]{set.m.MapIterator()}
+func (s Set[T]) SetIterator() sets.Iterator[T] {
+	return Iterator[T]{s.m.MapIterator()}
 }
 
-// Stream returns a streams.Stream of the set elements.
-func (set Set[T]) Stream() streams.Stream[T] {
-	return streams.Map(set.m.Stream(), func(pair misc.Pair[T, empty]) T {
-		return pair.First
-	})
+// Stream streams the elements of the Set.
+func (s Set[T]) Stream(yield func(T) bool) {
+	for k, _ := range s.m.Stream2 {
+		if !yield(k) {
+			return
+		}
+	}
 }
 
 // Map returns the underlying map.
-func (set Set[T]) Map() maps.Map[T, empty] {
-	return set.m
+func (s Set[T]) Map() maps.Map[T, empty] {
+	return s.m
 }

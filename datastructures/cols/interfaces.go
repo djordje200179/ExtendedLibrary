@@ -5,7 +5,6 @@ import (
 	"github.com/djordje200179/extendedlibrary/misc"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions/predication"
-	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 // Iterator is a special iter.Iterator that can modify the collection it iterates over.
@@ -63,9 +62,10 @@ type Collection[T any] interface {
 	iter.Iterable[T]
 	// CollectionIterator creates and returns a new Iterator.
 	CollectionIterator() Iterator[T]
-	streams.Streamer[T]
-	// RefsStream returns a streams.Stream of references to the elements of the collection.
-	RefsStream() streams.Stream[*T]
+	// Stream streams the elements of the Collection.
+	Stream(yield func(T) bool)
+	// RefsStream streams references to the elements of the Collection.
+	RefsStream(yield func(*T) bool)
 
 	// FindIndex returns the index of the first element that satisfies the given predicate.
 	// If no element satisfies the predicate, 0 and false are returned.

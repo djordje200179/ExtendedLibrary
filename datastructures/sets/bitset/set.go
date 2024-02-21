@@ -4,7 +4,6 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/cols/bitarray"
 	"github.com/djordje200179/extendedlibrary/datastructures/iter"
 	"github.com/djordje200179/extendedlibrary/datastructures/sets"
-	"github.com/djordje200179/extendedlibrary/streams"
 )
 
 // Set is a set implementation based on bit array.
@@ -36,60 +35,68 @@ func FromArray(arr *bitarray.Array) *Set {
 }
 
 // Size returns the number of elements in the Set.
-func (set *Set) Size() int {
-	return set.elements
+func (s *Set) Size() int {
+	return s.elements
 }
 
 // Add adds the given value to the Set.
-func (set *Set) Add(value int) {
-	if !set.Contains(value) {
-		set.arr.Set(value, true)
-		set.elements++
+func (s *Set) Add(value int) {
+	if !s.Contains(value) {
+		s.arr.Set(value, true)
+		s.elements++
 	}
 }
 
 // Remove removes the given value from the Set.
 // If the value is not in the Set, this method does nothing.
-func (set *Set) Remove(value int) {
-	if set.Contains(value) {
-		set.arr.Set(value, false)
-		set.elements--
+func (s *Set) Remove(value int) {
+	if s.Contains(value) {
+		s.arr.Set(value, false)
+		s.elements--
 	}
 }
 
 // Contains returns true if the Set contains the given value.
-func (set *Set) Contains(value int) bool {
-	return set.arr.Get(value)
+func (s *Set) Contains(value int) bool {
+	return s.arr.Get(value)
 }
 
 // Clear removes all elements from the Set.
-func (set *Set) Clear() {
-	set.arr.Clear()
-	set.elements = 0
+func (s *Set) Clear() {
+	s.arr.Clear()
+	s.elements = 0
 }
 
 // Clone returns a shallow copy of the Set.
-func (set *Set) Clone() sets.Set[int] {
-	clonedArray := set.arr.Clone()
-	return &Set{clonedArray, set.elements}
+func (s *Set) Clone() sets.Set[int] {
+	clonedArray := s.arr.Clone()
+	return &Set{clonedArray, s.elements}
 }
 
 // Iterator returns an iter.Iterator over the elements in the Set.
-func (set *Set) Iterator() iter.Iterator[int] {
-	return set.SetIterator()
+func (s *Set) Iterator() iter.Iterator[int] {
+	return s.SetIterator()
 }
 
 // SetIterator returns an iterator over the elements in the Set.
-func (set *Set) SetIterator() sets.Iterator[int] {
-	return &Iterator{0, set}
+func (s *Set) SetIterator() sets.Iterator[int] {
+	return &Iterator{0, s}
 }
 
-// Stream returns a streams.Stream over the elements in the Set.
-func (set *Set) Stream() streams.Stream[int] {
-	return iter.IteratorStream(set.Iterator())
+// Stream streams the elements of the Set.
+func (s *Set) Stream(yield func(int) bool) {
+	for i := range s.arr.Size() {
+		if !s.arr.Get(i) {
+			continue
+		}
+
+		if !yield(i) {
+			break
+		}
+	}
 }
 
 // Array returns the underlying bit array.
-func (set *Set) Array() *bitarray.Array {
-	return set.arr
+func (s *Set) Array() *bitarray.Array {
+	return s.arr
 }

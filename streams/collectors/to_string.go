@@ -18,15 +18,15 @@ func ToString[T any](delimiter string) streams.Collector[T, string] {
 	}
 }
 
-func (collector *stringCollector[T]) Supply(value T) {
-	if collector.builder.Len() > 0 {
-		collector.builder.WriteString(collector.delimiter)
+func (c *stringCollector[T]) Supply(value T) {
+	if c.builder.Len() > 0 {
+		c.builder.WriteString(c.delimiter)
 	}
 
 	str := fmt.Sprint(value)
-	collector.builder.WriteString(str)
+	c.builder.WriteString(str)
 }
 
-func (collector *stringCollector[T]) Finish() string {
-	return collector.builder.String()
+func (c *stringCollector[T]) Finish() string {
+	return c.builder.String()
 }

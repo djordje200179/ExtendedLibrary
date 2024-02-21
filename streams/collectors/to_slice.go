@@ -14,10 +14,10 @@ func ToSlice[T any]() streams.Collector[T, []T] {
 	}
 }
 
-func (collector *sliceCollector[T]) Supply(value T) {
-	collector.slice = append(collector.slice, value)
+func (c *sliceCollector[T]) Supply(value T) {
+	c.slice = append(c.slice, value)
 }
 
-func (collector *sliceCollector[T]) Finish() []T {
-	return collector.slice
+func (c *sliceCollector[T]) Finish() []T {
+	return c.slice
 }
