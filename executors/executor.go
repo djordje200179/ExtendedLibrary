@@ -10,48 +10,46 @@ type Executor struct {
 	wg sync.WaitGroup
 }
 
-func NewExecutor(goroutinesCount int, queueSize int) *Executor {
+func NewExecutor(goroutinesCnt int, queueSize int) *Executor {
 	executor := &Executor{
 		tasks: make(chan Task, queueSize),
 	}
 
-	for range goroutinesCount {
+	for range goroutinesCnt {
 		go executor.routine()
 	}
 
-	executor.wg.Add(goroutinesCount)
+	executor.wg.Add(goroutinesCnt)
 
 	return executor
 }
 
-func (executor *Executor) Submit(tasker Task) {
-	executor.tasks <- tasker
+func (e *Executor) Submit(tasker Task) { e.tasks <- tasker }
+
+func (e *Executor) Close() {
+	close(e.tasks)
+	e.wg.Wait()
 }
 
-func (executor *Executor) Close() {
-	close(executor.tasks)
-	executor.wg.Wait()
-}
-
-func (executor *Executor) routine() {
-	for task := range executor.tasks {
+func (e *Executor) routine() {
+	for task := range e.tasks {
 		runTask(task)
 	}
 
-	executor.wg.Done()
+	e.wg.Done()
 }
 
 func runTask(task Task) {
 	defer func() {
 		if r := recover(); r != nil {
-			task.MarkFailed(r)
+			task.MarkFail(r)
 		}
 	}()
 
 	function := task.Function()
 	context := task.Context()
 
-	task.MarkStarted()
+	task.MarkStart()
 	function(context)
-	task.MarkFinished()
+	task.MarkFinish()
 }

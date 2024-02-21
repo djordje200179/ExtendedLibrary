@@ -6,13 +6,13 @@ type Future[T any] struct {
 	getter func(context.Context) T
 	result T
 
-	*taskStatus
+	*status
 }
 
 func NewFuture[T any](getter func(context.Context) T, ctx context.Context) *Future[T] {
 	future := &Future[T]{
-		getter:     getter,
-		taskStatus: newTaskStatus(ctx),
+		getter: getter,
+		status: newTaskStatus(ctx),
 	}
 
 	return future
@@ -22,18 +22,18 @@ func NewDefaultFuture[T any](getter func(context.Context) T) *Future[T] {
 	return NewFuture(getter, context.Background())
 }
 
-func (future *Future[T]) Result() T {
-	future.Wait()
+func (f *Future[T]) Result() T {
+	f.Wait()
 
-	if future.IsFailed() {
-		panic(future.taskStatus.failReason)
+	if f.HasFailed() {
+		panic(f.status.failReason)
 	}
 
-	return future.result
+	return f.result
 }
 
-func (future *Future[T]) Function() func(context.Context) {
+func (f *Future[T]) Function() func(context.Context) {
 	return func(ctx context.Context) {
-		future.result = future.getter(ctx)
+		f.result = f.getter(ctx)
 	}
 }

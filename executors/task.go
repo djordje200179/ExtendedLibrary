@@ -6,15 +6,15 @@ type Task interface {
 	Function() func(ctx context.Context)
 	Context() context.Context
 
-	IsStarted() bool
-	IsFailed() bool
-	IsCancelled() bool
-	IsFinished() bool
+	HasStarted() bool
+	HasFailed() bool
+	HasCancelled() bool
+	HasFinished() bool
 
 	Wait()
 	Cancel()
 
-	MarkStarted()
-	MarkFailed(reason any)
-	MarkFinished()
+	MarkStart()
+	MarkFail(reason any)
+	MarkFinish()
 }

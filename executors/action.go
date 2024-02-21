@@ -3,15 +3,16 @@ package executors
 import "context"
 
 type Action struct {
-	function func(context.Context)
+	f func(context.Context)
 
-	*taskStatus
+	*status
 }
 
-func NewAction(function func(context.Context), ctx context.Context) *Action {
+func NewAction(f func(context.Context), ctx context.Context) *Action {
 	action := &Action{
-		function:   function,
-		taskStatus: newTaskStatus(ctx),
+		f: f,
+
+		status: newTaskStatus(ctx),
 	}
 
 	return action
@@ -21,6 +22,6 @@ func NewDefaultAction(function func(context.Context)) *Action {
 	return NewAction(function, context.Background())
 }
 
-func (action *Action) Function() func(context.Context) {
-	return action.function
+func (a *Action) Function() func(context.Context) {
+	return a.f
 }

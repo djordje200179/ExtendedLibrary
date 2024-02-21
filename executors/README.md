@@ -53,10 +53,10 @@ Because every task can panic or be cancelled, you can check the status of the
 task whenever you want.
 
 ```go
-task.IsStarted()
+task.HasStarted()
 ...
 task.Wait()
-if task.IsCancelled() {
+if task.HasCancelled() {
 	...
 }
 ```
