@@ -1,7 +1,6 @@
 go 1.22
 
 use (
-	./testing
 	./datastructures
 	./misc
 	./streams
