@@ -112,7 +112,7 @@ func Window[T any](stream Stream[T], width int) Stream[[]T] {
 				return optional.Empty[[]T]()
 			}
 		} else {
-			for i := 0; i < width-1; i++ {
+			for i := range width - 1 {
 				window[i] = window[i+1]
 			}
 

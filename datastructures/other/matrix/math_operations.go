@@ -19,7 +19,7 @@ func Add[T math.Real](matrices ...*Matrix[T]) *Matrix[T] {
 	size := matrices[0].Size()
 
 	result := Zeros[T](size)
-	for i := 0; i < size.Elements(); i++ {
+	for i := range size.Elements() {
 		for _, matrix := range matrices {
 			result.values[i] += matrix.values[i]
 		}
@@ -39,7 +39,7 @@ func Subtract[T math.Real](first, second *Matrix[T]) *Matrix[T] {
 
 	result := New[T](size)
 
-	for i := 0; i < size.Elements(); i++ {
+	for i := range size.Elements() {
 		result.values[i] = first.values[i] - second.values[i]
 	}
 
@@ -50,7 +50,7 @@ func Subtract[T math.Real](first, second *Matrix[T]) *Matrix[T] {
 func ScalarMultiply[T math.Real](matrix *Matrix[T], scalar T) *Matrix[T] {
 	result := New[T](matrix.Size())
 
-	for i := 0; i < result.Size().Elements(); i++ {
+	for i := range result.Size().Elements() {
 		result.values[i] = matrix.values[i] * scalar
 	}
 
@@ -69,10 +69,10 @@ func Multiply[T math.Real](first, second *Matrix[T]) *Matrix[T] {
 	}
 
 	result := Zeros[T](resultSize)
-	for i := 0; i < result.Size().Height; i++ {
-		for j := 0; j < result.Size().Width; j++ {
+	for i := range result.Size().Height {
+		for j := range result.Size().Width {
 			var sum T
-			for k := 0; k < first.Size().Width; k++ {
+			for k := range first.Size().Width {
 				sum += first.Get(i, k) * second.Get(k, j)
 			}
 
@@ -101,7 +101,7 @@ func DotMultiply[T math.Real](matrices ...*Matrix[T]) *Matrix[T] {
 	size := matrices[0].Size()
 
 	result := New[T](size)
-	for i := 0; i < size.Elements(); i++ {
+	for i := range size.Elements() {
 		result.values[i] = 1
 		for _, matrix := range matrices {
 			result.values[i] *= matrix.values[i]

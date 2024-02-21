@@ -7,8 +7,8 @@ func (array *Array) applyBiOperation(other *Array, operation bitwiseOperation) {
 		panic("Array sizes don't match")
 	}
 
-	for i := 0; i < len(array.slice); i++ {
-		array.slice[i] = operation(array.slice[i], other.slice[i])
+	for i, val := range array.slice {
+		array.slice[i] = operation(val, other.slice[i])
 	}
 }
 

@@ -16,7 +16,7 @@ func (array *Array) All() bool {
 		sliceSize--
 	}
 
-	for i := 0; i < sliceSize-1; i++ {
+	for i := range sliceSize - 1 {
 		if array.slice[i] != 0xFF {
 			return false
 		}
@@ -39,7 +39,7 @@ func (array *Array) Any() bool {
 		sliceSize--
 	}
 
-	for i := 0; i < sliceSize-1; i++ {
+	for i := range sliceSize - 1 {
 		if array.slice[i] != 0 {
 			return true
 		}
@@ -62,7 +62,7 @@ func (array *Array) None() bool {
 		sliceSize--
 	}
 
-	for i := 0; i < sliceSize-1; i++ {
+	for i := range sliceSize - 1 {
 		if array.slice[i] != 0 {
 			return false
 		}
@@ -85,7 +85,7 @@ func (array *Array) Count() int {
 		sliceSize--
 	}
 
-	for i := 0; i < sliceSize-1; i++ {
+	for i := range sliceSize - 1 {
 		elem := array.slice[i]
 
 		count += bits.OnesCount8(elem)

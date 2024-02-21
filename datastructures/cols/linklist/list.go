@@ -51,7 +51,7 @@ func (list *List[T]) GetNode(index int) *Node[T] {
 	var curr *Node[T]
 	if index > 0 {
 		curr = list.head
-		for i := 0; i < index; i++ {
+		for range index {
 			curr = curr.next
 		}
 	} else {

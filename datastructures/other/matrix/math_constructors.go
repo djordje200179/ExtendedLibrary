@@ -11,7 +11,7 @@ func Zeros[T math.Number](size Size) *Matrix[T] {
 func Ones[T math.Number](size Size) *Matrix[T] {
 	matrix := New[T](size)
 
-	for i := 0; i < size.Elements(); i++ {
+	for i := range size.Elements() {
 		matrix.values[i] = 1
 	}
 
@@ -23,7 +23,7 @@ func Ones[T math.Number](size Size) *Matrix[T] {
 func Identity[T math.Number](size Size) *Matrix[T] {
 	matrix := Zeros[T](size)
 
-	for i := 0; i < size.Height && i < size.Width; i++ {
+	for i := range min(size.Height, size.Width) {
 		matrix.Set(i, i, 1)
 	}
 

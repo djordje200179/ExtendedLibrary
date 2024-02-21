@@ -15,7 +15,7 @@ func NewExecutor(goroutinesCount int, queueSize int) *Executor {
 		tasks: make(chan Task, queueSize),
 	}
 
-	for i := 0; i < goroutinesCount; i++ {
+	for range goroutinesCount {
 		go executor.routine()
 	}
 

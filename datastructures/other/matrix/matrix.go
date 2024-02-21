@@ -162,7 +162,7 @@ func (matrix *Matrix[T]) RemoveColumn(index int) {
 
 	newValues := make([]T, len(matrix.values)-size.Height)
 
-	for i := 0; i < size.Height; i++ {
+	for i := range size.Height {
 		oldRow := matrix.values[i*(size.Width+1) : (i+1)*(size.Width+1)]
 		newRow := newValues[i*size.Width : (i+1)*size.Width]
 
@@ -194,8 +194,8 @@ func (matrix *Matrix[T]) Transpose() {
 
 	newValues := make([]T, newSize.Elements())
 
-	for i := 0; i < newSize.Height; i++ {
-		for j := 0; j < newSize.Width; j++ {
+	for i := range newSize.Height {
+		for j := range newSize.Width {
 			newIndex := newSize.Index(i, j)
 			oldIndex := oldSize.Index(j, i)
 

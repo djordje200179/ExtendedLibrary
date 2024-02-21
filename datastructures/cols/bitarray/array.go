@@ -43,8 +43,8 @@ func NewWithCapacity(initialCapacity int) *Array {
 func NewFromSlice(slice []bool) *Array {
 	arr := NewWithSize(len(slice))
 
-	for i := 0; i < len(slice); i++ {
-		arr.Set(i, slice[i])
+	for i, val := range slice {
+		arr.Set(i, val)
 	}
 
 	return arr
@@ -118,7 +118,7 @@ func (array *Array) SetAll(value bool) {
 		elem = 0xFF
 	}
 
-	for i := 0; i < len(array.slice); i++ {
+	for i := range array.slice {
 		array.slice[i] = elem
 	}
 }
@@ -139,8 +139,8 @@ func (array *Array) Flip(index int) {
 
 // FlipAll flips all bits in the Array.
 func (array *Array) FlipAll() {
-	for i := 0; i < len(array.slice); i++ {
-		array.slice[i] = ^array.slice[i]
+	for i, val := range array.slice {
+		array.slice[i] = ^val
 	}
 }
 
@@ -256,7 +256,7 @@ func (array *Array) Join(other *Array) {
 		array.slice = append(array.slice, other.slice...)
 		array.lastElemOff = other.lastElemOff
 	} else {
-		for i := 0; i < other.Size(); i++ {
+		for i := range other.Size() {
 			array.Append(other.Get(i))
 		}
 	}
@@ -277,7 +277,7 @@ func (array *Array) Clone() *Array {
 func (array *Array) String() string {
 	var sb strings.Builder
 
-	for i := 0; i < array.Size(); i++ {
+	for i := range array.Size() {
 		val := array.Get(i)
 
 		var char byte
