@@ -67,7 +67,7 @@ func (m Map[K, V]) TryGet(key K) (V, bool) {
 func (m Map[K, V]) Get(key K) V {
 	value, ok := m[key]
 	if !ok {
-		panic(maps.ErrMissingKey[K]{Key: key})
+		panic(maps.MissingKeyError[K]{Key: key})
 	}
 
 	return value
@@ -80,7 +80,7 @@ func (m Map[K, V]) GetRef(key K) *V {
 	ptr, ok := internalMapGet(mt, mv, unsafe.Pointer(&key))
 
 	if !ok {
-		panic(maps.ErrMissingKey[K]{Key: key})
+		panic(maps.MissingKeyError[K]{Key: key})
 	}
 
 	return (*V)(ptr)

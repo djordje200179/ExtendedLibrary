@@ -40,7 +40,7 @@ func (list *List[T]) Size() int {
 // Panics if the index is out of bounds.
 func (list *List[T]) GetNode(index int) *Node[T] {
 	if index >= list.size || index < -list.size {
-		panic(cols.ErrIndexOutOfBounds{Index: index, Length: list.size})
+		panic(cols.IndexOutOfBoundsError{Index: index, Length: list.size})
 	}
 
 	if index == 0 {

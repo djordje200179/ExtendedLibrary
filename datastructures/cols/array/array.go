@@ -70,7 +70,7 @@ func (arr *Array[T]) getRealIndex(index int) int {
 	size := arr.Size()
 
 	if index >= size || index < -size {
-		panic(cols.ErrIndexOutOfBounds{Index: index, Length: size})
+		panic(cols.IndexOutOfBoundsError{Index: index, Length: size})
 	}
 
 	if index < 0 {
