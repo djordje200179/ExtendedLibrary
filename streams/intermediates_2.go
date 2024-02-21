@@ -82,24 +82,3 @@ func (s Stream2[K, V]) Seek(count int) Stream2[K, V] {
 		}
 	}
 }
-
-func Window2[K, V any](s Stream2[K, V], size int) Stream2[K, []V] {
-	return func(yield func(K, []V) bool) {
-		window := make([]V, size)
-		i := 0
-		for k, v := range s {
-			if i < size {
-				window[i] = v
-				i++
-				continue
-			}
-
-			if !yield(k, window) {
-				break
-			}
-
-			copy(window, window[1:])
-			window[size-1] = v
-		}
-	}
-}
