@@ -5,7 +5,6 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/maps"
 	"github.com/djordje200179/extendedlibrary/datastructures/maps/hashmap"
 	"github.com/djordje200179/extendedlibrary/misc"
-	"github.com/djordje200179/extendedlibrary/misc/functions"
 )
 
 // Order represents the order of the nodes in the map.
@@ -98,7 +97,8 @@ func (w *Wrapper[K, V]) Contains(key K) bool {
 func (w *Wrapper[K, V]) TryGet(key K) (V, bool) {
 	node, ok := w.m.TryGet(key)
 	if !ok {
-		return functions.Zero[V](), false
+		var zero V
+		return zero, false
 	}
 
 	if w.order == LRU {
