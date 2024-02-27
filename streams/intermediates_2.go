@@ -1,6 +1,9 @@
 package streams
 
-import "github.com/djordje200179/extendedlibrary/misc/functions/predication"
+import (
+	"github.com/djordje200179/extendedlibrary/misc"
+	"github.com/djordje200179/extendedlibrary/misc/functions/predication"
+)
 
 func (s Stream2[K, V]) Keys() Stream[K] {
 	return func(yield func(K) bool) {
@@ -16,6 +19,16 @@ func (s Stream2[K, V]) Values() Stream[V] {
 	return func(yield func(V) bool) {
 		for _, v := range s {
 			if !yield(v) {
+				break
+			}
+		}
+	}
+}
+
+func (s Stream2[K, V]) Pairs() Stream[misc.Pair[K, V]] {
+	return func(yield func(misc.Pair[K, V]) bool) {
+		for k, v := range s {
+			if !yield(misc.MakePair(k, v)) {
 				break
 			}
 		}

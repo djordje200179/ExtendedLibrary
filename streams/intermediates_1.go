@@ -7,19 +7,6 @@ import (
 	"slices"
 )
 
-func (s Stream[T]) Enumerate() Stream2[int, T] {
-	return func(yield func(int, T) bool) {
-		i := 0
-		for elem := range s {
-			if !yield(i, elem) {
-				break
-			}
-
-			i++
-		}
-	}
-}
-
 func Map[T, U any](s Stream[T], mapper functions.Mapper[T, U]) Stream[U] {
 	return func(yield func(U) bool) {
 		for elem := range s {

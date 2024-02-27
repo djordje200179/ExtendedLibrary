@@ -29,10 +29,7 @@ func (it Iterator[K, V]) Get() misc.Pair[K, V] {
 	it.mutex.RLock()
 	defer it.mutex.RUnlock()
 
-	return misc.Pair[K, V]{
-		First:  it.mapIt.Key(),
-		Second: it.mapIt.Value(),
-	}
+	return misc.MakePair(it.mapIt.Key(), it.mapIt.Value())
 }
 
 // Key returns the current entry's key.

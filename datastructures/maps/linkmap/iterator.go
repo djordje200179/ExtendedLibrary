@@ -25,10 +25,7 @@ func (it *Iterator[K, V]) Move() {
 
 // Get returns the current entry as a Pair.
 func (it *Iterator[K, V]) Get() misc.Pair[K, V] {
-	return misc.Pair[K, V]{
-		First:  it.Key(),
-		Second: it.Value(),
-	}
+	return misc.MakePair(it.Key(), it.Value())
 }
 
 // Key returns the current key.

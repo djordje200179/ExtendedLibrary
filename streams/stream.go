@@ -13,8 +13,18 @@ type Streamer[T any] interface {
 	Stream(yield func(T) bool)
 }
 
-func From[T any](seq iter.Seq[T]) Stream[T] {
-	return Stream[T](seq)
+func From[T any](streamer Streamer[T]) Stream[T] {
+	return streamer.Stream
+}
+
+func FromSlice[T any](slice []T) Stream[T] {
+	return func(yield func(T) bool) {
+		for _, elem := range slice {
+			if !yield(elem) {
+				break
+			}
+		}
+	}
 }
 
 func FromChannel[T any](ch <-chan T) Stream[T] {
@@ -62,4 +72,17 @@ func RangeIncrement[T math.Real](lower, upper, increment T) Stream[T] {
 
 func Range[T math.Real](lower, upper T) Stream[T] {
 	return RangeIncrement(lower, upper, 1)
+}
+
+func Enumerate[T any](s Stream[T]) Stream2[int, T] {
+	return func(yield func(int, T) bool) {
+		i := 0
+		for elem := range s {
+			if !yield(i, elem) {
+				break
+			}
+
+			i++
+		}
+	}
 }
