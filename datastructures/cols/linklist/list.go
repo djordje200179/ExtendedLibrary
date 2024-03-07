@@ -227,10 +227,10 @@ func (list *List[T]) Stream(yield func(T) bool) {
 	}
 }
 
-// RefsStream streams references to the elements in the List.
-func (list *List[T]) RefsStream(yield func(*T) bool) {
-	for curr := list.head; curr != nil; curr = curr.next {
-		if !yield(&curr.Value) {
+// Stream2 streams the elements in the List with their indices.
+func (list *List[T]) Stream2(yield func(int, T) bool) {
+	for curr, i := list.head, 0; curr != nil; curr, i = curr.next, i+1 {
+		if !yield(i, curr.Value) {
 			return
 		}
 	}

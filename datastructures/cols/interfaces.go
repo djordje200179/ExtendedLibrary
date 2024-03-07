@@ -64,8 +64,8 @@ type Collection[T any] interface {
 	CollectionIterator() Iterator[T]
 	// Stream streams the elements of the Collection.
 	Stream(yield func(T) bool)
-	// RefsStream streams references to the elements of the Collection.
-	RefsStream(yield func(*T) bool)
+	// Stream2 streams the elements of the Collection with their indices.
+	Stream2(yield func(int, T) bool)
 
 	// FindIndex returns the index of the first element that satisfies the given predicate.
 	// If no element satisfies the predicate, 0 and false are returned.

@@ -86,28 +86,3 @@ func (s Stream[T]) Sort(comparator comparison.Comparator[T]) Stream[T] {
 		}
 	}
 }
-
-func Window[T any](s Stream[T], width int) Stream[[]T] {
-	return func(yield func([]T) bool) {
-		window := make([]T, width)
-
-		i := 0
-		for elem := range s {
-			if i < width {
-				window[i] = elem
-				i++
-				continue
-			}
-
-			if !yield(window) {
-				break
-			}
-
-			for i := range width - 1 {
-				window[i] = window[i+1]
-			}
-
-			window[width-1] = elem
-		}
-	}
-}

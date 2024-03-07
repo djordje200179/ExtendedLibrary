@@ -86,3 +86,45 @@ func Enumerate[T any](s Stream[T]) Stream2[int, T] {
 		}
 	}
 }
+
+func Chunk[T any](s Stream[T], size int) Stream[[]T] {
+	return func(yield func([]T) bool) {
+		chunk := make([]T, 0, size)
+
+		for elem := range s {
+			chunk = append(chunk, elem)
+			if len(chunk) == size {
+				if !yield(chunk) {
+					break
+				}
+
+				chunk = make([]T, 0, size)
+			}
+		}
+	}
+}
+
+func Window[T any](s Stream[T], width int) Stream[[]T] {
+	return func(yield func([]T) bool) {
+		window := make([]T, width)
+
+		i := 0
+		for elem := range s {
+			if i < width {
+				window[i] = elem
+				i++
+				continue
+			}
+
+			if !yield(window) {
+				break
+			}
+
+			for i := range width - 1 {
+				window[i] = window[i+1]
+			}
+
+			window[width-1] = elem
+		}
+	}
+}

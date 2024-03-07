@@ -141,10 +141,19 @@ func (m Map[K, V]) Stream2(yield func(K, V) bool) {
 	}
 }
 
-// RefsStream2 streams over the keys and references to the values in the Map.
-func (m Map[K, V]) RefsStream2(yield func(K, *V) bool) {
-	for it := m.MapIterator(); it.Valid(); it.Move() {
-		if !yield(it.Key(), it.ValueRef()) {
+// Keys streams the keys of the Map.
+func (m Map[K, V]) Keys(yield func(K) bool) {
+	for k := range m {
+		if !yield(k) {
+			break
+		}
+	}
+}
+
+// Values streams the values of the Map.
+func (m Map[K, V]) Values(yield func(V) bool) {
+	for _, v := range m {
+		if !yield(v) {
 			break
 		}
 	}

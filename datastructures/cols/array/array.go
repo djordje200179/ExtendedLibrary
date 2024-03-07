@@ -250,10 +250,11 @@ func (arr *Array[T]) Stream(yield func(T) bool) {
 	}
 }
 
-// RefsStream streams references to the elements in the Array.
-func (arr *Array[T]) RefsStream(yield func(*T) bool) {
-	for i := range arr.slice {
-		if !yield(&arr.slice[i]) {
+// Stream2 streams elements of the Array with their indices.
+func (arr *Array[T]) Stream2(yield func(int, T) bool) {
+	// TODO: Use slices.Stream
+	for i, val := range arr.slice {
+		if !yield(i, val) {
 			break
 		}
 	}

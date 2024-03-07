@@ -160,7 +160,7 @@ func (w *Wrapper[T]) CollectionIterator() cols.Iterator[T] {
 	return Iterator[T]{w.collection.CollectionIterator(), &w.mutex}
 }
 
-// Stream streams the elements of the collection.
+// Stream streams the elements of the cols.Collection.
 func (w *Wrapper[T]) Stream(yield func(T) bool) {
 	w.mutex.RLock()
 	defer w.mutex.RUnlock()
@@ -168,12 +168,12 @@ func (w *Wrapper[T]) Stream(yield func(T) bool) {
 	w.collection.Stream(yield)
 }
 
-// RefsStream streams the references to the elements of the collection.
-func (w *Wrapper[T]) RefsStream(yield func(*T) bool) {
-	w.mutex.Lock()
-	defer w.mutex.Unlock()
+// Stream2 streams the elements of the cols.Collection with their indices.
+func (w *Wrapper[T]) Stream2(yield func(int, T) bool) {
+	w.mutex.RLock()
+	defer w.mutex.RUnlock()
 
-	w.collection.RefsStream(yield)
+	w.collection.Stream2(yield)
 }
 
 // FindIndex returns the index of the first element that satisfies the given predicate.

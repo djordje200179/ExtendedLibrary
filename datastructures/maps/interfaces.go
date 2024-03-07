@@ -48,8 +48,10 @@ type Map[K, V any] interface {
 	iter.Iterable[misc.Pair[K, V]]
 	// MapIterator returns an iterator over the Map
 	MapIterator() Iterator[K, V]
-	// Stream2 streams entries of the Map
+	// Stream2 streams the entries of the Map
 	Stream2(yield func(K, V) bool)
-	// RefsStream2 streams keys and references to values of the Map
-	RefsStream2(yield func(K, *V) bool)
+	// Keys streams the keys of the Map
+	Keys(yield func(K) bool)
+	// Values streams the values of the Map
+	Values(yield func(V) bool)
 }

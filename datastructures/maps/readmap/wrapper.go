@@ -53,3 +53,13 @@ func (w Wrapper[K, V]) Iterator() iter.Iterator[misc.Pair[K, V]] {
 func (w Wrapper[K, V]) Stream2(yield func(K, V) bool) {
 	w.m.Stream2(yield)
 }
+
+// Keys streams the keys of the maps.Map.
+func (w Wrapper[K, V]) Keys(yield func(K) bool) {
+	w.m.Keys(yield)
+}
+
+// Values streams the values of the maps.Map.
+func (w Wrapper[K, V]) Values(yield func(V) bool) {
+	w.m.Values(yield)
+}

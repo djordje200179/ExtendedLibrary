@@ -288,10 +288,19 @@ func (tree *Tree[K, V]) Stream2(yield func(K, V) bool) {
 	}
 }
 
-// RefsStream2 streams over the keys and references to the values in the Map.
-func (tree *Tree[K, V]) RefsStream2(yield func(K, *V) bool) {
+// Keys streams the keys of the Tree.
+func (tree *Tree[K, V]) Keys(yield func(K) bool) {
 	for it := tree.MapIterator(); it.Valid(); it.Move() {
-		if !yield(it.Key(), it.ValueRef()) {
+		if !yield(it.Key()) {
+			return
+		}
+	}
+}
+
+// Values streams the values of the Tree.
+func (tree *Tree[K, V]) Values(yield func(V) bool) {
+	for it := tree.MapIterator(); it.Valid(); it.Move() {
+		if !yield(it.Value()) {
 			return
 		}
 	}

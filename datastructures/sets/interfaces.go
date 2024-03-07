@@ -32,6 +32,6 @@ type Set[T any] interface {
 	iter.Iterable[T]
 	// SetIterator returns an iterator over the set
 	SetIterator() Iterator[T]
-	// Stream streams elements of the set
+	// Stream streams the elements of the Set
 	Stream(yield func(T) bool)
 }

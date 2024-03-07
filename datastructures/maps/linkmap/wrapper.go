@@ -258,10 +258,19 @@ func (w *Wrapper[K, V]) Stream2(yield func(K, V) bool) {
 	}
 }
 
-// RefsStream2 streams keys and references to values of the Map
-func (w *Wrapper[K, V]) RefsStream2(yield func(K, *V) bool) {
+// Keys streams the keys of the maps.Map.
+func (w *Wrapper[K, V]) Keys(yield func(K) bool) {
 	for it := w.MapIterator(); it.Valid(); it.Move() {
-		if !yield(it.Key(), it.ValueRef()) {
+		if !yield(it.Key()) {
+			break
+		}
+	}
+}
+
+// Values streams the values of the maps.Map.
+func (w *Wrapper[K, V]) Values(yield func(V) bool) {
+	for it := w.MapIterator(); it.Valid(); it.Move() {
+		if !yield(it.Value()) {
 			break
 		}
 	}

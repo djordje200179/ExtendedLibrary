@@ -135,12 +135,20 @@ func (w *Wrapper[K, V]) Stream2(yield func(K, V) bool) {
 	w.m.Stream2(yield)
 }
 
-// RefsStream2 streams over the keys and references to the values in the Map.
-func (w *Wrapper[K, V]) RefsStream2(yield func(K, *V) bool) {
-	w.mutex.Lock()
-	defer w.mutex.Unlock()
+// Keys streams the keys of the maps.Map.
+func (w *Wrapper[K, V]) Keys(yield func(K) bool) {
+	w.mutex.RLock()
+	defer w.mutex.RUnlock()
 
-	w.m.RefsStream2(yield)
+	w.m.Keys(yield)
+}
+
+// Values streams the values of the maps.Map.
+func (w *Wrapper[K, V]) Values(yield func(V) bool) {
+	w.mutex.RLock()
+	defer w.mutex.RUnlock()
+
+	w.m.Values(yield)
 }
 
 // Transaction executes the given function with the map as an argument.

@@ -74,6 +74,15 @@ func (list *List[T]) Stream(yield func(T) bool) {
 	}
 }
 
+// Stream2 streams the elements of the List with their indices.
+func (list *List[T]) Stream2(yield func(int, T) bool) {
+	for curr, i := list.head.Load(), 0; curr != nil; curr, i = curr.next, i+1 {
+		if !yield(i, curr.Value) {
+			break
+		}
+	}
+}
+
 // Head returns the first element in the List.
 func (list *List[T]) Head() *Node[T] {
 	return list.head.Load()

@@ -37,9 +37,14 @@ func (w Wrapper[T]) Iterator() iter.Iterator[T] {
 	return w.collection.Iterator()
 }
 
-// Stream streams the elements of the collection.
+// Stream streams the elements of the cols.Collection.
 func (w Wrapper[T]) Stream(yield func(T) bool) {
 	w.collection.Stream(yield)
+}
+
+// Stream2 streams the elements of the cols.Collection with their indices.
+func (w Wrapper[T]) Stream2(yield func(int, T) bool) {
+	w.collection.Stream2(yield)
 }
 
 // FindIndex returns the index of the first element that satisfies the given predicate.
