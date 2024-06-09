@@ -1,16 +1,21 @@
 package matrix
 
-import "fmt"
+import (
+	"errors"
+	"slices"
+)
 
-// Matrix is a two-dimensional array of values.
-// The zero value is ready to use. Do not copy a non-zero Matrix.
+// Matrix is a two-dimensional dynamic array of values.
+//
+// The zero value is ready to use.
+// Do not copy a non-zero Matrix.
 type Matrix[T any] struct {
 	values []T
 
 	columns int
 }
 
-// New creates a new matrix with the given size.
+// New creates an empty Matrix with the specified Size.
 func New[T any](size Size) *Matrix[T] {
 	values := make([]T, size.Elements())
 
@@ -22,7 +27,16 @@ func New[T any](size Size) *Matrix[T] {
 	return matrix
 }
 
-// NewFromSlices creates a new matrix from the given slices.
+// SliceSizeMismatchError is an error that occurs
+// when the size of the given row or column slice
+// doesn't match the size of the matrix.
+var SliceSizeMismatchError = errors.New("slice size isn't consistent")
+
+// NewFromSlices creates a new Matrix from
+// the elements of the specified slices.
+//
+// The slices must have the same length,
+// SliceSizeMismatchError panics occur otherwise.
 func NewFromSlices[T any](values [][]T) *Matrix[T] {
 	if len(values) == 0 {
 		return New[T](Size{})
@@ -33,7 +47,7 @@ func NewFromSlices[T any](values [][]T) *Matrix[T] {
 
 	for _, row := range values {
 		if len(row) != columns {
-			panic("Matrix rows have different lengths")
+			panic(SliceSizeMismatchError)
 		}
 	}
 
@@ -48,7 +62,7 @@ func NewFromSlices[T any](values [][]T) *Matrix[T] {
 	return matrix
 }
 
-// Size returns the size of the matrix.
+// Size returns the Size.
 func (matrix *Matrix[T]) Size() Size {
 	var rows int
 	if matrix.columns != 0 {
@@ -58,34 +72,32 @@ func (matrix *Matrix[T]) Size() Size {
 	return Size{rows, matrix.columns}
 }
 
-// GetRef returns a reference to the value at the given position.
+// GetRef returns the reference to the element at the specified position.
 func (matrix *Matrix[T]) GetRef(row, column int) *T {
-	index := matrix.Size().Index(row, column)
-	return &matrix.values[index]
+	return &matrix.values[matrix.Size().Index(row, column)]
 }
 
-// Get returns the value at the given position.
-func (matrix *Matrix[T]) Get(row, column int) T {
-	return *matrix.GetRef(row, column)
-}
+// Get returns the element at the specified position.
+func (matrix *Matrix[T]) Get(row, column int) T { return *matrix.GetRef(row, column) }
 
-// Set sets the value at the given position.
-func (matrix *Matrix[T]) Set(row, column int, value T) {
-	*matrix.GetRef(row, column) = value
-}
+// Set sets the element at the specified position.
+func (matrix *Matrix[T]) Set(row, column int, value T) { *matrix.GetRef(row, column) = value }
 
-// Clone returns a copy of the matrix.
+// Clone returns a copy of the Matrix.
 func (matrix *Matrix[T]) Clone() *Matrix[T] {
-	newMatrix := New[T](matrix.Size())
-	copy(newMatrix.values, matrix.values)
-
-	return newMatrix
+	return &Matrix[T]{
+		values:  slices.Clone(matrix.values),
+		columns: matrix.columns,
+	}
 }
 
-// InsertRow inserts a row at the given index.
+// InsertRow inserts the given row at the given index.
+//
+// The row length must match the matrix width,
+// SliceSizeMismatchError panics occur otherwise.
 func (matrix *Matrix[T]) InsertRow(index int, row []T) {
 	if len(row) != matrix.columns {
-		panic("Row length does not match matrix width")
+		panic(SliceSizeMismatchError)
 	}
 
 	newValues := make([]T, len(matrix.values)+matrix.columns)
@@ -104,12 +116,15 @@ func (matrix *Matrix[T]) InsertRow(index int, row []T) {
 	matrix.values = newValues
 }
 
-// InsertColumn inserts a column at the given index.
+// InsertColumn inserts the given column at the given index.
+//
+// The column length must match the matrix height,
+// SliceSizeMismatchError panics occur otherwise.
 func (matrix *Matrix[T]) InsertColumn(index int, column []T) {
 	size := matrix.Size()
 
 	if len(column) != size.Height {
-		panic("Column length does not match matrix height")
+		panic(SliceSizeMismatchError)
 	}
 
 	newValues := make([]T, len(matrix.values)+size.Height)
@@ -127,16 +142,22 @@ func (matrix *Matrix[T]) InsertColumn(index int, column []T) {
 	matrix.columns++
 }
 
-// AppendRow appends a row to the matrix.
+// AppendRow appends the given row to the end.
+//
+// The row length must match the Matrix width,
+// SliceSizeMismatchError panics occur otherwise.
 func (matrix *Matrix[T]) AppendRow(row []T) {
 	if len(row) != matrix.columns {
-		panic("Row length does not match matrix width")
+		panic(SliceSizeMismatchError)
 	}
 
 	matrix.values = append(matrix.values, row...)
 }
 
-// AppendColumn appends a column to the matrix.
+// AppendColumn appends the given column to the end.
+//
+// The column length must match the Matrix height,
+// SliceSizeMismatchError panics occur otherwise.
 func (matrix *Matrix[T]) AppendColumn(column []T) {
 	matrix.InsertColumn(matrix.columns, column)
 }
@@ -174,20 +195,26 @@ func (matrix *Matrix[T]) RemoveColumn(index int) {
 	matrix.columns--
 }
 
-// Reshape reshapes the matrix into the given size.
-// The number of elements must be the same.
-// The matrix is reshaped in row-major order.
+// SizeMismatchError is an error that occurs
+// when the sizes of two matrices don't match.
+var SizeMismatchError = errors.New("matrix sizes don't match")
+
+// Reshape reshapes the Matrix into the
+// given size in row-major order.
+//
+// The new size must have the same number of elements,
+// SizeMismatchError panics occur otherwise.
 func (matrix *Matrix[T]) Reshape(newSize Size) {
 	oldSize := matrix.Size()
 
 	if oldSize.Elements() != newSize.Elements() {
-		panic(fmt.Sprintf("Can't reshape matrix into %s", newSize))
+		panic(SizeMismatchError)
 	}
 
 	matrix.columns = newSize.Width
 }
 
-// Transpose transposes the matrix.
+// Transpose transposes the Matrix.
 func (matrix *Matrix[T]) Transpose() {
 	oldSize := matrix.Size()
 	newSize := oldSize.Transposed()

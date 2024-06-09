@@ -1,12 +1,11 @@
 package streams
 
 import (
-	"github.com/djordje200179/extendedlibrary/misc/functions"
 	"github.com/djordje200179/extendedlibrary/misc/functions/comparison"
 	"github.com/djordje200179/extendedlibrary/misc/functions/predication"
 )
 
-func (s Stream[T]) ForEach(f functions.ParamCallback[T]) {
+func (s Stream[T]) ForEach(f func(T)) {
 	for elem := range s {
 		f(elem)
 	}

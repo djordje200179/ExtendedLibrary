@@ -6,19 +6,21 @@ import (
 	"github.com/djordje200179/extendedlibrary/datastructures/sets"
 )
 
-// Set is a set implementation based on bit array.
+// Set stores information about the presence
+// of values in the 0..N-1 range.
 type Set struct {
 	arr *bitarray.Array
 
 	elements int
 }
 
-// New creates an empty set with the given size.
+// New creates an empty Set with the given size.
 func New(size int) *Set {
 	return &Set{bitarray.NewWithSize(size), 0}
 }
 
-// NewFromIterable creates a set with the given size from the given iter.Iterable.
+// NewFromIterable creates a new Set with the given size
+// and elements from the given iter.Iterable.
 func NewFromIterable(size int, iterable iter.Iterable[int]) *Set {
 	set := New(size)
 
@@ -29,17 +31,21 @@ func NewFromIterable(size int, iterable iter.Iterable[int]) *Set {
 	return set
 }
 
-// FromArray creates a set from the given array.
+// FromArray creates a new Set from the given bitarray.Array.
 func FromArray(arr *bitarray.Array) *Set {
 	return &Set{arr, arr.Count()}
 }
 
-// Size returns the number of elements in the Set.
+// Size returns the cardinality.
 func (s *Set) Size() int {
 	return s.elements
 }
 
-// Add adds the given value to the Set.
+// Add inserts the given value.
+// If the value is already present, this method does nothing.
+//
+// Panic cols.IndexOutOfBoundsError occurs
+// if the value is out of bounds.
 func (s *Set) Add(value int) {
 	if !s.Contains(value) {
 		s.arr.Set(value, true)
@@ -47,8 +53,11 @@ func (s *Set) Add(value int) {
 	}
 }
 
-// Remove removes the given value from the Set.
-// If the value is not in the Set, this method does nothing.
+// Remove removes the given value.
+// If the value is not present, this method does nothing.
+//
+// Panic cols.IndexOutOfBoundsError occurs
+// if the value is out of bounds.
 func (s *Set) Remove(value int) {
 	if s.Contains(value) {
 		s.arr.Set(value, false)
@@ -56,34 +65,37 @@ func (s *Set) Remove(value int) {
 	}
 }
 
-// Contains returns true if the Set contains the given value.
+// Contains returns true if the value is already present.
+//
+// Panic cols.IndexOutOfBoundsError occurs
+// if the value is out of bounds.
 func (s *Set) Contains(value int) bool {
 	return s.arr.Get(value)
 }
 
-// Clear removes all elements from the Set.
+// Clear removes all the values.
 func (s *Set) Clear() {
 	s.arr.Clear()
 	s.elements = 0
 }
 
-// Clone returns a shallow copy of the Set.
+// Clone returns a new Set with the same values.
 func (s *Set) Clone() sets.Set[int] {
 	clonedArray := s.arr.Clone()
 	return &Set{clonedArray, s.elements}
 }
 
-// Iterator returns an iter.Iterator over the elements in the Set.
+// Iterator returns a read-only iter.Iterator over the elements.
 func (s *Set) Iterator() iter.Iterator[int] {
 	return s.SetIterator()
 }
 
-// SetIterator returns an iterator over the elements in the Set.
+// SetIterator returns a specialized Iterator over the elements.
 func (s *Set) SetIterator() sets.Iterator[int] {
 	return &Iterator{0, s}
 }
 
-// Stream streams the elements of the Set.
+// Stream streams the elements.
 func (s *Set) Stream(yield func(int) bool) {
 	for i := range s.arr.Size() {
 		if !s.arr.Get(i) {
@@ -96,7 +108,7 @@ func (s *Set) Stream(yield func(int) bool) {
 	}
 }
 
-// Array returns the underlying bit array.
+// Array returns the underlying bitarray.Array.
 func (s *Set) Array() *bitarray.Array {
 	return s.arr
 }

@@ -1,10 +1,14 @@
 package bitarray
 
-type bitwiseOperation func(a, b uint8) uint8
+import "errors"
 
-func (array *Array) applyBiOperation(other *Array, operation bitwiseOperation) {
+type bitwiseOp func(a, b uint8) uint8
+
+var SizeMismatchError = errors.New("array sizes don't match")
+
+func (array *Array) applyBiOperation(other *Array, operation bitwiseOp) {
 	if array.Size() != other.Size() {
-		panic("Array sizes don't match")
+		panic(SizeMismatchError)
 	}
 
 	for i, val := range array.slice {
@@ -12,21 +16,27 @@ func (array *Array) applyBiOperation(other *Array, operation bitwiseOperation) {
 	}
 }
 
-// And performs an in-place bitwise AND operation with the other array.
+// And performs an in-place bitwise AND operation with the other Array.
+//
+// If the arrays are not of the same size, panic SizeMismatchError occurs.
 func (array *Array) And(other *Array) {
 	array.applyBiOperation(other, func(a, b uint8) uint8 {
 		return a & b
 	})
 }
 
-// Or performs an in-place bitwise OR operation with the other array.
+// Or performs an in-place bitwise OR operation with the other Array.
+//
+// If the arrays are not of the same size, panic SizeMismatchError occurs.
 func (array *Array) Or(other *Array) {
 	array.applyBiOperation(other, func(a, b uint8) uint8 {
 		return a | b
 	})
 }
 
-// Xor performs an in-place bitwise XOR operation with the other array.
+// Xor performs an in-place bitwise XOR operation with the other Array.
+//
+// If the arrays are not of the same size, panic SizeMismatchError occurs.
 func (array *Array) Xor(other *Array) {
 	array.applyBiOperation(other, func(a, b uint8) uint8 {
 		return a ^ b

@@ -6,19 +6,22 @@ import (
 	"github.com/djordje200179/extendedlibrary/misc/functions/predication"
 )
 
-// List is a doubly linked list implementation.
-// The zero value is ready to use. Do not copy a non-zero List.
+// List is a cols.Collection that
+// stores elements in a doubly linked list.
+//
+// The zero value is ready to use.
+// Do not copy a non-zero List.
 type List[T any] struct {
 	head, tail *Node[T]
 	size       int
 }
 
-// New creates an empty list.
+// New creates an empty List.
 func New[T any]() *List[T] {
 	return new(List[T])
 }
 
-// NewFromIterable creates a list from the specified iter.Iterable.
+// NewFromIterable creates a new List from the specified iter.Iterable.
 func NewFromIterable[T any](iterable iter.Iterable[T]) *List[T] {
 	list := New[T]()
 
@@ -30,14 +33,15 @@ func NewFromIterable[T any](iterable iter.Iterable[T]) *List[T] {
 	return list
 }
 
-// Size returns the number of elements in the list.
+// Size returns the number of elements.
 func (list *List[T]) Size() int {
 	return list.size
 }
 
-// GetNode returns the node at the specified index.
-// Negative indices are interpreted as relative to the end of the List.
-// Panics if the index is out of bounds.
+// GetNode returns the Node at the specified index.
+//
+// Negative indices are interpreted as relative to the end.
+// Panic occurs if the index is out of bounds.
 func (list *List[T]) GetNode(index int) *Node[T] {
 	if index >= list.size || index < -list.size {
 		panic(cols.IndexOutOfBoundsError{Index: index, Length: list.size})
@@ -63,30 +67,24 @@ func (list *List[T]) GetNode(index int) *Node[T] {
 }
 
 // GetRef returns a reference to the element at the specified index.
-// Negative indices are interpreted as relative to the end of the List.
-// Panics if the index is out of bounds.
-func (list *List[T]) GetRef(index int) *T {
-	node := list.GetNode(index)
-	return &node.Value
-}
+//
+// Negative indices are interpreted as relative to the end.
+// Panic occurs if the index is out of bounds.
+func (list *List[T]) GetRef(index int) *T { return &list.GetNode(index).Value }
 
 // Get returns the element at the specified index.
-// Negative indices are interpreted as relative to the end of the List.
-// Panics if the index is out of bounds.
-func (list *List[T]) Get(index int) T {
-	node := list.GetNode(index)
-	return node.Value
-}
+//
+// Negative indices are interpreted as relative to the end.
+// Panic occurs if the index is out of bounds.
+func (list *List[T]) Get(index int) T { return list.GetNode(index).Value }
 
 // Set sets the element at the specified index.
-// Negative indices are interpreted as relative to the end of the List.
-// Panics if the index is out of bounds.
-func (list *List[T]) Set(index int, value T) {
-	node := list.GetNode(index)
-	node.Value = value
-}
+//
+// Negative indices are interpreted as relative to the end.
+// Panic occurs if the index is out of bounds.
+func (list *List[T]) Set(index int, value T) { list.GetNode(index).Value = value }
 
-// Prepend inserts the specified element at the beginning of the List.
+// Prepend inserts the specified element at the beginning.
 func (list *List[T]) Prepend(value T) {
 	if list.size == 0 {
 		node := &Node[T]{
@@ -102,7 +100,7 @@ func (list *List[T]) Prepend(value T) {
 	}
 }
 
-// Append inserts the specified element at the end of the List.
+// Append appends the specified element to the end.
 func (list *List[T]) Append(value T) {
 	if list.size == 0 {
 		node := &Node[T]{
@@ -119,22 +117,25 @@ func (list *List[T]) Append(value T) {
 }
 
 // Insert inserts the specified element at the specified index.
-// Negative indices are interpreted as relative to the end of the List.
-// Panics if the index is out of bounds.
+//
+// Negative indices are interpreted as relative to the end.
+// Panic occurs if the index is out of bounds.
 func (list *List[T]) Insert(index int, value T) {
 	list.GetNode(index).InsertBefore(value)
 }
 
 // Remove removes the element at the specified index.
-// Negative indices are interpreted as relative to the end of the List.
-// Panics if the index is out of bounds.
+//
+// Negative indices are interpreted as relative to the end.
+// Panic occurs if the index is out of bounds.
 func (list *List[T]) Remove(index int) {
 	node := list.GetNode(index)
 	list.RemoveNode(node)
 }
 
-// RemoveNode removes the specified node from the List.
-// Panics if the node is not part of the List.
+// RemoveNode removes the element associated with the specified node.
+//
+// Panic occurs if the node is not associated with the List.
 func (list *List[T]) RemoveNode(node *Node[T]) {
 	if node == nil || node.list != list {
 		panic("invalid node")
@@ -155,14 +156,14 @@ func (list *List[T]) RemoveNode(node *Node[T]) {
 	list.size--
 }
 
-// Clear removes all elements from the List.
+// Clear removes all elements.
 func (list *List[T]) Clear() {
 	list.head = nil
 	list.tail = nil
 	list.size = 0
 }
 
-// Reverse reverses the order of the elements in the List.
+// Reverse reverses the order of the elements.
 func (list *List[T]) Reverse() {
 	for curr := list.head; curr != nil; curr = curr.prev {
 		curr.prev, curr.next = curr.next, curr.prev
@@ -171,8 +172,13 @@ func (list *List[T]) Reverse() {
 	list.head, list.tail = list.tail, list.head
 }
 
-// Join appends all elements from the other collection to the List.
-// The other collection is cleared.
+// Join moves all elements from the other cols.Collection
+// to the end. The other cols.Collection becomes empty.
+//
+// If the other collection is a List, only pointers to the nodes are moved.
+// Unfortunately, it is also needed to update the reference
+// to the list in the moved nodes.
+// If the other collection is not a List, the elements are moved one by one.
 func (list *List[T]) Join(other cols.Collection[T]) {
 	switch second := other.(type) {
 	case *List[T]:
@@ -194,7 +200,7 @@ func (list *List[T]) Join(other cols.Collection[T]) {
 	other.Clear()
 }
 
-// Clone returns a shallow copy of the List.
+// Clone returns a copy of the List.
 func (list *List[T]) Clone() cols.Collection[T] {
 	cloned := New[T]()
 	for curr := list.head; curr != nil; curr = curr.next {
@@ -204,21 +210,27 @@ func (list *List[T]) Clone() cols.Collection[T] {
 	return cloned
 }
 
-// Iterator returns an iterator over the elements in the List.
+// Iterator returns a read-only iter.Iterator over the elements.
+//
+// Iteration starts from the first element.
 func (list *List[T]) Iterator() iter.Iterator[T] {
 	return list.CollectionIterator()
 }
 
-// CollectionIterator returns an iterator over the elements in the List.
+// CollectionIterator returns an Iterator over the elements.
+// It can be used to modify the elements while iterating.
+//
+// Iteration starts from the first element.
 func (list *List[T]) CollectionIterator() cols.Iterator[T] {
 	return &Iterator[T]{
-		list:  list,
-		curr:  list.head,
-		index: 0,
+		list: list,
+		curr: list.head,
 	}
 }
 
-// Stream streams the elements in the List.
+// Stream streams all elements.
+//
+// It is safe to modify the List while streaming.
 func (list *List[T]) Stream(yield func(T) bool) {
 	for curr := list.head; curr != nil; curr = curr.next {
 		if !yield(curr.Value) {
@@ -227,7 +239,9 @@ func (list *List[T]) Stream(yield func(T) bool) {
 	}
 }
 
-// Stream2 streams the elements in the List with their indices.
+// Stream2 streams all elements with their indices.
+//
+// It is safe to modify the Array while streaming.
 func (list *List[T]) Stream2(yield func(int, T) bool) {
 	for curr, i := list.head, 0; curr != nil; curr, i = curr.next, i+1 {
 		if !yield(i, curr.Value) {
@@ -236,7 +250,9 @@ func (list *List[T]) Stream2(yield func(int, T) bool) {
 	}
 }
 
-// FindIndex returns the index of the first element that matches the specified predicate.
+// FindIndex returns the index of the first element
+// that satisfies the specified predicate.
+// If no such element is found, 0 and false are returned.
 func (list *List[T]) FindIndex(predicate predication.Predicate[T]) (int, bool) {
 	for curr, i := list.head, 0; curr != nil; curr, i = curr.next, i+1 {
 		if predicate(curr.Value) {
@@ -247,7 +263,9 @@ func (list *List[T]) FindIndex(predicate predication.Predicate[T]) (int, bool) {
 	return -1, false
 }
 
-// FindRef returns a reference to the first element that matches the specified predicate.
+// FindRef returns a reference to the first element
+// that matches the specified predicate.
+// If no element matches the predicate, nil and false are returned.
 func (list *List[T]) FindRef(predicate predication.Predicate[T]) (*T, bool) {
 	node, ok := list.FindNode(predicate)
 	if !ok {
@@ -257,7 +275,9 @@ func (list *List[T]) FindRef(predicate predication.Predicate[T]) (*T, bool) {
 	return &node.Value, true
 }
 
-// FindNode returns the first node that matches the specified predicate.
+// FindNode returns the first Node
+// that matches the specified predicate.
+// If no node matches the predicate, nil and false are returned.
 func (list *List[T]) FindNode(predicate predication.Predicate[T]) (*Node[T], bool) {
 	for curr := list.head; curr != nil; curr = curr.next {
 		if predicate(curr.Value) {
@@ -268,12 +288,12 @@ func (list *List[T]) FindNode(predicate predication.Predicate[T]) (*Node[T], boo
 	return nil, false
 }
 
-// Head returns the first node in the List.
+// Head returns the first Node.
 func (list *List[T]) Head() *Node[T] {
 	return list.head
 }
 
-// Tail returns the last node in the List.
+// Tail returns the last Node.
 func (list *List[T]) Tail() *Node[T] {
 	return list.tail
 }

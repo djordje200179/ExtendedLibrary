@@ -8,21 +8,20 @@ import (
 	"slices"
 )
 
-// Array is a collection that stores elements in a contiguous memory block.
-// The zero value is ready to use. Do not copy a non-zero Array.
+// Array is a cols.Collection that
+// stores elements in a contiguous memory block.
+//
+// The zero value is ready to use.
+// Do not copy a non-zero Array.
 type Array[T any] struct {
 	slice []T
 }
 
 // New creates an empty Array.
-func New[T any]() *Array[T] {
-	return NewWithSize[T](0)
-}
+func New[T any]() *Array[T] { return NewWithSize[T](0) }
 
 // NewWithSize creates an empty Array with the specified initial size.
-func NewWithSize[T any](initialSize int) *Array[T] {
-	return FromSlice(make([]T, initialSize))
-}
+func NewWithSize[T any](initialSize int) *Array[T] { return FromSlice(make([]T, initialSize)) }
 
 // NewWithCapacity creates an empty Array with the specified initial capacity.
 func NewWithCapacity[T any](initialCapacity int) *Array[T] {
@@ -52,19 +51,17 @@ func NewFromIterable[T any](iterable iter.Iterable[T]) *Array[T] {
 }
 
 // FromSlice creates a new Array from the specified slice.
-func FromSlice[T any](slice []T) *Array[T] {
-	return &Array[T]{slice}
-}
+func FromSlice[T any](slice []T) *Array[T] { return &Array[T]{slice} }
 
-// Size returns the number of elements in the Array.
-func (arr *Array[T]) Size() int {
-	return len(arr.slice)
-}
+// FromValues creates a new Array from the specified values.
+func FromValues[T any](values ...T) *Array[T] { return &Array[T]{values} }
 
-// Capacity returns the number of elements that the Array can hold without reallocating.
-func (arr *Array[T]) Capacity() int {
-	return cap(arr.slice)
-}
+// Size returns the number of elements.
+func (arr *Array[T]) Size() int { return len(arr.slice) }
+
+// Capacity returns the number of elements that
+// can be stored without reallocating the memory.
+func (arr *Array[T]) Capacity() int { return cap(arr.slice) }
 
 func (arr *Array[T]) getRealIndex(index int) int {
 	size := arr.Size()
@@ -81,142 +78,101 @@ func (arr *Array[T]) getRealIndex(index int) int {
 }
 
 // GetRef returns a reference to the element at the specified index.
-// Negative indices are interpreted as relative to the end of the Array.
-// Panics if the index is out of bounds.
-func (arr *Array[T]) GetRef(index int) *T {
-	index = arr.getRealIndex(index)
-	return &arr.slice[index]
-}
+//
+// Negative indices are interpreted as relative to the end.
+// Panic occurs if the index is out of bounds.
+func (arr *Array[T]) GetRef(index int) *T { return &arr.slice[arr.getRealIndex(index)] }
 
 // Get returns the element at the specified index.
-// Negative indices are interpreted as relative to the end of the Array.
-// Panics if the index is out of bounds.
-func (arr *Array[T]) Get(index int) T {
-	index = arr.getRealIndex(index)
-	return arr.slice[index]
-}
+//
+// Negative indices are interpreted as relative to the end.
+// Panic occurs if the index is out of bounds.
+func (arr *Array[T]) Get(index int) T { return arr.slice[arr.getRealIndex(index)] }
 
 // Set sets the element at the specified index.
-// Negative indices are interpreted as relative to the end of the Array.
-// Panics if the index is out of bounds.
-func (arr *Array[T]) Set(index int, value T) {
-	index = arr.getRealIndex(index)
-	arr.slice[index] = value
-}
+//
+// Negative indices are interpreted as relative to the end.
+// Panic occurs if the index is out of bounds.
+func (arr *Array[T]) Set(index int, value T) { arr.slice[arr.getRealIndex(index)] = value }
 
-// Prepend inserts the specified element at the beginning of the Array.
-func (arr *Array[T]) Prepend(value T) {
-	newArray := make([]T, arr.Size()+1)
+// Prepend inserts the specified element at the beginning.
+func (arr *Array[T]) Prepend(value T) { slices.Insert(arr.slice, 0, value) }
 
-	newArray[0] = value
-	copy(newArray[1:], arr.slice)
+// PrependMany inserts the specified elements at the beginning.
+func (arr *Array[T]) PrependMany(values ...T) { slices.Insert(arr.slice, 0, values...) }
 
-	arr.slice = newArray
-}
+// Append appends the specified element to the end.
+func (arr *Array[T]) Append(value T) { arr.slice = append(arr.slice, value) }
 
-// PrependMany inserts the specified elements at the beginning of the Array.
-func (arr *Array[T]) PrependMany(values ...T) {
-	newArray := make([]T, arr.Size()+len(values))
-
-	copy(newArray, values)
-	copy(newArray[len(values):], arr.slice)
-
-	arr.slice = newArray
-}
-
-// Append appends the specified element to the end of the Array.
-func (arr *Array[T]) Append(value T) {
-	arr.slice = append(arr.slice, value)
-}
-
-// AppendMany appends the specified elements to the end of the Array.
-func (arr *Array[T]) AppendMany(values ...T) {
-	arr.slice = append(arr.slice, values...)
-}
+// AppendMany appends the specified elements to the end.
+func (arr *Array[T]) AppendMany(values ...T) { arr.slice = append(arr.slice, values...) }
 
 // Insert inserts the specified element at the specified index.
-// Negative indices are interpreted as relative to the end of the Array.
-// Panics if the index is out of bounds.
+//
+// Negative indices are interpreted as relative to the end.
+// Panic occurs if the index is out of bounds.
 func (arr *Array[T]) Insert(index int, value T) {
 	index = arr.getRealIndex(index)
-
-	newArray := make([]T, arr.Size()+1)
-
-	copy(newArray, arr.slice[:index])
-	newArray[index] = value
-	copy(newArray[index+1:], arr.slice[index:])
-
-	arr.slice = newArray
+	slices.Insert(arr.slice, index, value)
 }
 
 // InsertMany inserts the specified elements at the specified index.
-// Negative indices are interpreted as relative to the end of the Array.
-// Panics if the index is out of bounds.
+//
+// Negative indices are interpreted as relative to the end.
+// Panic occurs if the index is out of bounds.
 func (arr *Array[T]) InsertMany(index int, values ...T) {
 	index = arr.getRealIndex(index)
-
-	arr.slice = slices.Insert(arr.slice, index, values...)
+	slices.Insert(arr.slice, index, values...)
 }
 
 // Remove removes the element at the specified index.
-// Negative indices are interpreted as relative to the end of the Array.
-// Panics if the index is out of bounds.
+//
+// Negative indices are interpreted as relative to the end.
+// Panic occurs if the index is out of bounds.
 func (arr *Array[T]) Remove(index int) {
 	index = arr.getRealIndex(index)
-
-	oldSlice := arr.slice
-	switch {
-	case index == 0:
-		arr.slice = oldSlice[1:]
-	case index == arr.Size()-1:
-		arr.slice = oldSlice[:index]
-	default:
-		arr.slice = append(oldSlice[:index], oldSlice[index+1:]...)
-	}
+	slices.Delete(arr.slice, index, index+1)
 }
 
-// Reserve reserves additional capacity for the Array.
+// Reserve reserves additional capacity.
+//
 // If additionalCapacity is negative, the function does nothing.
 func (arr *Array[T]) Reserve(additionalCapacity int) {
-	newCapacity := arr.Capacity() + additionalCapacity
-
-	if newCapacity <= arr.Capacity() {
+	if additionalCapacity <= 0 {
 		return
 	}
 
-	newSlice := make([]T, arr.Size(), newCapacity)
-	copy(newSlice, arr.slice)
-	arr.slice = newSlice
+	arr.slice = slices.Grow(arr.slice, additionalCapacity)
 }
 
-// Shrink shrinks the capacity of the Array to match its size.
-func (arr *Array[T]) Shrink() {
-	arr.slice = slices.Clip(arr.slice)
-}
+// Shrink shrinks the capacity to match the number of elements.
+func (arr *Array[T]) Shrink() { arr.slice = slices.Clip(arr.slice) }
 
-// Clear removes all elements from the Array.
-func (arr *Array[T]) Clear() {
-	arr.slice = make([]T, 0)
-}
+// Clear removes all elements.
+func (arr *Array[T]) Clear() { arr.slice = nil }
 
-// Reverse reverses the order of the elements in the Array.
-func (arr *Array[T]) Reverse() {
-	slices.Reverse(arr.slice)
-}
+// Reverse reverses the order of the elements.
+func (arr *Array[T]) Reverse() { slices.Reverse(arr.slice) }
 
-// Sort sorts the elements in the Array by the specified comparator.
-// The sorting algorithm is stable.
+// Sort sorts the elements by the specified comparator.
+//
+// The sorting algorithm is a stable variant of quicksort.
 func (arr *Array[T]) Sort(comparator comparison.Comparator[T]) {
 	slices.SortStableFunc(arr.slice, comparator)
 }
 
-// Join appends all elements from the other collection to the Array.
-// The other collection is cleared.
+// Join moves all elements from the other cols.Collection
+// to the end. The other cols.Collection becomes empty.
+//
+// If the other collection is an Array, only one
+// memory allocation occurs and the elements are moved in bulk.
+// Otherwise, the elements are moved one by one.
 func (arr *Array[T]) Join(other cols.Collection[T]) {
 	switch second := other.(type) {
 	case *Array[T]:
 		arr.AppendMany(second.slice...)
 	default:
+		arr.Reserve(other.Size())
 		for it := other.Iterator(); it.Valid(); it.Move() {
 			arr.Append(it.Get())
 		}
@@ -226,21 +182,22 @@ func (arr *Array[T]) Join(other cols.Collection[T]) {
 }
 
 // Clone returns a copy of the Array.
-func (arr *Array[T]) Clone() cols.Collection[T] {
-	return &Array[T]{slices.Clone(arr.slice)}
-}
+func (arr *Array[T]) Clone() cols.Collection[T] { return &Array[T]{slices.Clone(arr.slice)} }
 
-// Iterator returns an iterator over the elements in the Array.
-func (arr *Array[T]) Iterator() iter.Iterator[T] {
-	return arr.CollectionIterator()
-}
+// Iterator returns a read-only iter.Iterator over the elements.
+//
+// Iteration starts from the first element.
+func (arr *Array[T]) Iterator() iter.Iterator[T] { return arr.CollectionIterator() }
 
-// CollectionIterator returns an iterator over the elements in the Array.
-func (arr *Array[T]) CollectionIterator() cols.Iterator[T] {
-	return &Iterator[T]{arr, 0}
-}
+// CollectionIterator returns an Iterator over the elements.
+// It can be used to modify the elements while iterating.
+//
+// Iteration starts from the first element.
+func (arr *Array[T]) CollectionIterator() cols.Iterator[T] { return &Iterator[T]{arr, 0} }
 
-// Stream streams elements of the Array.
+// Stream streams all elements.
+//
+// It is not safe to modify the Array while streaming.
 func (arr *Array[T]) Stream(yield func(T) bool) {
 	// TODO: Use slices.Stream
 	for _, val := range arr.slice {
@@ -250,7 +207,9 @@ func (arr *Array[T]) Stream(yield func(T) bool) {
 	}
 }
 
-// Stream2 streams elements of the Array with their indices.
+// Stream2 streams all elements with their indices.
+//
+// It is not safe to modify the Array while streaming.
 func (arr *Array[T]) Stream2(yield func(int, T) bool) {
 	// TODO: Use slices.Stream
 	for i, val := range arr.slice {
@@ -260,7 +219,9 @@ func (arr *Array[T]) Stream2(yield func(int, T) bool) {
 	}
 }
 
-// FindIndex returns the index of the first element that matches the specified predicate.
+// FindIndex returns the index of the first element
+// that satisfies the specified predicate.
+// If no such element is found, 0 and false are returned.
 func (arr *Array[T]) FindIndex(predicate predication.Predicate[T]) (int, bool) {
 	index := slices.IndexFunc(arr.slice, predicate)
 	if index == -1 {
@@ -270,7 +231,9 @@ func (arr *Array[T]) FindIndex(predicate predication.Predicate[T]) (int, bool) {
 	return index, true
 }
 
-// FindRef returns a reference to the first element that matches the specified predicate.
+// FindRef returns a reference to the first element
+// that matches the specified predicate.
+// If no element matches the predicate, nil and false are returned.
 func (arr *Array[T]) FindRef(predicate predication.Predicate[T]) (*T, bool) {
 	index, ok := arr.FindIndex(predicate)
 	if !ok {
@@ -280,12 +243,16 @@ func (arr *Array[T]) FindRef(predicate predication.Predicate[T]) (*T, bool) {
 	return arr.GetRef(index), true
 }
 
-// Slice returns a slice of elements in the Array.
+// Slice returns a slice of all elements.
 func (arr *Array[T]) Slice() []T {
 	return arr.slice
 }
 
-// SliceRange returns a slice of elements in the Array in the specified range.
+// SliceRange returns a slice of elements
+// in the specified range [from, to).
+//
+// Negative indices are interpreted as relative to the end.
+// Panic occurs if the range is out of bounds.
 func (arr *Array[T]) SliceRange(from, to int) []T {
 	from = arr.getRealIndex(from)
 	to = arr.getRealIndex(to)

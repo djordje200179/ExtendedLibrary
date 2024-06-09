@@ -5,25 +5,26 @@ import (
 	"sync"
 )
 
-// Iterator is a wrapper around a cols.Iterator that provides thread-safe
-// access to the underlying collection.
+// Iterator is a wrapper around a cols.Iterator
+// that provides thread-safe access.
 type Iterator[T any] struct {
 	colIt cols.Iterator[T]
 
 	mutex *sync.RWMutex
 }
 
-// Valid returns true if the iterator is currently pointing to a valid element.
-func (it Iterator[T]) Valid() bool {
-	return it.colIt.Valid()
-}
+// Valid returns if the iterator is
+// currently pointing to a valid element.
+func (it Iterator[T]) Valid() bool { return it.colIt.Valid() }
 
-// Move moves the iterator to the next element.
-func (it Iterator[T]) Move() {
-	it.colIt.Move()
-}
+// Move moves to the next element.
+func (it Iterator[T]) Move() { it.colIt.Move() }
 
 // GetRef returns a reference to the current element.
+//
+// Usage of this method is discouraged, as it breaks the thread-safety.
+// Lock will not be held while the reference is used, so it is possible
+// that the value of the element changes while the reference is used.
 func (it Iterator[T]) GetRef() *T {
 	it.mutex.RLock()
 	defer it.mutex.RUnlock()
@@ -47,7 +48,8 @@ func (it Iterator[T]) Set(value T) {
 	it.colIt.Set(value)
 }
 
-// InsertBefore inserts the specified element before the current element.
+// InsertBefore inserts the specified element
+// before the current element.
 func (it Iterator[T]) InsertBefore(value T) {
 	it.mutex.Lock()
 	defer it.mutex.Unlock()
@@ -55,7 +57,8 @@ func (it Iterator[T]) InsertBefore(value T) {
 	it.colIt.InsertBefore(value)
 }
 
-// InsertAfter inserts the specified element after the current element.
+// InsertAfter inserts the specified element
+// after the current element.
 func (it Iterator[T]) InsertAfter(value T) {
 	it.mutex.Lock()
 	defer it.mutex.Unlock()
@@ -69,9 +72,4 @@ func (it Iterator[T]) Remove() {
 	defer it.mutex.Unlock()
 
 	it.colIt.Remove()
-}
-
-// Index returns the current index.
-func (it Iterator[T]) Index() int {
-	return it.colIt.Index()
 }

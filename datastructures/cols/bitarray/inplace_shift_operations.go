@@ -12,7 +12,7 @@ const (
 	*/
 )
 
-// ShiftLeft performs an in-place left shift operation on the array.
+// ShiftLeft performs an in-place left shift operation.
 func (array *Array) ShiftLeft(operationType ShiftType) {
 	size := array.Size()
 	if size == 0 {
@@ -22,7 +22,7 @@ func (array *Array) ShiftLeft(operationType ShiftType) {
 	panic("not implemented")
 }
 
-// ShiftRight performs an in-place right shift operation on the array.
+// ShiftRight performs an in-place right shift operation.
 func (array *Array) ShiftRight(operationType ShiftType) {
 	size := array.Size()
 	if size == 0 {

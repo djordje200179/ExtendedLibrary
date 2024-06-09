@@ -2,11 +2,14 @@ package bitarray
 
 import (
 	"github.com/djordje200179/extendedlibrary/datastructures/cols"
+	"slices"
 	"strings"
 )
 
-// Array is an optimized array of boolean values.
-// The zero value is ready to use. Do not copy a non-zero Array.
+// Array is a space-optimized array of boolean values.
+//
+// The zero value is ready to use.
+// Do not copy a non-zero Array.
 type Array struct {
 	slice       []uint8
 	lastElemOff uint8
@@ -39,7 +42,7 @@ func NewWithCapacity(initialCapacity int) *Array {
 	}
 }
 
-// NewFromSlice creates an Array from the specified slice.
+// NewFromSlice creates an Array from elements of the specified slice.
 func NewFromSlice(slice []bool) *Array {
 	arr := NewWithSize(len(slice))
 
@@ -50,7 +53,7 @@ func NewFromSlice(slice []bool) *Array {
 	return arr
 }
 
-// Size returns the number of bits in the Array.
+// Size returns the number of bits.
 func (array *Array) Size() int {
 	if array.lastElemOff == 0 {
 		return len(array.slice) * 8
@@ -59,10 +62,9 @@ func (array *Array) Size() int {
 	}
 }
 
-// Capacity returns the number of bits that the Array can hold without reallocating.
-func (array *Array) Capacity() int {
-	return cap(array.slice) * 8
-}
+// Capacity returns the number of bits that
+// can be stored without reallocating the memory.
+func (array *Array) Capacity() int { return cap(array.slice) * 8 }
 
 func (array *Array) getRealIndex(index int) int {
 	size := array.Size()
@@ -79,8 +81,9 @@ func (array *Array) getRealIndex(index int) int {
 }
 
 // Get returns the bit at the specified index.
-// Negative indices are interpreted as relative to the end of the Array.
-// Panics if the index is out of bounds.
+//
+// Negative indices are interpreted as relative to the end.
+// Panic occurs if the index is out of bounds.
 func (array *Array) Get(index int) bool {
 	index = array.getRealIndex(index)
 
@@ -91,9 +94,10 @@ func (array *Array) Get(index int) bool {
 	return masked != 0
 }
 
-// Set sets the bit at the specified index to the specified value.
-// Negative indices are interpreted as relative to the end of the Array.
-// Panics if the index is out of bounds.
+// Set sets the bit at the specified index.
+//
+// Negative indices are interpreted as relative to the end.
+// Panic occurs if the index is out of bounds.
 func (array *Array) Set(index int, value bool) {
 	index = array.getRealIndex(index)
 
@@ -111,7 +115,7 @@ func (array *Array) Set(index int, value bool) {
 	array.slice[elemIndex] = elem
 }
 
-// SetAll sets all bits in the Array to the specified value.
+// SetAll sets all bits to the specified value.
 func (array *Array) SetAll(value bool) {
 	var elem uint8
 	if value {
@@ -137,14 +141,14 @@ func (array *Array) Flip(index int) {
 	array.slice[elemIndex] = elem
 }
 
-// FlipAll flips all bits in the Array.
+// FlipAll flips all bits.
 func (array *Array) FlipAll() {
 	for i, val := range array.slice {
 		array.slice[i] = ^val
 	}
 }
 
-// Append appends the specified bit value to the end of the Array.
+// Append appends the specified bit to the end.
 func (array *Array) Append(value bool) {
 	if array.lastElemOff == 0 {
 		array.slice = append(array.slice, 0)
@@ -155,7 +159,10 @@ func (array *Array) Append(value bool) {
 	array.Set(array.Size()-1, value)
 }
 
-// Insert inserts the specified bit value at the specified index.
+// Insert inserts the specified bit at the specified index.
+//
+// Negative indices are interpreted as relative to the end.
+// Panic occurs if the index is out of bounds.
 func (array *Array) Insert(index int, value bool) {
 	index = array.getRealIndex(index)
 
@@ -201,6 +208,9 @@ func (array *Array) Insert(index int, value bool) {
 }
 
 // Remove removes the bit at the specified index.
+//
+// Negative indices are interpreted as relative to the end.
+// Panic occurs if the index is out of bounds.
 func (array *Array) Remove(index int) {
 	index = array.getRealIndex(index)
 
@@ -239,18 +249,19 @@ func (array *Array) Remove(index int) {
 	}
 }
 
-// Clear removes all bits from the Array.
+// Clear removes all bits.
 func (array *Array) Clear() {
 	array.slice = make([]uint8, 0)
 	array.lastElemOff = 0
 }
 
-// Reverse reverses the order of the bits in the Array.
+// Reverse reverses the order of the bits.
 func (array *Array) Reverse() {
 	panic("not implemented")
 }
 
-// Join appends all bits from the specified Array to the end of the Array.
+// Join moves all elements from the other Array
+// to the end. The other Array becomes empty.
 func (array *Array) Join(other *Array) {
 	if array.lastElemOff == 0 {
 		array.slice = append(array.slice, other.slice...)
@@ -264,13 +275,12 @@ func (array *Array) Join(other *Array) {
 	other.Clear()
 }
 
-// Clone returns a shallow copy of the Array.
+// Clone returns a copy of the Array.
 func (array *Array) Clone() *Array {
-	cloned := NewWithSize(array.Size())
-	cloned.lastElemOff = array.lastElemOff
-	copy(cloned.slice, array.slice)
-
-	return cloned
+	return &Array{
+		slice:       slices.Clone(array.slice),
+		lastElemOff: array.lastElemOff,
+	}
 }
 
 // String returns a string representation of the Array.

@@ -7,21 +7,24 @@ import (
 	"sync"
 )
 
-// Wrapper is a wrapper around a map that provides thread-safe access to the map.
-// Locking is done through read-write mutex. This means that multiple goroutines can read from the map at the same time,
-// but only one goroutine can write to the map at the same time.
+// Wrapper is a wrapper around a maps.Map
+// that provides thread-safe access.
+//
+// Locking is done through read-write mutex.
+// This means that multiple goroutines can read
+// at the same time, but only one goroutine can write at that time.
 type Wrapper[K, V any] struct {
 	m maps.Map[K, V]
 
 	mutex sync.RWMutex
 }
 
-// From creates a new Wrapper from the given map.
+// From creates a new Wrapper around the given maps.Map.
 func From[K, V any](m maps.Map[K, V]) *Wrapper[K, V] {
 	return &Wrapper[K, V]{m, sync.RWMutex{}}
 }
 
-// Size returns the number of entries in the map.
+// Size returns the number of entries.
 func (w *Wrapper[K, V]) Size() int {
 	w.mutex.RLock()
 	defer w.mutex.RUnlock()
@@ -29,7 +32,7 @@ func (w *Wrapper[K, V]) Size() int {
 	return w.m.Size()
 }
 
-// Contains returns true if the map contains the given key.
+// Contains returns true if the given key is present.
 func (w *Wrapper[K, V]) Contains(key K) bool {
 	w.mutex.RLock()
 	defer w.mutex.RUnlock()
@@ -37,8 +40,10 @@ func (w *Wrapper[K, V]) Contains(key K) bool {
 	return w.m.Contains(key)
 }
 
-// TryGet returns the value associated with the given key, and true if the key exists.
-// If the key does not exist, the default value for the value type is returned, and false is returned.
+// TryGet returns the value associated with the
+// given key if it is present.
+// If the key is not present, it returns the zero value
+// for the value type and false.
 func (w *Wrapper[K, V]) TryGet(key K) (V, bool) {
 	w.mutex.RLock()
 	defer w.mutex.RUnlock()
@@ -55,8 +60,10 @@ func (w *Wrapper[K, V]) Get(key K) V {
 }
 
 // GetRef returns a reference to the value associated with the given key.
-// Usage of this method is discouraged, as it breaks the thread-safety of the map.
-// Lock will not be held while the reference is used, so it is possible that the value of the element changes while the reference is used.
+//
+// Usage of this method is discouraged, as it breaks the thread-safety.
+// Lock will not be held while the reference is used, so it is possible
+// that the value of the element changes while the reference is used.
 func (w *Wrapper[K, V]) GetRef(key K) *V {
 	w.mutex.RLock()
 	defer w.mutex.RUnlock()
@@ -72,7 +79,9 @@ func (w *Wrapper[K, V]) Set(key K, value V) {
 	w.m.Set(key, value)
 }
 
-// Update updates the value associated with the given key.
+// Update calculates and sets the new value
+// of the entry at the given key using
+// the given update function.
 func (w *Wrapper[K, V]) Update(key K, updateFunction func(oldValue V) V) {
 	w.mutex.Lock()
 	defer w.mutex.Unlock()
@@ -83,7 +92,8 @@ func (w *Wrapper[K, V]) Update(key K, updateFunction func(oldValue V) V) {
 	w.m.Set(key, newValue)
 }
 
-// UpdateRef updates the value associated with the given key.
+// UpdateRef updates the value at the given key
+// in-place using the given update function.
 func (w *Wrapper[K, V]) UpdateRef(key K, updateFunction func(oldValue *V)) {
 	w.mutex.Lock()
 	defer w.mutex.Unlock()
@@ -100,7 +110,7 @@ func (w *Wrapper[K, V]) Remove(key K) {
 	w.m.Remove(key)
 }
 
-// Clear removes all entries from the map.
+// Clear removes all entries.
 func (w *Wrapper[K, V]) Clear() {
 	w.mutex.Lock()
 	defer w.mutex.Unlock()
@@ -108,7 +118,8 @@ func (w *Wrapper[K, V]) Clear() {
 	w.m.Clear()
 }
 
-// Clone returns a copy of the wrapper and the underlying map.
+// Clone returns a new Wrapper with
+// a clone of the underlying maps.Map.
 func (w *Wrapper[K, V]) Clone() maps.Map[K, V] {
 	w.mutex.RLock()
 	defer w.mutex.RUnlock()
@@ -117,17 +128,21 @@ func (w *Wrapper[K, V]) Clone() maps.Map[K, V] {
 	return &Wrapper[K, V]{clonedMap, sync.RWMutex{}}
 }
 
-// Iterator returns an iter.Iterator over the map.
+// Iterator returns a read-only iter.Iterator over the entries.
 func (w *Wrapper[K, V]) Iterator() iter.Iterator[misc.Pair[K, V]] {
 	return w.MapIterator()
 }
 
-// MapIterator returns an iterator over the map.
+// MapIterator returns an Iterator over the entries.
+// It can be used to modify the entries while iterating.
 func (w *Wrapper[K, V]) MapIterator() maps.Iterator[K, V] {
 	return Iterator[K, V]{w.m.MapIterator(), &w.mutex}
 }
 
-// Stream2 streams over the entries in the Map.
+// Stream2 streams all entries.
+//
+// Updates to the underlying maps.Map
+// while streaming are not allowed.
 func (w *Wrapper[K, V]) Stream2(yield func(K, V) bool) {
 	w.mutex.RLock()
 	defer w.mutex.RUnlock()
@@ -135,7 +150,7 @@ func (w *Wrapper[K, V]) Stream2(yield func(K, V) bool) {
 	w.m.Stream2(yield)
 }
 
-// Keys streams the keys of the maps.Map.
+// Keys streams the keys.
 func (w *Wrapper[K, V]) Keys(yield func(K) bool) {
 	w.mutex.RLock()
 	defer w.mutex.RUnlock()
@@ -143,7 +158,7 @@ func (w *Wrapper[K, V]) Keys(yield func(K) bool) {
 	w.m.Keys(yield)
 }
 
-// Values streams the values of the maps.Map.
+// Values streams the values.
 func (w *Wrapper[K, V]) Values(yield func(V) bool) {
 	w.mutex.RLock()
 	defer w.mutex.RUnlock()
@@ -151,8 +166,9 @@ func (w *Wrapper[K, V]) Values(yield func(V) bool) {
 	w.m.Values(yield)
 }
 
-// Transaction executes the given function with the map as an argument.
-// The map is locked for writing while the function is executed.
+// Transaction executes the given function
+// on the underlying maps.Map
+// while holding the write lock.
 func (w *Wrapper[K, V]) Transaction(updateFunction func(m maps.Map[K, V])) {
 	w.mutex.Lock()
 	defer w.mutex.Unlock()

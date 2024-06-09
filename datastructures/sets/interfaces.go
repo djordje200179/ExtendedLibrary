@@ -5,7 +5,8 @@ import (
 	"github.com/djordje200179/extendedlibrary/misc"
 )
 
-// Iterator is an iterator over a set.
+// An Iterator is used to iterate
+// through values of a Set.
 type Iterator[T any] interface {
 	iter.Iterator[T]
 
@@ -13,25 +14,27 @@ type Iterator[T any] interface {
 	Remove()
 }
 
-// Set is an interface that represents a set of elements
+// Set is a data structure for storing unique values.
 type Set[T any] interface {
-	// Size returns the size of the set
+	// Size returns the cardinality.
 	Size() int
 
-	// Add adds the given value to the set
+	// Add inserts the given value.
 	Add(value T)
-	// Remove removes the given value from the set
+	// Remove removes the given value.
 	Remove(value T)
-	// Contains returns true if the set contains the given value
+	// Contains returns true if the
+	// value is already present.
 	Contains(value T) bool
 
-	// Clear clears the set
+	// Clear removes all the values.
 	Clear()
 	misc.Cloner[Set[T]]
 
 	iter.Iterable[T]
-	// SetIterator returns an iterator over the set
+	// SetIterator returns a specialized
+	// Iterator over the elements.
 	SetIterator() Iterator[T]
-	// Stream streams the elements of the Set
+	// Stream streams the elements.
 	Stream(yield func(T) bool)
 }

@@ -1,13 +1,14 @@
 package synclist
 
-// Node is a node in a singly linked list.
+// Node is an element of a List.
+// It should not be created directly.
 type Node[T any] struct {
-	Value T // The value stored in the node.
+	Value T // Stored value
 
 	next *Node[T]
 }
 
-// Next returns the next node in the list.
+// Next returns the next Node.
 func (node Node[T]) Next() *Node[T] {
 	return node.next
 }

@@ -1,5 +1,6 @@
 package comparison
 
+// Comparator is a function that compares two values of the same type.
 type Comparator[T any] func(first, second T) int
 
 const (
@@ -11,14 +12,14 @@ const (
 	SecondBigger = FirstSmaller
 )
 
-func (comparator Comparator[T]) Reverse() Comparator[T] {
-	return func(first, second T) int {
-		return -comparator(first, second)
-	}
+// Reverse returns a new Comparator that
+// compares two values in the opposite order.
+func (comp Comparator[T]) Reverse() Comparator[T] {
+	return func(first, second T) int { return -comp(first, second) }
 }
 
-func (comparator Comparator[T]) Less() func(first, second T) bool {
-	return func(first, second T) bool {
-		return comparator(first, second) == -1
-	}
+// Less returns a function that Comparator two values
+// and returns true if the first value is smaller than the second.
+func (comp Comparator[T]) Less() func(first, second T) bool {
+	return func(first, second T) bool { return comp(first, second) == FirstSmaller }
 }
